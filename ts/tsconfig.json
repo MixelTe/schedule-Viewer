@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "outDir": "../wwwroot/out",
+        // "module": "amd",
+        // "outFile": "../wwwroot/out.js"
+    }
+}
