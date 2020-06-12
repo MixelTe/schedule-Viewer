@@ -5,6 +5,8 @@ export class Coordinates
     private x: number;
     private y: number;
 
+    private DEVdisplayHours = 2;
+
     private axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
     private scale = {
         hours: { els: <any>[], color: "black", width: 6, height: 25, fontSize: 20 },
@@ -34,11 +36,11 @@ export class Coordinates
         body.appendChild(this.axis.svgEl);
 
         this.createScale(body);
-        this.hideSystem(1, true);
+        this.hideSystem(1);
     }
     private createScale(body: SVGElement)
     {
-        for (let i = 1; i <= 1; i++)
+        for (let i = 1; i <= this.DEVdisplayHours; i++)
         {
             let x = this.axis.x + this.oneHour * i;
             const y = this.axis.y + this.axis.height;
@@ -108,9 +110,10 @@ export class Coordinates
                     number.setAttribute("display", "none");
                     number.innerHTML = `${j}`;
 
-                    this.scale.seconds.els[j + i*3600 + o*60] = { line, number };
-                    body.appendChild(this.scale.seconds.els[j + i*3600 + o*60].line);
-                    body.appendChild(this.scale.seconds.els[j + i*3600 + o*60].number);
+                    const index = j + i * 3600 + o * 60;
+                    this.scale.seconds.els[index] = { line, number };
+                    body.appendChild(this.scale.seconds.els[index].line);
+                    body.appendChild(this.scale.seconds.els[index].number);
                 }
             }
         }
@@ -142,27 +145,29 @@ export class Coordinates
             x = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 0; o < 60; o++)
             {
-                const line = this.scale.minutes.els[o + i*60].line;
                 line.setAttribute("x1", `${x + this.oneHour / 60 * o * zoom}`);
                 line.setAttribute("x2", `${x + this.oneHour / 60 * o * zoom}`);
-                const number = this.scale.minutes.els[o + i*60].number;
                 number.setAttribute("x", `${x + this.oneHour / 60 * o * zoom - 6}`);
+                const index = o + i * 60;
+                const line = this.scale.minutes.els[index].line;
+                const number = this.scale.minutes.els[index].number;
 
                 const xsec = x + this.oneHour / 60 * o * zoom;
                 for (let j = 0; j < 60; j++)
                 {
-                    const line = this.scale.seconds.els[j + i*3600 + o*60].line;
                     line.setAttribute("x1", `${xsec + this.oneHour / 60 / 60 * j * zoom}`);
                     line.setAttribute("x2", `${xsec + this.oneHour / 60 / 60 * j * zoom}`);
-                    const number = this.scale.seconds.els[j + i*3600 + o*60].number;
                     number.setAttribute("x", `${xsec + this.oneHour / 60 / 60 * j * zoom - 4}`);
+                    const index = j + i * 3600 + o * 60;
+                    const line = this.scale.seconds.els[index].line;
+                    const number = this.scale.seconds.els[index].number;
                 }
             }
         }
         this.hideSystem(zoom);
     }
 
-    private hideSystem(zoom: number, onStart?: boolean)
+    private hideSystem(zoom: number)
     {
         const interHour = this.oneHour * zoom;
         for (let i = 1; i < 60; i++)
@@ -171,22 +176,23 @@ export class Coordinates
             const interMinuts = interHour / minutsToDisplay;
             if (interMinuts >= 25)
             {
-                for (let o = 1; o <= 1; o++)
+                for (let o = 1; o <= this.DEVdisplayHours; o++)
                 {
                     for (let j = 0; j < 60; j++)
                     {
-                        if (j % Math.round(60 / minutsToDisplay) == 0 && (j + o * 60) % 60 != 0)
+                        const index = j + o * 60;
+                        if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
                         {
-                            const line = this.scale.minutes.els[j + o * 60].line;
+                            const line = this.scale.minutes.els[index].line;
                             line.setAttribute("display", "inline");
-                            const number = this.scale.minutes.els[j + o * 60].number;
+                            const number = this.scale.minutes.els[index].number;
                             number.setAttribute("display", "inline");
                         }
                         else
                         {
-                            const line = this.scale.minutes.els[j + o * 60].line;
+                            const line = this.scale.minutes.els[index].line;
                             line.setAttribute("display", "none");
-                            const number = this.scale.minutes.els[j + o * 60].number;
+                            const number = this.scale.minutes.els[index].number;
                             number.setAttribute("display", "none");
                         }
                         if (i == 1)
@@ -199,18 +205,19 @@ export class Coordinates
                                 {
                                     for (let l = 0; l < 60; l++)
                                     {
-                                        if (l % Math.round(60 / secondsToDisplay) == 0 && (l + j * 60 + o * 360) % 60 != 0)
+                                        const index = l + j * 60 + o * 3600;
+                                        if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
                                         {
-                                            const line = this.scale.seconds.els[l + j * 60 + o * 3600].line;
+                                            const line = this.scale.seconds.els[index].line;
                                             line.setAttribute("display", "inline");
-                                            const number = this.scale.seconds.els[l + j * 60 + o * 3600].number;
+                                            const number = this.scale.seconds.els[index].number;
                                             number.setAttribute("display", "inline");
                                         }
                                         else
                                         {
-                                            const line = this.scale.seconds.els[l + j * 60 + o * 3600].line;
+                                            const line = this.scale.seconds.els[index].line;
                                             line.setAttribute("display", "none");
-                                            const number = this.scale.seconds.els[l + j * 60 + o * 3600].number;
+                                            const number = this.scale.seconds.els[index].number;
                                             number.setAttribute("display", "none");
                                         }
                                     }
