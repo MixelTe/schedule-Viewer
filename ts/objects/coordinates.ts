@@ -108,9 +108,9 @@ export class Coordinates
                     number.setAttribute("display", "none");
                     number.innerHTML = `${j}`;
 
-                    this.scale.seconds.els[j + i*360 + o*60] = { line, number };
-                    body.appendChild(this.scale.seconds.els[j + i*360 + o*60].line);
-                    body.appendChild(this.scale.seconds.els[j + i*360 + o*60].number);
+                    this.scale.seconds.els[j + i*3600 + o*60] = { line, number };
+                    body.appendChild(this.scale.seconds.els[j + i*3600 + o*60].line);
+                    body.appendChild(this.scale.seconds.els[j + i*3600 + o*60].number);
                 }
             }
         }
@@ -151,10 +151,10 @@ export class Coordinates
                 const xsec = x + this.oneHour / 60 * o * zoom;
                 for (let j = 0; j < 60; j++)
                 {
-                    const line = this.scale.seconds.els[j + i*360 + o*60].line;
+                    const line = this.scale.seconds.els[j + i*3600 + o*60].line;
                     line.setAttribute("x1", `${xsec + this.oneHour / 60 / 60 * j * zoom}`);
                     line.setAttribute("x2", `${xsec + this.oneHour / 60 / 60 * j * zoom}`);
-                    const number = this.scale.seconds.els[j + i*360 + o*60].number;
+                    const number = this.scale.seconds.els[j + i*3600 + o*60].number;
                     number.setAttribute("x", `${xsec + this.oneHour / 60 / 60 * j * zoom - 4}`);
                 }
             }
@@ -201,16 +201,16 @@ export class Coordinates
                                     {
                                         if (l % Math.round(60 / secondsToDisplay) == 0 && (l + j * 60 + o * 360) % 60 != 0)
                                         {
-                                            const line = this.scale.seconds.els[l + j * 60 + o * 360].line;
+                                            const line = this.scale.seconds.els[l + j * 60 + o * 3600].line;
                                             line.setAttribute("display", "inline");
-                                            const number = this.scale.seconds.els[l + j * 60 + o * 360].number;
+                                            const number = this.scale.seconds.els[l + j * 60 + o * 3600].number;
                                             number.setAttribute("display", "inline");
                                         }
                                         else
                                         {
-                                            const line = this.scale.seconds.els[l + j * 60 + o * 360].line;
+                                            const line = this.scale.seconds.els[l + j * 60 + o * 3600].line;
                                             line.setAttribute("display", "none");
-                                            const number = this.scale.seconds.els[l + j * 60 + o * 360].number;
+                                            const number = this.scale.seconds.els[l + j * 60 + o * 3600].number;
                                             number.setAttribute("display", "none");
                                         }
                                     }
