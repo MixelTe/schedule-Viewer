@@ -10,10 +10,10 @@ export class scheduleViewer
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private altPressed = false;
     private oneHour = 60;
-    private zoom = 80;
+    private zoom = 10;
     private zoomMin = 0.6;
-    private zoomMax = 100;
-    private zoomSpeed = 2;
+    private zoomMax = 1500;
+    private zoomSpeed = 1;
 
     constructor(svg: SVGSVGElement)
     {
@@ -39,7 +39,10 @@ export class scheduleViewer
         const dy = e.deltaY;
         const dz = (dy / Math.abs(dy)) * -1;
 
-        this.zoom = Math.max(Math.min(this.zoom + dz * this.zoomSpeed, this.zoomMax), this.zoomMin);
+        let speed = this.zoomSpeed;
+        if (this.zoom > 70) speed *= 4;
+        if (this.zoom > 200) speed *= 4;
+        this.zoom = Math.max(Math.min(this.zoom + dz * speed, this.zoomMax), this.zoomMin);
         this.zoom = Math.round(this.zoom * 100) / 100;
         console.log(this.zoom);
 
