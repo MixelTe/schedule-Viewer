@@ -8,7 +8,7 @@ export class Coordinates
     private axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
     private scale = {
         hours: { els: <any>[], color: "black", width: 2, height: 25, fontSize: 20 },
-        minutes: { els: <any>[], color: "black", width: 0.5, height: 20, fontSize: 12 },
+        minutes: { els: <any>[], color: "black", width: 0.5, height: 20, fontSize: 15 },
         seconds: { els: <any>[], color: "black", width: 2, height: 15, fontSize: 10 },
     }
     private oneHour: number;
@@ -34,6 +34,7 @@ export class Coordinates
         body.appendChild(this.axis.svgEl);
 
         this.createScale(body);
+        this.hideMinuts(1);
     }
     private createScale(body: SVGElement)
     {
@@ -62,7 +63,7 @@ export class Coordinates
             body.appendChild(this.scale.hours.els[i].number);
 
             x = this.axis.x + this.oneHour * (i - 1);
-            for (let o = 1; o < 60; o++)
+            for (let o = 0; o < 60; o++)
             {
                 const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
                 line.setAttribute("x1", `${x + this.oneHour / 60 * o}`);
@@ -82,7 +83,7 @@ export class Coordinates
 
                 this.scale.minutes.els[o + i*60] = { line, number };
                 body.appendChild(this.scale.minutes.els[o + i*60].line);
-                body.appendChild(this.scale.minutes.els[o + i*60].number);
+                body.appendChild(this.scale.minutes.els[o + i * 60].number);
             }
         }
     }
@@ -111,13 +112,49 @@ export class Coordinates
             number.setAttribute("x", `${x - 6}`);
 
             x = this.axis.x + this.oneHour * (i - 1) * zoom;
-            for (let o = 1; o < 60; o++)
+            for (let o = 0; o < 60; o++)
             {
                 const line = this.scale.minutes.els[o + i*60].line;
                 line.setAttribute("x1", `${x + this.oneHour / 60 * o * zoom}`);
                 line.setAttribute("x2", `${x + this.oneHour / 60 * o * zoom}`);
                 const number = this.scale.minutes.els[o + i*60].number;
                 number.setAttribute("x", `${x + this.oneHour / 60 * o * zoom - 6}`);
+            }
+        }
+        this.hideMinuts(zoom);
+    }
+
+    private hideMinuts(zoom: number)
+    {
+        const interHour = this.oneHour * zoom;
+        for (let i = 1; i < 60; i++)
+        {
+            const minutsToDisplay = Math.round(60 / i);
+            const interMinuts = interHour / minutsToDisplay;
+            if (interMinuts >= 25)
+            {
+                for (let o = 1; o <= 24; o++)
+                {
+                    for (let j = 0; j < 60; j++)
+                    {
+                        if (j % Math.round(60 / minutsToDisplay) == 0 && (j + o * 60) % 60 != 0)
+                        {
+                            const line = this.scale.minutes.els[j + o * 60].line;
+                            line.setAttribute("display", "inline");
+                            const number = this.scale.minutes.els[j + o * 60].number;
+                            number.setAttribute("display", "inline");
+                        }
+                        else
+                        {
+                            const line = this.scale.minutes.els[j + o * 60].line;
+                            line.setAttribute("display", "none");
+                            const number = this.scale.minutes.els[j + o * 60].number;
+                            number.setAttribute("display", "none");
+                        }
+
+                    }
+                }
+                break;
             }
         }
     }
