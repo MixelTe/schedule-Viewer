@@ -42,19 +42,19 @@ export class Coordinates
     {
         for (let i = 1; i <= this.DEVdisplayHours; i++)
         {
-            let x = this.axis.x + this.oneHour * i;
+            const xh = this.axis.x + this.oneHour * i;
             const y = this.axis.y + this.axis.height;
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", `${x}`);
+            line.setAttribute("x1", `${xh}`);
             line.setAttribute("y1", `${y - this.scale.hours.height / 3}`);
-            line.setAttribute("x2", `${x}`);
+            line.setAttribute("x2", `${xh}`);
             line.setAttribute("y2", `${y + this.scale.hours.height / 2}`);
             line.setAttribute("stroke", `${this.scale.hours.color}`);
             line.setAttribute("fill", `transparent`);
             line.setAttribute("stroke-width", `${this.scale.hours.width}`);
 
             const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            number.setAttribute("x", `${x - 6}`);
+            number.setAttribute("x", `${xh - 6}`);
             number.setAttribute("y", `${y + this.scale.hours.fontSize + this.scale.hours.height / 2}`);
             number.setAttribute("font-size", `${this.scale.hours.fontSize}`);
             number.setAttribute("fill", `${this.scale.hours.color}`);
@@ -64,13 +64,14 @@ export class Coordinates
             body.appendChild(this.scale.hours.els[i].line);
             body.appendChild(this.scale.hours.els[i].number);
 
-            x = this.axis.x + this.oneHour * (i - 1);
+            const xh2 = this.axis.x + this.oneHour * (i - 1);
             for (let o = 0; o < 60; o++)
             {
+                const xm = xh2 + this.oneHour / 60 * o;
                 const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", `${x + this.oneHour / 60 * o}`);
+                line.setAttribute("x1", `${xm}`);
                 line.setAttribute("y1", `${y - this.scale.minutes.height / 3}`);
-                line.setAttribute("x2", `${x + this.oneHour / 60 * o}`);
+                line.setAttribute("x2", `${xm}`);
                 line.setAttribute("y2", `${y + this.scale.minutes.height / 2}`);
                 line.setAttribute("stroke", `${this.scale.minutes.color}`);
                 line.setAttribute("fill", `transparent`);
@@ -78,24 +79,25 @@ export class Coordinates
                 line.setAttribute("display", "none");
 
                 const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                number.setAttribute("x", `${x + this.oneHour / 60 * o - 6}`);
+                number.setAttribute("x", `${xm - 6}`);
                 number.setAttribute("y", `${y + this.scale.minutes.fontSize + this.scale.minutes.height / 2}`);
                 number.setAttribute("font-size", `${this.scale.minutes.fontSize}`);
                 number.setAttribute("fill", `${this.scale.minutes.color}`);
                 number.setAttribute("display", "none");
                 number.innerHTML = `${o}`;
 
-                this.scale.minutes.els[o + i*60] = { line, number };
-                body.appendChild(this.scale.minutes.els[o + i*60].line);
-                body.appendChild(this.scale.minutes.els[o + i * 60].number);
+                const index = o + i * 60;
+                this.scale.minutes.els[index] = { line, number };
+                body.appendChild(this.scale.minutes.els[index].line);
+                body.appendChild(this.scale.minutes.els[index].number);
 
-                const xsec = x + this.oneHour / 60 * o;
                 for (let j = 0; j < 60; j++)
                 {
+                    const xs = xm + this.oneHour / 60 / 60 * j;
                     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                    line.setAttribute("x1", `${xsec + this.oneHour / 60 / 60 * j}`);
+                    line.setAttribute("x1", `${xs}`);
                     line.setAttribute("y1", `${y - this.scale.seconds.height / 3}`);
-                    line.setAttribute("x2", `${xsec + this.oneHour / 60 / 60 * j}`);
+                    line.setAttribute("x2", `${xs}`);
                     line.setAttribute("y2", `${y + this.scale.seconds.height / 2}`);
                     line.setAttribute("stroke", `${this.scale.seconds.color}`);
                     line.setAttribute("fill", `transparent`);
@@ -103,7 +105,7 @@ export class Coordinates
                     line.setAttribute("display", "none");
 
                     const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    number.setAttribute("x", `${xsec + this.oneHour / 60 / 60 * j - 4}`);
+                    number.setAttribute("x", `${xs - 4}`);
                     number.setAttribute("y", `${y + this.scale.seconds.fontSize + this.scale.seconds.height / 2}`);
                     number.setAttribute("font-size", `${this.scale.seconds.fontSize}`);
                     number.setAttribute("fill", `${this.scale.seconds.color}`);
@@ -132,35 +134,38 @@ export class Coordinates
 
         this.axis.svgEl.setAttribute("points", this.createAxisPoints());
 
-        for (let i = 1; i <= 1; i++)
+        for (let i = 1; i <= this.DEVdisplayHours; i++)
         {
-            let x = this.axis.x + this.oneHour * i * zoom;
+            const xh = this.axis.x + this.oneHour * i * zoom;
             const line = this.scale.hours.els[i].line;
-            line.setAttribute("x1", `${x}`);
-            line.setAttribute("x2", `${x}`);
+            line.setAttribute("x1", `${xh}`);
+            line.setAttribute("x2", `${xh}`);
 
             const number = this.scale.hours.els[i].number;
-            number.setAttribute("x", `${x - 6}`);
+            number.setAttribute("x", `${xh - 6}`);
 
-            x = this.axis.x + this.oneHour * (i - 1) * zoom;
+            const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 0; o < 60; o++)
             {
-                line.setAttribute("x1", `${x + this.oneHour / 60 * o * zoom}`);
-                line.setAttribute("x2", `${x + this.oneHour / 60 * o * zoom}`);
-                number.setAttribute("x", `${x + this.oneHour / 60 * o * zoom - 6}`);
                 const index = o + i * 60;
-                const line = this.scale.minutes.els[index].line;
-                const number = this.scale.minutes.els[index].number;
+                const xm = xh2 + this.oneHour / 60 * o * zoom
 
-                const xsec = x + this.oneHour / 60 * o * zoom;
+                const line = this.scale.minutes.els[index].line;
+                line.setAttribute("x1", `${xm}`);
+                line.setAttribute("x2", `${xm}`);
+                const number = this.scale.minutes.els[index].number;
+                number.setAttribute("x", `${xm - 6}`);
+
                 for (let j = 0; j < 60; j++)
                 {
-                    line.setAttribute("x1", `${xsec + this.oneHour / 60 / 60 * j * zoom}`);
-                    line.setAttribute("x2", `${xsec + this.oneHour / 60 / 60 * j * zoom}`);
-                    number.setAttribute("x", `${xsec + this.oneHour / 60 / 60 * j * zoom - 4}`);
                     const index = j + i * 3600 + o * 60;
+                    const xs = xm + this.oneHour / 60 / 60 * j * zoom;
+
                     const line = this.scale.seconds.els[index].line;
+                    line.setAttribute("x1", `${xs}`);
+                    line.setAttribute("x2", `${xs}`);
                     const number = this.scale.seconds.els[index].number;
+                    number.setAttribute("x", `${xs - 4}`);
                 }
             }
         }
