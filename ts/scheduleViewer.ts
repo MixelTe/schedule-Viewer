@@ -26,7 +26,7 @@ export class scheduleViewer
 
         {
             this.svgBody.appendChild(this.coordinatesBody);
-            this.coordinates = new Coordinates(this.coordinatesBody, this.parametrs, this.oneHour);
+            this.coordinates = new Coordinates(this.coordinatesBody, this.parametrs, this.oneHour, this.zoom);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
         document.addEventListener("keydown", (e) => {if (e.key == "Alt") this.altPressed = true;});

@@ -15,7 +15,7 @@ export class Coordinates
     }
     private oneHour: number;
 
-    constructor(body: SVGElement, bodyPrm: Rect, oneHour: number)
+    constructor(body: SVGElement, bodyPrm: Rect, oneHour: number, zoom = 1)
     {
         this.oneHour = oneHour;
         this.x = bodyPrm.x;
@@ -36,7 +36,7 @@ export class Coordinates
         body.appendChild(this.axis.svgEl);
 
         this.createScale(body);
-        this.hideSystem(1);
+        this.zoomIt(zoom, this.width);
     }
     private createAxisPoints()
     {
@@ -126,7 +126,7 @@ export class Coordinates
             }
         }
     }
-    
+
     public zoomIt(zoom: number, newWidth: number)
     {
         this.width = newWidth;
