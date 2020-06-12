@@ -38,6 +38,12 @@ export class Coordinates
         this.createScale(body);
         this.hideSystem(1);
     }
+    private createAxisPoints()
+    {
+        return `${this.axis.x} ${this.axis.y}
+                ${this.axis.x} ${this.axis.y + this.axis.height}
+                ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
+    }
     private createScale(body: SVGElement)
     {
         for (let i = 1; i <= this.DEVdisplayHours; i++)
@@ -120,13 +126,7 @@ export class Coordinates
             }
         }
     }
-    private createAxisPoints()
-    {
-        return `${this.axis.x} ${this.axis.y}
-                ${this.axis.x} ${this.axis.y + this.axis.height}
-                ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
-    }
-
+    
     public zoomIt(zoom: number, newWidth: number)
     {
         this.width = newWidth;
