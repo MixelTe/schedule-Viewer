@@ -10,10 +10,10 @@ export class scheduleViewer
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private altPressed = false;
     private oneHour = 60;
-    private zoom = 10;
+    private zoom = 20;
     private zoomMin = 0.6;
     private zoomMax = 1500;
-    private zoomSpeed = 1;
+    private zoomSpeed = 2;
 
     constructor(svg: SVGSVGElement)
     {
@@ -49,6 +49,6 @@ export class scheduleViewer
         const newWidth = this.oneHour * 25 * this.zoom + this.parametrs.x + 50;
         this.svgBody.setAttribute("width", `${newWidth}`);
         this.parametrs.width = this.oneHour * 25 * this.zoom;
-        this.coordinates.zoomIt(this.zoom, this.parametrs.width);
+        this.coordinates.recreateScale(this.coordinatesBody, this.zoom, this.parametrs.width);
     }
 }
