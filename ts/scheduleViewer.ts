@@ -8,10 +8,10 @@ export class scheduleViewer
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private altPressed = false;
     private oneHour = 60;
-    private zoom = 20;
+    private zoom = 0.9;
     private zoomMin = 0.6;
     private zoomMax = 1500;
-    private zoomSpeed = 2;
+    private zoomSpeed = 1;
     private translate = 0;
     private translateMin = 24 * 60 * 60 * -1;
     private translateMax = 0;
@@ -25,9 +25,11 @@ export class scheduleViewer
         const scgBCR = this.svgBody.getBoundingClientRect()
 
         const parametrs = { x: 50, y: 50, width: 0, height: 0 };
-        parametrs.width = this.oneHour * 25;
+        parametrs.width = scgBCR.width - scgBCR.x - parametrs.x;
         parametrs.height = scgBCR.height - parametrs.y - 70;
 
+        this.zoom = parametrs.width / (this.oneHour * 24);
+        console.log(this.zoom);
         {
             this.svgBody.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
@@ -41,7 +43,7 @@ export class scheduleViewer
             this.scroller.value = `${this.translate}`;
             this.scroller.style.top = `${scgBCR.y + scgBCR.height - parametrs.y + 20}px`;
             this.scroller.style.left = `${scgBCR.x + parametrs.x}px`;
-            this.scroller.style.width = `${scgBCR.width - parametrs.x - 5}px`;
+            this.scroller.style.width = `${scgBCR.width - parametrs.x - 7}px`;
             this.scroller.style.height = "20px";
             this.scroller.style.backgroundColor = "lightgray"
             this.scroller.style.border = "1px solid black"

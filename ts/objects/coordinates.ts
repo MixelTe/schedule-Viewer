@@ -77,7 +77,7 @@ export class Coordinates
                         const xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
                         {
-                            if (xm > this.width) break;
+                            if (xm > this.width + this.x) break;
                             if (xm > this.axis.x)
                             {
                                 const line = this.createLine(xm, y, this.scale.minutes);
@@ -101,7 +101,7 @@ export class Coordinates
                                         if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
                                         {
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
-                                            if (xs > this.width) break;
+                                            if (xs > this.width + this.x) break;
                                             if (xs < this.axis.x) continue;
                                             const line = this.createLine(xs, y, this.scale.seconds);
                                             const number = this.createNumber(xs-4, y, l, this.scale.seconds);
