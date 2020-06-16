@@ -67,6 +67,14 @@ export class scheduleViewer
                 this.coordinates.recreateScale(this.zoom, this.translate);
                 break;
 
+            case "ArrowLeft":
+                this.svgBody.setAttribute("width", `${this.svgBody.getBoundingClientRect().width - 10}`);
+                break;
+
+            case "ArrowRight":
+                this.svgBody.setAttribute("width", `${this.svgBody.getBoundingClientRect().width + 10}`);
+                break;
+
             default:
                 break;
         }

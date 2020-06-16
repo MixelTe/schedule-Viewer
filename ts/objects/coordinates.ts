@@ -5,8 +5,6 @@ export class Coordinates
     private x: number;
     private y: number;
 
-    private DEVdisplayHours = 2;
-
     private axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
     private scale = {
         hours: { els: <any>[], color: "black", width: 6, height: 25, fontSize: 20 },
@@ -55,9 +53,10 @@ export class Coordinates
 
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
-        for (let i = 1; i <= this.DEVdisplayHours; i++)
+        for (let i = 1; i <= 24; i++)
         {
             const xh = this.axis.x + this.oneHour * i * zoom;
+            if (xh - this.oneHour * zoom > this.width) break;
             const line = this.createLine(xh, y, this.scale.hours);
             const number = this.createNumber(xh-6, y, i, this.scale.hours);
 
@@ -74,17 +73,16 @@ export class Coordinates
                     for (let j = 0; j < 60; j++)
                     {
                         const index = j + i * 60;
-                        let xm = 0;
+                        let xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
                         {
-                            xm = xh2 + this.oneHour / 60 * j * zoom
+                            if (xm > this.width) break;
                             const line = this.createLine(xm, y, this.scale.minutes);
                             const number = this.createNumber(xm-6, y, j, this.scale.minutes);
 
                             this.body.appendChild(line);
                             this.body.appendChild(number);
                         }
-                        xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (o == 1)
                         {
                             for (let k = 1; k < 60; k++)
@@ -99,6 +97,7 @@ export class Coordinates
                                         if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
                                         {
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
+                                            if (xs > this.width) break;
                                             const line = this.createLine(xs, y, this.scale.seconds);
                                             const number = this.createNumber(xs-4, y, l, this.scale.seconds);
 
