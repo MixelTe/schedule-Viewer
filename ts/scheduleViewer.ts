@@ -4,8 +4,6 @@ export class scheduleViewer
 {
     private svgBody: SVGSVGElement;
 
-    private parametrs = { x: 50, y: 50, width: 0, height: 0 };
-
     private coordinates: Coordinates;
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private altPressed = false;
@@ -18,15 +16,15 @@ export class scheduleViewer
     constructor(svg: SVGSVGElement)
     {
         this.svgBody = svg;
-        this.svgBody.setAttribute("width", `${this.oneHour * 25 + this.parametrs.x + 50}`);
         const scgBCR = this.svgBody.getBoundingClientRect()
 
-        this.parametrs.width = this.oneHour * 25;
-        this.parametrs.height = scgBCR.height - this.parametrs.y - 50;
+        const parametrs = { x: 50, y: 50, width: 0, height: 0 };
+        parametrs.width = this.oneHour * 25;
+        parametrs.height = scgBCR.height - parametrs.y - 50;
 
         {
             this.svgBody.appendChild(this.coordinatesBody);
-            this.coordinates = new Coordinates(this.coordinatesBody, this.parametrs, this.oneHour, this.zoom);
+            this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
         document.addEventListener("keydown", (e) => {if (e.key == "Alt") this.altPressed = true;});
@@ -46,9 +44,6 @@ export class scheduleViewer
         this.zoom = Math.round(this.zoom * 100) / 100;
         console.log(this.zoom);
 
-        const newWidth = this.oneHour * 25 * this.zoom + this.parametrs.x + 50;
-        this.svgBody.setAttribute("width", `${newWidth}`);
-        this.parametrs.width = this.oneHour * 25 * this.zoom;
-        this.coordinates.recreateScale(this.coordinatesBody, this.zoom, this.parametrs.width);
+        this.coordinates.recreateScale(this.coordinatesBody, this.zoom);
     }
 }

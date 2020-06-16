@@ -28,34 +28,28 @@ export class Coordinates
         this.axis.width = this.width;
         this.axis.height = this.height;
 
-        // this.axis.svgEl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        // this.axis.svgEl.setAttribute("points", this.createAxisPoints());
-        // this.axis.svgEl.setAttribute("stroke", `${this.axis.color}`);
-        // this.axis.svgEl.setAttribute("fill", `transparent`);
-        // this.axis.svgEl.setAttribute("stroke-width", `${this.axis.sWidth}`);
-        // body.appendChild(this.axis.svgEl);
-
-        this.recreateScale(body, zoom, this.width);
+        this.recreateScale(body, zoom);
     }
-    private createAxisPoints()
+    private createAxis()
     {
-        return `${this.axis.x} ${this.axis.y}
-                ${this.axis.x} ${this.axis.y + this.axis.height}
-                ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
+        const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        axis.setAttribute("points",
+            `${this.axis.x} ${this.axis.y}
+            ${this.axis.x} ${this.axis.y + this.axis.height}
+            ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
+        );
+        axis.setAttribute("stroke", `${this.axis.color}`);
+        axis.setAttribute("fill", `transparent`);
+        axis.setAttribute("stroke-width", `${this.axis.sWidth}`);
+        return axis;
     }
-    public recreateScale(body: SVGElement, zoom: number, newWidth: number)
+    public recreateScale(body: SVGElement, zoom: number)
     {
-        this.width = newWidth;
-        this.axis.width = this.width;
+        this.width = this.oneHour * 25 * zoom;
 
         body.innerHTML = "";
 
-        this.axis.svgEl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        this.axis.svgEl.setAttribute("points", this.createAxisPoints());
-        this.axis.svgEl.setAttribute("stroke", `${this.axis.color}`);
-        this.axis.svgEl.setAttribute("fill", `transparent`);
-        this.axis.svgEl.setAttribute("stroke-width", `${this.axis.sWidth}`);
-        body.appendChild(this.axis.svgEl);
+        body.appendChild(this.createAxis());
 
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
