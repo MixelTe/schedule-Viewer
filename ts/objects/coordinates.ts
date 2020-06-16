@@ -55,15 +55,16 @@ export class Coordinates
         const interHour = this.oneHour * zoom;
         for (let i = 1; i <= 24; i++)
         {
-            const xh = this.axis.x + this.oneHour * i * zoom;
-            if (xh - this.oneHour * zoom > this.width) break;
+            const xh = this.axis.x + this.oneHour * i * zoom + translate;
+            if (xh - interHour > this.width) break;
+            if (xh < this.axis.x) continue;
             const line = this.createLine(xh, y, this.scale.hours);
             const number = this.createNumber(xh-6, y, i, this.scale.hours);
 
             this.body.appendChild(line);
             this.body.appendChild(number);
 
-            const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
+            const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom + translate;
             for (let o = 1; o < 60; o++)
             {
                 const minutsToDisplay = Math.round(60 / o);
@@ -73,15 +74,18 @@ export class Coordinates
                     for (let j = 0; j < 60; j++)
                     {
                         const index = j + i * 60;
-                        let xm = xh2 + this.oneHour / 60 * j * zoom;
+                        const xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
                         {
                             if (xm > this.width) break;
-                            const line = this.createLine(xm, y, this.scale.minutes);
-                            const number = this.createNumber(xm-6, y, j, this.scale.minutes);
+                            if (xm > this.axis.x)
+                            {
+                                const line = this.createLine(xm, y, this.scale.minutes);
+                                const number = this.createNumber(xm - 6, y, j, this.scale.minutes);
 
-                            this.body.appendChild(line);
-                            this.body.appendChild(number);
+                                this.body.appendChild(line);
+                                this.body.appendChild(number);
+                            }
                         }
                         if (o == 1)
                         {
@@ -98,6 +102,7 @@ export class Coordinates
                                         {
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
                                             if (xs > this.width) break;
+                                            if (xs < this.axis.x) continue;
                                             const line = this.createLine(xs, y, this.scale.seconds);
                                             const number = this.createNumber(xs-4, y, l, this.scale.seconds);
 

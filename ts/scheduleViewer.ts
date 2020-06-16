@@ -13,8 +13,8 @@ export class scheduleViewer
     private zoomMax = 1500;
     private zoomSpeed = 2;
     private translate = 0;
-    private translateMin = 0;
-    private translateMax = 200;
+    private translateMin = 24 * 60 * 60 * -1;
+    private translateMax = 0;
     private translateSpeed = 1;
 
     constructor(svg: SVGSVGElement)
@@ -48,7 +48,8 @@ export class scheduleViewer
         this.zoom = Math.round(this.zoom * 100) / 100;
         console.log(this.zoom);
 
-        this.coordinates.recreateScale(this.zoom, this.translate);
+        // this.translateMin = this.oneHour * 24 * this.zoom * -1 + 10;
+        this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
     }
     keyDown(e: KeyboardEvent)
     {
@@ -58,13 +59,19 @@ export class scheduleViewer
                 break;
 
             case "ArrowDown":
-                this.translate = Math.max(this.translate - this.translateSpeed, this.translateMin);
-                this.coordinates.recreateScale(this.zoom, this.translate);
+                {
+                    const speed = (3600 / this.zoom / 2) * this.translateSpeed;
+                    this.translate = Math.max(this.translate - speed, this.translateMin);
+                    this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
+                }
                 break;
 
             case "ArrowUp":
-                this.translate = Math.min(this.translate + this.translateSpeed, this.translateMax);
-                this.coordinates.recreateScale(this.zoom, this.translate);
+                {
+                    const speed = (3600 / this.zoom / 2) * this.translateSpeed;
+                    this.translate = Math.min(this.translate + speed, this.translateMax);
+                    this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
+                }
                 break;
 
             case "ArrowLeft":
@@ -79,5 +86,6 @@ export class scheduleViewer
                 break;
         }
         console.log(this.translate);
+        console.log(this.translateMin);
     }
 }
