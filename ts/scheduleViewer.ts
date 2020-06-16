@@ -12,6 +12,10 @@ export class scheduleViewer
     private zoomMin = 0.6;
     private zoomMax = 1500;
     private zoomSpeed = 2;
+    private translate = 0;
+    private translateMin = 0;
+    private translateMax = 200;
+    private translateSpeed = 1;
 
     constructor(svg: SVGSVGElement)
     {
@@ -27,7 +31,7 @@ export class scheduleViewer
             this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
-        document.addEventListener("keydown", (e) => {if (e.key == "Alt") this.altPressed = true;});
+        document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) =>   {if (e.key == "Alt") this.altPressed = false;});
     }
 
@@ -44,6 +48,28 @@ export class scheduleViewer
         this.zoom = Math.round(this.zoom * 100) / 100;
         console.log(this.zoom);
 
-        this.coordinates.recreateScale(this.coordinatesBody, this.zoom);
+        this.coordinates.recreateScale(this.zoom, this.translate);
+    }
+    keyDown(e: KeyboardEvent)
+    {
+        switch (e.key) {
+            case "Alt":
+                this.altPressed = true;
+                break;
+
+            case "ArrowDown":
+                this.translate = Math.max(this.translate - this.translateSpeed, this.translateMin);
+                this.coordinates.recreateScale(this.zoom, this.translate);
+                break;
+
+            case "ArrowUp":
+                this.translate = Math.min(this.translate + this.translateSpeed, this.translateMax);
+                this.coordinates.recreateScale(this.zoom, this.translate);
+                break;
+
+            default:
+                break;
+        }
+        console.log(this.translate);
     }
 }

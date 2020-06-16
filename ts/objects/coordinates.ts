@@ -14,9 +14,11 @@ export class Coordinates
         seconds: { els: <any>[], color: "black", width: 2, height: 15, fontSize: 10 },
     }
     private oneHour: number;
+    private body: SVGElement;
 
-    constructor(body: SVGElement, bodyPrm: Rect, oneHour: number, zoom = 1)
+    constructor(body: SVGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0)
     {
+        this.body = body;
         this.oneHour = oneHour;
         this.x = bodyPrm.x;
         this.y = bodyPrm.y;
@@ -28,7 +30,7 @@ export class Coordinates
         this.axis.width = this.width;
         this.axis.height = this.height;
 
-        this.recreateScale(body, zoom);
+        this.recreateScale(zoom, translate);
     }
     private createAxis()
     {
@@ -36,20 +38,20 @@ export class Coordinates
         axis.setAttribute("points",
             `${this.axis.x} ${this.axis.y}
             ${this.axis.x} ${this.axis.y + this.axis.height}
-            ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
+            ${this.axis.x + this.width} ${this.axis.y + this.axis.height}`
         );
         axis.setAttribute("stroke", `${this.axis.color}`);
         axis.setAttribute("fill", `transparent`);
         axis.setAttribute("stroke-width", `${this.axis.sWidth}`);
         return axis;
     }
-    public recreateScale(body: SVGElement, zoom: number)
+    public recreateScale(zoom: number, translate: number)
     {
-        this.width = this.oneHour * 25 * zoom;
+        this.axis.width = this.oneHour * 25 * zoom;
 
-        body.innerHTML = "";
+        this.body.innerHTML = "";
 
-        body.appendChild(this.createAxis());
+        this.body.appendChild(this.createAxis());
 
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
@@ -59,8 +61,8 @@ export class Coordinates
             const line = this.createLine(xh, y, this.scale.hours);
             const number = this.createNumber(xh-6, y, i, this.scale.hours);
 
-            body.appendChild(line);
-            body.appendChild(number);
+            this.body.appendChild(line);
+            this.body.appendChild(number);
 
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 1; o < 60; o++)
@@ -79,8 +81,8 @@ export class Coordinates
                             const line = this.createLine(xm, y, this.scale.minutes);
                             const number = this.createNumber(xm-6, y, j, this.scale.minutes);
 
-                            body.appendChild(line);
-                            body.appendChild(number);
+                            this.body.appendChild(line);
+                            this.body.appendChild(number);
                         }
                         xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (o == 1)
@@ -100,8 +102,8 @@ export class Coordinates
                                             const line = this.createLine(xs, y, this.scale.seconds);
                                             const number = this.createNumber(xs-4, y, l, this.scale.seconds);
 
-                                            body.appendChild(line);
-                                            body.appendChild(number);
+                                            this.body.appendChild(line);
+                                            this.body.appendChild(number);
                                         }
                                     }
                                     break;
