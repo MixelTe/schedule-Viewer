@@ -17,6 +17,8 @@ export class scheduleViewer
     private translateMax = 0;
     private translateSpeed = 1;
 
+    private scroller = document.createElement("input");
+
     constructor(svg: SVGSVGElement)
     {
         this.svgBody = svg;
@@ -24,15 +26,32 @@ export class scheduleViewer
 
         const parametrs = { x: 50, y: 50, width: 0, height: 0 };
         parametrs.width = this.oneHour * 25;
-        parametrs.height = scgBCR.height - parametrs.y - 50;
+        parametrs.height = scgBCR.height - parametrs.y - 70;
 
         {
             this.svgBody.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
+
+            this.scroller.style.position = "absolute";
+            this.scroller.style.webkitAppearance = "none";
+            this.scroller.className = "scheduleViewer_scroller";
+            this.scroller.type = "range";
+            this.scroller.max = `${-this.translateMin}`;
+            this.scroller.min = `${this.translateMax}`;
+            this.scroller.value = `${this.translate}`;
+            this.scroller.style.top = `${scgBCR.y + scgBCR.height - parametrs.y + 20}px`;
+            this.scroller.style.left = `${scgBCR.x + parametrs.x}px`;
+            this.scroller.style.width = `${scgBCR.width - parametrs.x - 5}px`;
+            this.scroller.style.height = "20px";
+            this.scroller.style.backgroundColor = "lightgray"
+            this.scroller.style.border = "1px solid black"
+            this.scroller.style.borderRadius = "3px"
+            this.svgBody.parentNode?.appendChild(this.scroller);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
+        this.scroller.addEventListener("input", () => this.scrollerInput());
         document.addEventListener("keydown", (e) => this.keyDown(e));
-        document.addEventListener("keyup", (e) =>   {if (e.key == "Alt") this.altPressed = false;});
+        document.addEventListener("keyup", (e) => { if (e.key == "Alt") this.altPressed = false; });
     }
 
     mouseWheel(e: WheelEvent)
@@ -85,5 +104,10 @@ export class scheduleViewer
                 break;
         }
         // console.log(this.translate);
+    }
+    scrollerInput()
+    {
+        this.translate = -parseInt(this.scroller.value);
+        this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
     }
 }
