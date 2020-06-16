@@ -46,9 +46,8 @@ export class scheduleViewer
         if (this.zoom > 200) speed *= 4;
         this.zoom = Math.max(Math.min(this.zoom + dz * speed, this.zoomMax), this.zoomMin);
         this.zoom = Math.round(this.zoom * 100) / 100;
-        console.log(this.zoom);
+        // console.log(this.zoom);
 
-        // this.translateMin = this.oneHour * 24 * this.zoom * -1 + 10;
         this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
     }
     keyDown(e: KeyboardEvent)
@@ -85,7 +84,6 @@ export class scheduleViewer
             default:
                 break;
         }
-        console.log(this.translate);
-        console.log(this.translateMin);
+        // console.log(this.translate);
     }
 }
