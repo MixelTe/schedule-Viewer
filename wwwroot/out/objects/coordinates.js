@@ -127,6 +127,7 @@ export class Coordinates {
         separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
         this.scale.separateLine.el = separateLine;
         this.body.appendChild(separateLine);
+        if (!this.scale.separateLine.visible) this.scale.separateLine.el.setAttribute("display", `none`);
     }
     createLine(x, y, parametrs, changeParametrs = {}) {
         const newParametrs = Object.assign({}, parametrs, changeParametrs);
