@@ -2,8 +2,6 @@ export class Coordinates
 {
     private width: number;
     private height: number;
-    public x: number;
-    private y: number;
 
     private axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
     private scale = {
@@ -18,25 +16,23 @@ export class Coordinates
     {
         this.body = body;
         this.oneHour = oneHour;
-        this.x = bodyPrm.x;
-        this.y = bodyPrm.y;
         this.width = bodyPrm.width;
         this.height = bodyPrm.height;
 
-        this.axis.x = this.x;
-        this.axis.y = this.y;
+        this.axis.x = 10;
+        this.axis.y = 10;
         this.axis.width = this.width;
-        this.axis.height = this.height;
+        this.axis.height = this.height - 65;
 
         this.recreateScale(zoom, translate);
     }
-    private createAxis()
+    private createAxis(translate = 0)
     {
         const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         axis.setAttribute("points",
-            `${this.axis.x} ${this.axis.y}
-            ${this.axis.x} ${this.axis.y + this.axis.height}
-            ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
+            `${this.axis.x + translate} ${this.axis.y}
+            ${this.axis.x + translate} ${this.axis.y + this.axis.height}
+            ${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}`
         );
         axis.setAttribute("stroke", `${this.axis.color}`);
         axis.setAttribute("fill", `transparent`);
@@ -45,11 +41,10 @@ export class Coordinates
     }
     public recreateScale(zoom: number, translate: number)
     {
-        this.axis.width = this.oneHour * 25 * zoom;
-
+        this.axis.width = Math.max(this.oneHour * 25 * zoom, this.width);
         this.body.innerHTML = "";
 
-        this.body.appendChild(this.createAxis());
+        this.body.appendChild(this.createAxis(translate));
 
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
@@ -77,7 +72,7 @@ export class Coordinates
                         const xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
                         {
-                            if (xm > this.width + this.x + translate) break;
+                            if (xm > this.width + translate) break;
                             if (xm > this.axis.x + translate)
                             {
                                 const line = this.createLine(xm, y, this.scale.minutes);
@@ -101,7 +96,7 @@ export class Coordinates
                                         if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
                                         {
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
-                                            if (xs > this.width + this.x + translate) break;
+                                            if (xs > this.width + translate) break;
                                             if (xs < this.axis.x + translate) continue;
                                             const line = this.createLine(xs, y, this.scale.seconds);
                                             const number = this.createNumber(xs-4, y, l, this.scale.seconds);

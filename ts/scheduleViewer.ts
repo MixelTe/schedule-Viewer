@@ -19,26 +19,22 @@ export class scheduleViewer
     constructor(body: HTMLDivElement)
     {
         this.body = body;
-        const scgBCR = this.body.getBoundingClientRect()
 
         this.svgBody.style.height = "100%";
-        this.svgDiv.style.height = "100%";
-        this.svgDiv.style.width = "100%";
+        this.svgDiv.style.height = "calc(100% - 50px)";
+        this.svgDiv.style.width = "calc(100% - 50px)";
         this.svgDiv.style.overflowX = "scroll";
         this.svgDiv.style.overflowY = "hidden";
         this.body.appendChild(this.svgDiv);
         this.svgDiv.appendChild(this.svgBody);
 
-        const parametrs = { x: 50, y: 50, width: 0, height: 0 };
-        parametrs.width = scgBCR.width - scgBCR.x - parametrs.x;
-        parametrs.height = scgBCR.height - parametrs.y - 70;
-
-        this.zoom = parametrs.width / (this.oneHour * 25);
-        this.svgBody.style.width = `${this.oneHour * this.zoom * 25 + parametrs.x}`;
+        const scgBCR = this.svgDiv.getBoundingClientRect()
+        this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
+        this.svgBody.style.width = `${this.oneHour * this.zoom * 25}`;
         console.log(this.zoom);
         {
             this.svgBody.appendChild(this.coordinatesBody);
-            this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
+            this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
         this.svgDiv.addEventListener("scroll", () => this.scrollDiv());
@@ -59,7 +55,7 @@ export class scheduleViewer
         this.zoom = Math.round(this.zoom * 100) / 100;
         // console.log(this.zoom);
 
-        this.svgBody.style.width = `${this.oneHour * this.zoom * 25 + this.coordinates.x}`;
+        this.svgBody.style.width = `${Math.max(this.oneHour * this.zoom * 25, this.svgDiv.getBoundingClientRect().width)}`;
         this.coordinates.recreateScale(this.zoom, this.translate);
     }
     keyDown(e: KeyboardEvent)
