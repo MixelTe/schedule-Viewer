@@ -44,7 +44,11 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom);
 
-            this.lines.createLine({ y: 30, color: "green", width: 4, dasharray: "8, 5" }, this.coordinates.axis, this.body.scrollLeft)
+            this.lines.createLine({ y: scgBCR.height - 90, color: "lightgreen", width: 4, dasharray: [20, 10] });
+            this.lines.createLine({ y: scgBCR.height - 120, color: "green", width: 4, dasharray: [60, 30] });
+            this.lines.createLine({ y: scgBCR.height - 150, color: "blue", width: 4, dasharray: [5, 200] });
+            this.lines.createLine({ y: scgBCR.height - 180, color: "lightblue", width: 4, dasharray: [30, 30] });
+            this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => { this.mouseWheel(e) });
         this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
@@ -80,7 +84,7 @@ export class Grafic
         this.body.scroll(newTranslate, 0)
         if (this.body.scrollLeft == 0) this.zoomFix.delta = zoomFixPointX;
         this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
-        this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft);
+        this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
     }
     private mouseClick(e: MouseEvent, needRecreate = false)
     {
@@ -91,7 +95,7 @@ export class Grafic
         this.zoomFix.second = second;
         this.coordinates.changeZoomFixPoint(second);
         if (needRecreate) this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
-        if (needRecreate) this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft);
+        if (needRecreate) this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         // console.log(second);
     }
     private keyDown(e: KeyboardEvent)
@@ -133,6 +137,6 @@ export class Grafic
         this.zoomFix.delta = zoomFixPointX - scrollLeft;
 
         this.coordinates.recreateScale(this.zoom, scrollLeft);
-        this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft);
+        this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
     }
 }

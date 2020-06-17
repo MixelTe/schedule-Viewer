@@ -5,7 +5,7 @@ export class Lines
 
     private oneHour: number;
     private body: SVGGElement;
-    private lines: { y: number, color: string, width: number, dasharray: string }[];
+    private lines: { y: number, color: string, width: number, dasharray: number[] }[];
     private clipRect: SVGRectElement;
 
     constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1)
@@ -26,10 +26,10 @@ export class Lines
         clipPath.appendChild(this.clipRect);
 
         this.lines = [];
-        this.recreateLines(axis, 0);
+        this.recreateLines(axis, 0, zoom);
     }
 
-    public recreateLines(axis: Rect, scroll: number)
+    public recreateLines(axis: Rect, scroll: number, zoom: number)
     {
         this.body.innerHTML = "";
 
@@ -46,14 +46,15 @@ export class Lines
             line.setAttribute("y2", `${el.y}`);
             line.setAttribute("stroke", `${el.color}`);
             line.setAttribute("stroke-width", `${el.width}`);
-            line.setAttribute("stroke-dasharray", `${el.dasharray}`);
+            line.setAttribute("stroke-dasharray", `
+            ${el.dasharray[0] * (this.oneHour / 60 / 60 * zoom)},
+            ${el.dasharray[1] * (this.oneHour / 60 / 60 * zoom)}`);
             line.setAttribute("clip-path", "url(#graficLinesClip)");
             this.body.appendChild(line);
         });
     }
-    public createLine(parametrs: { y: number, color: string, width: number, dasharray: string }, axis: Rect, scroll: number)
+    public createLine(parametrs: { y: number, color: string, width: number, dasharray: number[] })
     {
-        this.lines.push({ y: parametrs.y, color: parametrs.color, width: parametrs.width, dasharray: parametrs.dasharray });
-        this.recreateLines(axis, scroll);
+        this.lines.push({ y: parametrs.y, color: parametrs.color, width: parametrs.width, dasharray: parametrs.dasharray});
     }
 }
