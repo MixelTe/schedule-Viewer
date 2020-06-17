@@ -3,11 +3,12 @@ export class Coordinates
     private width: number;
     private height: number;
 
-    private axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
+    public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
     private scale = {
         hours: { els: <any>[], color: "black", width: 6, height: 25, fontSize: 20 },
         minutes: { els: <any>[], color: "black", width: 4, height: 20, fontSize: 15 },
         seconds: { els: <any>[], color: "black", width: 2, height: 15, fontSize: 10 },
+        zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
     private oneHour: number;
     private body: SVGGElement;
@@ -114,6 +115,13 @@ export class Coordinates
                 }
             }
         }
+
+        const zoomFixPoint = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        zoomFixPoint.setAttribute("cx", `${this.axis.x + this.scale.zoomFixPoint.second * (this.oneHour / 60 / 60 * zoom)}`);
+        zoomFixPoint.setAttribute("cy", `${this.axis.y + this.axis.height}`);
+        zoomFixPoint.setAttribute("r", `${this.scale.zoomFixPoint.radius}`);
+        zoomFixPoint.setAttribute("fill", `${this.scale.zoomFixPoint.color}`);
+        this.body.appendChild(zoomFixPoint);
     }
 
     private createLine(x: number, y: number, parametrs: {height: number, width: number, color: string})
@@ -138,5 +146,10 @@ export class Coordinates
         number.setAttribute("fill", `${parametrs.color}`);
         number.innerHTML = `${value}`;
         return number;
+    }
+
+    public changeZoomFixPoint(second: number)
+    {
+        this.scale.zoomFixPoint.second = second;
     }
 }

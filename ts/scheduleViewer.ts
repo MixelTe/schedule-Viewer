@@ -14,15 +14,15 @@ export class scheduleViewer
     private zoomMin = 0.4;
     private zoomMax = 1500;
     private zoomSpeed = 1;
-    private translate = 0;
+    private zoomFix = {second: 0, delta: 0}
 
     constructor(body: HTMLDivElement)
     {
         this.body = body;
 
         this.svg.style.height = "100%";
-        this.svgDiv.style.height = "calc(100% - 50px)";
-        this.svgDiv.style.width = "calc(100% - 50px)";
+        this.svgDiv.style.height = "calc(100% - 0px)";
+        this.svgDiv.style.width = "calc(100% - 0px)";
         this.svgDiv.style.overflowX = "scroll";
         this.svgDiv.style.overflowY = "hidden";
         this.body.appendChild(this.svgDiv);
@@ -37,6 +37,7 @@ export class scheduleViewer
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
+        this.svg.addEventListener("click", (e) => this.mouseClick(e));
         this.svgDiv.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Alt") this.altPressed = false; });
@@ -56,7 +57,20 @@ export class scheduleViewer
         // console.log(this.zoom);
 
         this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 25, this.svgDiv.getBoundingClientRect().width)}`;
-        this.coordinates.recreateScale(this.zoom, this.translate);
+        const newTranslate = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom) - this.zoomFix.delta;
+        this.svgDiv.scroll(newTranslate, 0)
+        this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
+    }
+    mouseClick(e: MouseEvent)
+    {
+        const x = e.offsetX - this.coordinates.axis.x;
+        const xAbs = e.offsetX - this.svgDiv.scrollLeft;
+        const second = Math.floor(x / (this.oneHour / 3600 * this.zoom));
+        this.zoomFix.delta = xAbs;
+        this.zoomFix.second = second;
+        this.coordinates.changeZoomFixPoint(second);
+        this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
+        // console.log(second);
     }
     keyDown(e: KeyboardEvent)
     {
@@ -80,7 +94,6 @@ export class scheduleViewer
     }
     scrollDiv()
     {
-        this.translate = this.svgDiv.scrollLeft;
-        this.coordinates.recreateScale(this.zoom, this.translate);
+        this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
     }
 }
