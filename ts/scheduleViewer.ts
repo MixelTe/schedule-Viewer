@@ -1,4 +1,5 @@
 import { Coordinates } from "./objects/coordinates.js";
+import { Lines } from "./objects/lines.js";
 
 export class scheduleViewer
 {
@@ -8,6 +9,8 @@ export class scheduleViewer
 
     private coordinates: Coordinates;
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    private lines: Lines;
+    private linesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private zoomActive = false;
     private oneHour = 60;
     private zoom = 2;
@@ -39,6 +42,9 @@ export class scheduleViewer
         {
             this.svg.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
+
+            this.svg.appendChild(this.linesBody);
+            this.lines = new Lines(this.linesBody, scgBCR, this.oneHour, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => { if (this.zoomActive) this.mouseWheel(e) });
         this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
