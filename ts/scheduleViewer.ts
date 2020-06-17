@@ -4,7 +4,7 @@ export class scheduleViewer
 {
     private body: HTMLDivElement;
     private svgDiv = document.createElement("div");
-    private svgBody = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    private svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
     private coordinates: Coordinates;
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -20,23 +20,23 @@ export class scheduleViewer
     {
         this.body = body;
 
-        this.svgBody.style.height = "100%";
+        this.svg.style.height = "100%";
         this.svgDiv.style.height = "calc(100% - 50px)";
         this.svgDiv.style.width = "calc(100% - 50px)";
         this.svgDiv.style.overflowX = "scroll";
         this.svgDiv.style.overflowY = "hidden";
         this.body.appendChild(this.svgDiv);
-        this.svgDiv.appendChild(this.svgBody);
+        this.svgDiv.appendChild(this.svg);
 
         const scgBCR = this.svgDiv.getBoundingClientRect()
         this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
-        this.svgBody.style.width = `${this.oneHour * this.zoom * 25}`;
+        this.svg.style.width = `${this.oneHour * this.zoom * 25}`;
         console.log(this.zoom);
         {
-            this.svgBody.appendChild(this.coordinatesBody);
+            this.svg.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
         }
-        this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
+        this.svg.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
         this.svgDiv.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Alt") this.altPressed = false; });
@@ -55,7 +55,7 @@ export class scheduleViewer
         this.zoom = Math.round(this.zoom * 100) / 100;
         // console.log(this.zoom);
 
-        this.svgBody.style.width = `${Math.max(this.oneHour * this.zoom * 25, this.svgDiv.getBoundingClientRect().width)}`;
+        this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 25, this.svgDiv.getBoundingClientRect().width)}`;
         this.coordinates.recreateScale(this.zoom, this.translate);
     }
     keyDown(e: KeyboardEvent)
@@ -66,11 +66,11 @@ export class scheduleViewer
                 break;
 
             case "ArrowLeft":
-                this.svgBody.setAttribute("width", `${this.svgBody.getBoundingClientRect().width - 10}`);
+                this.svg.setAttribute("width", `${this.svg.getBoundingClientRect().width - 10}`);
                 break;
 
             case "ArrowRight":
-                this.svgBody.setAttribute("width", `${this.svgBody.getBoundingClientRect().width + 10}`);
+                this.svg.setAttribute("width", `${this.svg.getBoundingClientRect().width + 10}`);
                 break;
 
             default:
