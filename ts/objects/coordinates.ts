@@ -123,7 +123,7 @@ export class Coordinates
         zoomFixPoint.setAttribute("cy", `${this.axis.y + this.axis.height}`);
         zoomFixPoint.setAttribute("r", `${this.scale.zoomFixPoint.radius}`);
         zoomFixPoint.setAttribute("fill", `${this.scale.zoomFixPoint.color}`);
-        this.body.appendChild(zoomFixPoint);
+        // this.body.appendChild(zoomFixPoint);
     }
 
     private createLine(x: number, y: number, parametrs: {height: number, width: number, color: string})

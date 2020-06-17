@@ -8,13 +8,14 @@ export class scheduleViewer
 
     private coordinates: Coordinates;
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    private altPressed = false;
+    private zoomActive = false;
     private oneHour = 60;
     private zoom = 2;
     private zoomMin = 0.4;
     private zoomMax = 1500;
     private zoomSpeed = 1;
-    private zoomFix = {second: 0, delta: 0}
+    private zoomFix = { second: 0, delta: 0 };
+    private lastTime = 0;
 
     constructor(body: HTMLDivElement)
     {
@@ -36,16 +37,23 @@ export class scheduleViewer
             this.svg.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
         }
-        this.svg.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
-        this.svg.addEventListener("click", (e) => this.mouseClick(e));
+        this.svg.addEventListener("wheel", (e) => { if (this.zoomActive) this.mouseWheel(e) });
+        this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
         this.svgDiv.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
-        document.addEventListener("keyup", (e) => { if (e.key == "Alt") this.altPressed = false; });
+        document.addEventListener("keyup", (e) => { if (e.code == "KeyZ") this.zoomActive = false; });
     }
 
     mouseWheel(e: WheelEvent)
     {
         e.preventDefault();
+        const curTime = new Date().getTime();
+        if (curTime - this.lastTime > 300)
+        {
+            this.mouseClick(e);
+        }
+        this.lastTime = curTime;
+
         const dy = e.deltaY;
         const dz = (dy / Math.abs(dy)) * -1;
 
@@ -65,7 +73,7 @@ export class scheduleViewer
         if (this.svgDiv.scrollLeft == 0) this.zoomFix.delta = zoomFixPointX;
         this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
     }
-    mouseClick(e: MouseEvent)
+    mouseClick(e: MouseEvent, needRecreate = false)
     {
         const x = e.offsetX - this.coordinates.axis.x;
         const xAbs = e.offsetX - this.svgDiv.scrollLeft;
@@ -73,16 +81,12 @@ export class scheduleViewer
         this.zoomFix.delta = xAbs;
         this.zoomFix.second = second;
         this.coordinates.changeZoomFixPoint(second);
-        this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
+        if (needRecreate) this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
         // console.log(second);
     }
     keyDown(e: KeyboardEvent)
     {
         switch (e.key) {
-            case "Alt":
-                this.altPressed = true;
-                break;
-
             case "ArrowLeft":
                 this.svg.setAttribute("width", `${this.svg.getBoundingClientRect().width - 10}`);
                 break;
@@ -94,7 +98,11 @@ export class scheduleViewer
             default:
                 break;
         }
-        // console.log(this.translate);
+        switch (e.code) {
+            case "KeyZ":
+                this.zoomActive = true;
+                break;
+        }
     }
     scrollDiv()
     {
