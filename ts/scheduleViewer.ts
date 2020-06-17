@@ -20,6 +20,7 @@ export class scheduleViewer
     constructor(body: HTMLDivElement)
     {
         this.body = body;
+        this.body.style.overflow = "hidden";
 
         this.svg.style.height = "100%";
         this.svgDiv.style.height = "calc(100% - 0px)";
@@ -29,10 +30,12 @@ export class scheduleViewer
         this.body.appendChild(this.svgDiv);
         this.svgDiv.appendChild(this.svg);
 
-        const scgBCR = this.svgDiv.getBoundingClientRect()
+        const scgBCR = this.svgDiv.getBoundingClientRect();
+        this.svgDiv.style.height = `${scgBCR.height}px`;
+        this.svgDiv.style.width = `${scgBCR.width}px`;
+
         this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
         this.svg.style.width = `${this.oneHour * this.zoom * 25}`;
-        console.log(this.zoom);
         {
             this.svg.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
