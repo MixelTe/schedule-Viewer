@@ -126,26 +126,29 @@ export class Coordinates
         // this.body.appendChild(zoomFixPoint);
     }
 
-    private createLine(x: number, y: number, parametrs: {height: number, width: number, color: string})
+    private createLine(x: number, y: number, parametrs: {height: number, width: number, color: number[]}, changeParametrs = {})
     {
+        const newParametrs = Object.assign({}, parametrs, changeParametrs);
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("x1", `${x}`);
-        line.setAttribute("y1", `${y - parametrs.height / 3}`);
+        line.setAttribute("y1", `${y - newParametrs.height / 3}`);
         line.setAttribute("x2", `${x}`);
-        line.setAttribute("y2", `${y + parametrs.height / 2}`);
-        line.setAttribute("stroke", `${parametrs.color}`);
+        line.setAttribute("y2", `${y + newParametrs.height / 2}`);
+        line.setAttribute("stroke", `hsl(${newParametrs.color[0]}, ${newParametrs.color[1]}%, ${newParametrs.color[2]}%)`);
         line.setAttribute("fill", `transparent`);
-        line.setAttribute("stroke-width", `${parametrs.width}`);
+        line.setAttribute("stroke-width", `${newParametrs.width}`);
         return line;
     }
 
-    private createNumber(x: number, y: number, value: number, parametrs: {fontSize: number, height: number, color: string})
+    private createNumber(x: number, y: number, value: number, parametrs: {fontSize: number, height: number, color: number[], fontFamily: string}, changeParametrs = {})
     {
+        const newParametrs = Object.assign({}, parametrs, changeParametrs);
         const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
         number.setAttribute("x", `${x}`);
-        number.setAttribute("y", `${y + parametrs.fontSize + parametrs.height / 2}`);
-        number.setAttribute("font-size", `${parametrs.fontSize}`);
-        number.setAttribute("fill", `${parametrs.color}`);
+        number.setAttribute("y", `${y + newParametrs.fontSize + newParametrs.height / 2}`);
+        number.setAttribute("font-size", `${newParametrs.fontSize}`);
+        number.setAttribute("font-family", `${newParametrs.fontFamily}`);
+        number.setAttribute("fill", `hsl(${newParametrs.color[0]}, ${newParametrs.color[1]}%, ${newParametrs.color[2]}%)`);
         number.innerHTML = `${value}`;
         return number;
     }
