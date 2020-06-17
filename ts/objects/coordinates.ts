@@ -3,11 +3,11 @@ export class Coordinates
     private width: number;
     private height: number;
 
-    public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
+    public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 3 };
     private scale = {
-        hours: { els: <any>[], color: [240, 100, 27], width: 6, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
-        minutes: { els: <any>[], color: [240, 100, 50], width: 4, height: 20, fontSize: 15, fontFamily: "Verdana, sans-serif" },
-        seconds: { els: <any>[], color: [210, 100, 40], width: 2, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
+        hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
+        minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
+        seconds: { els: <any>[], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
         zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
     private minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -78,8 +78,17 @@ export class Coordinates
                             if (xm > this.width + translate) break;
                             if (xm > this.axis.x + translate)
                             {
-                                const line = this.createLine(xm, y, this.scale.minutes);
-                                const number = this.createNumber(xm - 6, y, j, this.scale.minutes);
+                                let changes: { heght: number, color: [] } | {} = {}
+                                if (index % 10 == 0 && this.secondsSteps[o] < 5)
+                                {
+                                    changes = {
+                                        height: this.scale.minutes.height + 7,
+                                        // color: [this.scale.minutes.color[0], this.scale.minutes.color[1], this.scale.minutes.color[2] - 10],
+                                    }
+                                }
+
+                                const line = this.createLine(xm, y, this.scale.minutes, changes);
+                                const number = this.createNumber(xm - 6, y, j, this.scale.minutes, changes);
 
                                 this.body.appendChild(line);
                                 this.body.appendChild(number);
@@ -98,11 +107,27 @@ export class Coordinates
                                         const index = l + j * 60 + i * 3600;
                                         if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
                                         {
+                                            let changes: { heght: number, color: [] } | {} = {}
+                                            if (index % 10 == 0 && this.secondsSteps[k] < 5)
+                                            {
+                                                changes = {
+                                                    height: this.scale.minutes.height + 6,
+                                                    // color: [this.scale.minutes.color[0], this.scale.minutes.color[1], this.scale.minutes.color[2] - 10],
+                                                }
+                                            }
+                                            else if (index % 5 == 0 && this.secondsSteps[k] < 5)
+                                            {
+                                                changes = {
+                                                    height: this.scale.minutes.height + 2,
+                                                    // color: [this.scale.minutes.color[0], this.scale.minutes.color[1], this.scale.minutes.color[2] - 10],
+                                                }
+                                            }
+
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
                                             if (xs > this.width + translate) break;
                                             if (xs < this.axis.x + translate) continue;
-                                            const line = this.createLine(xs, y, this.scale.seconds);
-                                            const number = this.createNumber(xs-4, y, l, this.scale.seconds);
+                                            const line = this.createLine(xs, y, this.scale.seconds, changes);
+                                            const number = this.createNumber(xs-4, y, l, this.scale.seconds, changes);
 
                                             this.body.appendChild(line);
                                             this.body.appendChild(number);
