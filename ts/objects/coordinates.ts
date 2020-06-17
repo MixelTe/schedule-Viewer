@@ -163,6 +163,7 @@ export class Coordinates
         separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
         this.scale.separateLine.el = separateLine;
         this.body.appendChild(separateLine);
+        if (!this.scale.separateLine.visible) this.scale.separateLine.el.setAttribute("display", `none`);
     }
 
     private createLine(x: number, y: number, parametrs: {height: number, width: number, color: number[]}, changeParametrs = {})
