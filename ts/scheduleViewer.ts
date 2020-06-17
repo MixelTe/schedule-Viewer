@@ -2,14 +2,15 @@ import { Coordinates } from "./objects/coordinates.js";
 
 export class scheduleViewer
 {
-    private svgBody: SVGSVGElement;
+    private body: HTMLDivElement;
+    private svgBody = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
     private coordinates: Coordinates;
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private altPressed = false;
     private oneHour = 60;
     private zoom = 0.9;
-    private zoomMin = 0.6;
+    private zoomMin = 0.4;
     private zoomMax = 1500;
     private zoomSpeed = 1;
     private translate = 0;
@@ -19,16 +20,20 @@ export class scheduleViewer
 
     private scroller = document.createElement("input");
 
-    constructor(svg: SVGSVGElement)
+    constructor(body: HTMLDivElement)
     {
-        this.svgBody = svg;
-        const scgBCR = this.svgBody.getBoundingClientRect()
+        this.body = body;
+        const scgBCR = this.body.getBoundingClientRect()
+
+        this.svgBody.style.width = "100%";
+        this.svgBody.style.height = "100%";
+        this.body.appendChild(this.svgBody);
 
         const parametrs = { x: 50, y: 50, width: 0, height: 0 };
         parametrs.width = scgBCR.width - scgBCR.x - parametrs.x;
         parametrs.height = scgBCR.height - parametrs.y - 70;
 
-        this.zoom = parametrs.width / (this.oneHour * 24);
+        this.zoom = parametrs.width / (this.oneHour * 25);
         console.log(this.zoom);
         {
             this.svgBody.appendChild(this.coordinatesBody);
@@ -48,7 +53,7 @@ export class scheduleViewer
             this.scroller.style.backgroundColor = "lightgray"
             this.scroller.style.border = "1px solid black"
             this.scroller.style.borderRadius = "3px"
-            this.svgBody.parentNode?.appendChild(this.scroller);
+            this.body.appendChild(this.scroller);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
         this.scroller.addEventListener("input", () => this.scrollerInput());

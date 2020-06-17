@@ -1,18 +1,17 @@
 import { scheduleViewer } from "./scheduleViewer.js";
 
 
-const svg = getSvg("svgGrafic")
-const grafic = new scheduleViewer(svg);
+const grafic = new scheduleViewer(getdiv("svgGrafic"));
 
 
 
 
 
 
-function getSvg(id: string)
+function getdiv(id: string)
 {
     const el = <unknown | null>document.getElementById(id);
     if (el == null) throw new Error(`${id} not found`);
-    if (el instanceof SVGSVGElement) return el;
-    throw new Error(`${id} element not SVG`);
+    if (el instanceof HTMLDivElement) return el;
+    throw new Error(`${id} element not Div`);
 }
