@@ -3,13 +3,14 @@ import { Coordinates } from "./objects/coordinates.js";
 export class scheduleViewer
 {
     private body: HTMLDivElement;
+    private svgDiv = document.createElement("div");
     private svgBody = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
     private coordinates: Coordinates;
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private altPressed = false;
     private oneHour = 60;
-    private zoom = 0.9;
+    private zoom = 2;
     private zoomMin = 0.4;
     private zoomMax = 1500;
     private zoomSpeed = 1;
@@ -18,45 +19,32 @@ export class scheduleViewer
     private translateMax = 0;
     private translateSpeed = 1;
 
-    private scroller = document.createElement("input");
-
     constructor(body: HTMLDivElement)
     {
         this.body = body;
         const scgBCR = this.body.getBoundingClientRect()
 
-        this.svgBody.style.width = "100%";
         this.svgBody.style.height = "100%";
-        this.body.appendChild(this.svgBody);
+        this.svgDiv.style.height = "100%";
+        this.svgDiv.style.width = "100%";
+        this.svgDiv.style.overflowX = "scroll";
+        this.svgDiv.style.overflowY = "hidden";
+        this.body.appendChild(this.svgDiv);
+        this.svgDiv.appendChild(this.svgBody);
 
         const parametrs = { x: 50, y: 50, width: 0, height: 0 };
         parametrs.width = scgBCR.width - scgBCR.x - parametrs.x;
         parametrs.height = scgBCR.height - parametrs.y - 70;
 
         this.zoom = parametrs.width / (this.oneHour * 25);
+        this.svgBody.style.width = `${this.oneHour * this.zoom * 25 + parametrs.x}`;
         console.log(this.zoom);
         {
             this.svgBody.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
-
-            this.scroller.style.position = "absolute";
-            this.scroller.style.webkitAppearance = "none";
-            this.scroller.className = "scheduleViewer_scroller";
-            this.scroller.type = "range";
-            this.scroller.max = `${-this.translateMin}`;
-            this.scroller.min = `${this.translateMax}`;
-            this.scroller.value = `${this.translate}`;
-            this.scroller.style.top = `${scgBCR.y + scgBCR.height - parametrs.y + 20}px`;
-            this.scroller.style.left = `${scgBCR.x + parametrs.x}px`;
-            this.scroller.style.width = `${scgBCR.width - parametrs.x - 7}px`;
-            this.scroller.style.height = "20px";
-            this.scroller.style.backgroundColor = "lightgray"
-            this.scroller.style.border = "1px solid black"
-            this.scroller.style.borderRadius = "3px"
-            this.body.appendChild(this.scroller);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
-        this.scroller.addEventListener("input", () => this.scrollerInput());
+        // this.scroller.addEventListener("input", () => this.scrollerInput());
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Alt") this.altPressed = false; });
     }
@@ -74,6 +62,7 @@ export class scheduleViewer
         this.zoom = Math.round(this.zoom * 100) / 100;
         // console.log(this.zoom);
 
+        this.svgBody.style.width = `${this.oneHour * this.zoom * 25 + this.coordinates.x}`;
         this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
     }
     keyDown(e: KeyboardEvent)

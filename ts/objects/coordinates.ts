@@ -2,7 +2,7 @@ export class Coordinates
 {
     private width: number;
     private height: number;
-    private x: number;
+    public x: number;
     private y: number;
 
     private axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
@@ -12,9 +12,9 @@ export class Coordinates
         seconds: { els: <any>[], color: "black", width: 2, height: 15, fontSize: 10 },
     }
     private oneHour: number;
-    private body: SVGElement;
+    private body: SVGGElement;
 
-    constructor(body: SVGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0)
+    constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0)
     {
         this.body = body;
         this.oneHour = oneHour;
@@ -36,7 +36,7 @@ export class Coordinates
         axis.setAttribute("points",
             `${this.axis.x} ${this.axis.y}
             ${this.axis.x} ${this.axis.y + this.axis.height}
-            ${this.axis.x + this.width} ${this.axis.y + this.axis.height}`
+            ${this.axis.x + this.axis.width} ${this.axis.y + this.axis.height}`
         );
         axis.setAttribute("stroke", `${this.axis.color}`);
         axis.setAttribute("fill", `transparent`);
