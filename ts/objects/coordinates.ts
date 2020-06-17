@@ -60,10 +60,11 @@ export class Coordinates
             if (xh - interHour > this.width + translate) break;
             if (xh < this.axis.x + translate) continue;
             const line = this.createLine(xh, y, this.scale.hours);
-            const number = this.createNumber(xh-6, y, i, this.scale.hours);
+            const number = this.createNumber(xh, y, i, this.scale.hours);
 
             this.body.appendChild(line);
             this.body.appendChild(number);
+            number.setAttribute("x", `${xh - number.getBoundingClientRect().width / 2}`);
 
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 0; o < this.minutesSteps.length; o++)
@@ -91,10 +92,11 @@ export class Coordinates
                                 }
 
                                 const line = this.createLine(xm, y, this.scale.minutes, changes);
-                                const number = this.createNumber(xm - 6, y, j, this.scale.minutes, changes);
+                                const number = this.createNumber(xm, y, j, this.scale.minutes, changes);
 
                                 this.body.appendChild(line);
                                 this.body.appendChild(number);
+                                number.setAttribute("x", `${xm - number.getBoundingClientRect().width / 2}`);
                             }
                         }
                         if (o == 0)
@@ -130,10 +132,11 @@ export class Coordinates
                                             if (xs > this.width + translate) break;
                                             if (xs < this.axis.x + translate) continue;
                                             const line = this.createLine(xs, y, this.scale.seconds, changes);
-                                            const number = this.createNumber(xs-4, y, l, this.scale.seconds, changes);
+                                            const number = this.createNumber(xs, y, l, this.scale.seconds, changes);
 
                                             this.body.appendChild(line);
                                             this.body.appendChild(number);
+                                            number.setAttribute("x", `${xs - number.getBoundingClientRect().width / 2}`);
                                         }
                                     }
                                     break;
@@ -179,7 +182,6 @@ export class Coordinates
         line.setAttribute("stroke-width", `${newParametrs.width}`);
         return line;
     }
-
     private createNumber(x: number, y: number, value: number, parametrs: {fontSize: number, height: number, color: number[], fontFamily: string}, changeParametrs = {})
     {
         const newParametrs = Object.assign({}, parametrs, changeParametrs);
