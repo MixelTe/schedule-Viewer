@@ -15,9 +15,6 @@ export class scheduleViewer
     private zoomMax = 1500;
     private zoomSpeed = 1;
     private translate = 0;
-    private translateMin = 24 * 60 * 60 * -1;
-    private translateMax = 0;
-    private translateSpeed = 1;
 
     constructor(body: HTMLDivElement)
     {
@@ -44,7 +41,7 @@ export class scheduleViewer
             this.coordinates = new Coordinates(this.coordinatesBody, parametrs, this.oneHour, this.zoom);
         }
         this.svgBody.addEventListener("wheel", (e) => { if (this.altPressed) this.mouseWheel(e) });
-        // this.scroller.addEventListener("input", () => this.scrollerInput());
+        this.svgDiv.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Alt") this.altPressed = false; });
     }
@@ -63,29 +60,13 @@ export class scheduleViewer
         // console.log(this.zoom);
 
         this.svgBody.style.width = `${this.oneHour * this.zoom * 25 + this.coordinates.x}`;
-        this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
+        this.coordinates.recreateScale(this.zoom, this.translate);
     }
     keyDown(e: KeyboardEvent)
     {
         switch (e.key) {
             case "Alt":
                 this.altPressed = true;
-                break;
-
-            case "ArrowDown":
-                {
-                    const speed = (3600 / this.zoom / 2) * this.translateSpeed;
-                    this.translate = Math.max(this.translate - speed, this.translateMin);
-                    this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
-                }
-                break;
-
-            case "ArrowUp":
-                {
-                    const speed = (3600 / this.zoom / 2) * this.translateSpeed;
-                    this.translate = Math.min(this.translate + speed, this.translateMax);
-                    this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
-                }
                 break;
 
             case "ArrowLeft":
@@ -101,9 +82,9 @@ export class scheduleViewer
         }
         // console.log(this.translate);
     }
-    scrollerInput()
+    scrollDiv()
     {
-        this.translate = -parseInt(this.scroller.value);
-        this.coordinates.recreateScale(this.zoom, this.translate * (this.oneHour / 60 / 60 * this.zoom));
+        this.translate = this.svgDiv.scrollLeft;
+        this.coordinates.recreateScale(this.zoom, this.translate);
     }
 }

@@ -55,16 +55,16 @@ export class Coordinates
         const interHour = this.oneHour * zoom;
         for (let i = 1; i <= 24; i++)
         {
-            const xh = this.axis.x + this.oneHour * i * zoom + translate;
-            if (xh - interHour > this.width) break;
-            if (xh < this.axis.x) continue;
+            const xh = this.axis.x + this.oneHour * i * zoom;
+            if (xh - interHour > this.width + translate) break;
+            if (xh < this.axis.x + translate) continue;
             const line = this.createLine(xh, y, this.scale.hours);
             const number = this.createNumber(xh-6, y, i, this.scale.hours);
 
             this.body.appendChild(line);
             this.body.appendChild(number);
 
-            const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom + translate;
+            const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 1; o < 60; o++)
             {
                 const minutsToDisplay = Math.round(60 / o);
@@ -77,8 +77,8 @@ export class Coordinates
                         const xm = xh2 + this.oneHour / 60 * j * zoom;
                         if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
                         {
-                            if (xm > this.width + this.x) break;
-                            if (xm > this.axis.x)
+                            if (xm > this.width + this.x + translate) break;
+                            if (xm > this.axis.x + translate)
                             {
                                 const line = this.createLine(xm, y, this.scale.minutes);
                                 const number = this.createNumber(xm - 6, y, j, this.scale.minutes);
@@ -101,8 +101,8 @@ export class Coordinates
                                         if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
                                         {
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
-                                            if (xs > this.width + this.x) break;
-                                            if (xs < this.axis.x) continue;
+                                            if (xs > this.width + this.x + translate) break;
+                                            if (xs < this.axis.x + translate) continue;
                                             const line = this.createLine(xs, y, this.scale.seconds);
                                             const number = this.createNumber(xs-4, y, l, this.scale.seconds);
 
