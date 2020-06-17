@@ -8,6 +8,7 @@ export class Coordinates
         hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
         minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
         seconds: { els: <any>[], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
+        separateLine: {x: 200, visible: true, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false},
         zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
     private minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -28,6 +29,8 @@ export class Coordinates
         this.axis.height = this.height - 65;
 
         this.recreateScale(zoom, translate);
+        body.addEventListener("mouseover", (e) => this.showSeparateLine(e, false))
+        body.addEventListener("click", (e) => this.showSeparateLine(e))
     }
     private createAxis(translate = 0)
     {
@@ -149,6 +152,17 @@ export class Coordinates
         zoomFixPoint.setAttribute("r", `${this.scale.zoomFixPoint.radius}`);
         zoomFixPoint.setAttribute("fill", `${this.scale.zoomFixPoint.color}`);
         // this.body.appendChild(zoomFixPoint);
+
+        const separateLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        separateLine.setAttribute("x1", `${this.scale.separateLine.x}`);
+        separateLine.setAttribute("x2", `${this.scale.separateLine.x}`);
+        separateLine.setAttribute("y1", `${this.axis.y}`);
+        separateLine.setAttribute("y2", `${this.axis.y + this.axis.height}`);
+        separateLine.setAttribute("stroke", `${this.scale.separateLine.color}`);
+        separateLine.setAttribute("stroke-width", `${this.scale.separateLine.width}`);
+        separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
+        this.scale.separateLine.el = separateLine;
+        this.body.appendChild(separateLine);
     }
 
     private createLine(x: number, y: number, parametrs: {height: number, width: number, color: number[]}, changeParametrs = {})
@@ -181,5 +195,33 @@ export class Coordinates
     public changeZoomFixPoint(second: number)
     {
         this.scale.zoomFixPoint.second = second;
+    }
+
+    private showSeparateLine(e: MouseEvent, lock = true)
+    {
+        const el = e.target;
+        if (el != null)
+        {
+            if (!lock && !this.scale.separateLine.lock || lock)
+            {
+                if (el instanceof SVGLineElement)
+                {
+                    const x = e.offsetX;
+                    this.scale.separateLine.x = x;
+                    this.scale.separateLine.visible = true;
+                    if (lock) this.scale.separateLine.lock = true;
+
+                    this.scale.separateLine.el.setAttribute("x1", `${x}`);
+                    this.scale.separateLine.el.setAttribute("x2", `${x}`);
+                    this.scale.separateLine.el.setAttribute("display", `inline`);
+                }
+                else
+                {
+                    this.scale.separateLine.visible = false;
+                    if (lock) this.scale.separateLine.lock = false;
+                    this.scale.separateLine.el.setAttribute("display", `none`);
+                }
+            }
+        }
     }
 }
