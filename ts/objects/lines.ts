@@ -5,35 +5,55 @@ export class Lines
 
     private oneHour: number;
     private body: SVGGElement;
-    private lines = [
-        { x1: 200, x2: 300, y1: 0, y2: 500, color: "lightgreen", width: 2, dasharray: "5, 5" },
-        { x1: 100, x2: 500, y1: 20, y2: 700, color: "lightblue", width: 4, dasharray: "8, 3" },
-    ];
+    private lines: { y: number, color: string, width: number, dasharray: string }[];
+    private clipRect: SVGRectElement;
 
-    constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1)
+    constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1)
     {
         this.body = body;
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
         this.height = bodyPrm.height;
 
-        this.recreateLines();
+        const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+        clipPath.id = "graficLinesClip";
+        defs.appendChild(clipPath);
+        this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        this.clipRect.setAttribute("x", `${axis.x}`);
+        this.clipRect.setAttribute("y", `${axis.y}`);
+        this.clipRect.setAttribute("width", `${axis.width}`);
+        this.clipRect.setAttribute("height", `${axis.height}`);
+        clipPath.appendChild(this.clipRect);
+
+        this.lines = [];
+        this.recreateLines(axis, 0);
     }
 
-    private recreateLines()
+    public recreateLines(axis: Rect, scroll: number)
     {
         this.body.innerHTML = "";
 
+        this.clipRect.setAttribute("x", `${axis.x + scroll}`);
+        this.clipRect.setAttribute("y", `${axis.y}`);
+        this.clipRect.setAttribute("width", `${axis.width - scroll}`);
+        this.clipRect.setAttribute("height", `${axis.height}`);
+
         this.lines.forEach(el => {
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", `${el.x1}`);
-            line.setAttribute("x2", `${el.x2}`);
-            line.setAttribute("y1", `${el.y1}`);
-            line.setAttribute("y2", `${el.y2}`);
+            line.setAttribute("x1", `${axis.x}`);
+            line.setAttribute("x2", `${axis.x + axis.width}`);
+            line.setAttribute("y1", `${el.y}`);
+            line.setAttribute("y2", `${el.y}`);
             line.setAttribute("stroke", `${el.color}`);
             line.setAttribute("stroke-width", `${el.width}`);
             line.setAttribute("stroke-dasharray", `${el.dasharray}`);
+            line.setAttribute("clip-path", "url(#graficLinesClip)");
             this.body.appendChild(line);
         });
+    }
+    public createLine(parametrs: { y: number, color: string, width: number, dasharray: string }, axis: Rect, scroll: number)
+    {
+        this.lines.push({ y: parametrs.y, color: parametrs.color, width: parametrs.width, dasharray: parametrs.dasharray });
+        this.recreateLines(axis, scroll);
     }
 }
