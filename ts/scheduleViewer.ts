@@ -11,7 +11,7 @@ export class scheduleViewer
     private zoomActive = false;
     private oneHour = 60;
     private zoom = 2;
-    private zoomMin = 0.4;
+    private zoomMin = 0.6;
     private zoomMax = 1500;
     private zoomSpeed = 1;
     private zoomFix = { second: 0, delta: 0 };

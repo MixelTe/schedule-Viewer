@@ -5,9 +5,9 @@ export class Coordinates
 
     public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 5 };
     private scale = {
-        hours: { els: <any>[], color: "black", width: 6, height: 25, fontSize: 20 },
-        minutes: { els: <any>[], color: "black", width: 4, height: 20, fontSize: 15 },
-        seconds: { els: <any>[], color: "black", width: 2, height: 15, fontSize: 10 },
+        hours: { els: <any>[], color: [240, 100, 27], width: 6, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
+        minutes: { els: <any>[], color: [240, 100, 50], width: 4, height: 20, fontSize: 15, fontFamily: "Verdana, sans-serif" },
+        seconds: { els: <any>[], color: [210, 100, 40], width: 2, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
         zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
     private minutesSteps = [1, 5, 10, 20, 30, 60];
