@@ -8,7 +8,7 @@ export class Coordinates
         hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
         minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
         seconds: { els: <any>[], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
-        separateLine: {x: 200, visible: false, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false},
+        separateLine: {x: 200, visible: false, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false, active: false},
         zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
     private minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -201,7 +201,7 @@ export class Coordinates
     private showSeparateLine(e: MouseEvent, lock = true)
     {
         const el = e.target;
-        if (el != null)
+        if (el != null && this.scale.separateLine.active)
         {
             if (!lock && !this.scale.separateLine.lock || lock)
             {
