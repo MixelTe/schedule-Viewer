@@ -10,6 +10,8 @@ export class Coordinates
         seconds: { els: <any>[], color: "black", width: 2, height: 15, fontSize: 10 },
         zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
+    private minutesSteps = [1, 5, 10, 20, 30, 60];
+    private secondsSteps = [1, 5, 10, 20, 30, 60];
     private oneHour: number;
     private body: SVGGElement;
 
@@ -61,9 +63,9 @@ export class Coordinates
             this.body.appendChild(number);
 
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
-            for (let o = 1; o < 60; o++)
+            for (let o = 0; o < this.minutesSteps.length; o++)
             {
-                const minutsToDisplay = Math.round(60 / o);
+                const minutsToDisplay = Math.round(60 / this.minutesSteps[o]);
                 const interMinuts = interHour / minutsToDisplay;
                 if (interMinuts >= 25)
                 {
@@ -83,11 +85,11 @@ export class Coordinates
                                 this.body.appendChild(number);
                             }
                         }
-                        if (o == 1)
+                        if (o == 0)
                         {
-                            for (let k = 1; k < 60; k++)
+                            for (let k = 0; k < this.secondsSteps.length; k++)
                             {
-                                const secondsToDisplay = Math.round(60 / k);
+                                const secondsToDisplay = Math.round(60 / this.secondsSteps[k]);
                                 const interSeconds = interMinuts / secondsToDisplay;
                                 if (interSeconds >= 15)
                                 {
