@@ -57,8 +57,12 @@ export class scheduleViewer
         // console.log(this.zoom);
 
         this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 25, this.svgDiv.getBoundingClientRect().width)}`;
-        const newTranslate = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom) - this.zoomFix.delta;
+
+        const zoomFixPointX = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom)
+        const newTranslate = zoomFixPointX - this.zoomFix.delta;
+
         this.svgDiv.scroll(newTranslate, 0)
+        if (this.svgDiv.scrollLeft == 0) this.zoomFix.delta = zoomFixPointX;
         this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
     }
     mouseClick(e: MouseEvent)
@@ -94,6 +98,27 @@ export class scheduleViewer
     }
     scrollDiv()
     {
-        this.coordinates.recreateScale(this.zoom, this.svgDiv.scrollLeft);
+        const zoomFixPointX = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom)
+        const scrollLeft = this.svgDiv.scrollLeft;
+        const width = this.svgDiv.getBoundingClientRect().width;
+
+        if (zoomFixPointX - scrollLeft < 0 || zoomFixPointX - scrollLeft > width)
+        {
+            let x;
+            if (zoomFixPointX - scrollLeft < 0)
+            {
+                x = scrollLeft;
+            }
+            else
+            {
+                x = scrollLeft + width - this.coordinates.axis.x;
+            }
+            const second = Math.floor(x / (this.oneHour / 3600 * this.zoom));
+            this.zoomFix.second = second;
+            this.coordinates.changeZoomFixPoint(second);
+        }
+        this.zoomFix.delta = zoomFixPointX - scrollLeft;
+
+        this.coordinates.recreateScale(this.zoom, scrollLeft);
     }
 }
