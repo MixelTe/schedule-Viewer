@@ -43,11 +43,10 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.oneHour, this.zoom);
         }
-        this.svg.addEventListener("wheel", (e) => { if (this.zoomActive) this.mouseWheel(e) });
+        this.svg.addEventListener("wheel", (e) => { this.mouseWheel(e) });
         this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
         this.body.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
-        document.addEventListener("keyup", (e) => { if (e.code == "KeyZ") this.zoomActive = false; });
     }
 
     private mouseWheel(e: WheelEvent)
@@ -102,11 +101,6 @@ export class Grafic
                 break;
 
             default:
-                break;
-        }
-        switch (e.code) {
-            case "KeyZ":
-                this.zoomActive = true;
                 break;
         }
     }
