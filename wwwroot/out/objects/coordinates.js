@@ -1,137 +1,103 @@
-export class Coordinates
-{
-    private width: number;
-    private height: number;
-
-    public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 3 };
-    private scale = {
-        hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
-        minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
-        seconds: { els: <any>[], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
-        separateLine: {x: 200, visible: true, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false},
-        zoomFixPoint: {second: 0, color: "red", radius: 4},
-    }
-    private minutesSteps = [1, 5, 10, 20, 30, 60];
-    private secondsSteps = [1, 5, 10, 20, 30, 60];
-    private oneHour: number;
-    private body: SVGGElement;
-
-    constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0)
-    {
+export class Coordinates {
+    constructor(body, bodyPrm, oneHour, zoom = 1, translate = 0) {
+        this.axis = { x: 0, y: 0, width: 0, height: 0, svgEl: {}, color: "black", sWidth: 3 };
+        this.scale = {
+            hours: { els: [], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
+            minutes: { els: [], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
+            seconds: { els: [], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
+            separateLine: { x: 200, visible: true, color: "orange", width: 1, dasharray: "10, 8", el: {}, lock: false },
+            zoomFixPoint: { second: 0, color: "red", radius: 4 },
+        };
+        this.minutesSteps = [1, 5, 10, 20, 30, 60];
+        this.secondsSteps = [1, 5, 10, 20, 30, 60];
         this.body = body;
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
         this.height = bodyPrm.height;
-
         this.axis.x = 10;
         this.axis.y = 10;
         this.axis.width = this.width;
         this.axis.height = this.height - 65;
-
         this.recreateScale(zoom, translate);
-        body.addEventListener("mouseover", (e) => this.showSeparateLine(e, false))
-        body.addEventListener("click", (e) => this.showSeparateLine(e))
+        body.addEventListener("mouseover", (e) => this.showSeparateLine(e, false));
+        body.addEventListener("click", (e) => this.showSeparateLine(e));
     }
-    private createAxis(translate = 0)
-    {
+    createAxis(translate = 0) {
         const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        axis.setAttribute("points",
-            `${this.axis.x + translate} ${this.axis.y}
+        axis.setAttribute("points", `${this.axis.x + translate} ${this.axis.y}
             ${this.axis.x + translate} ${this.axis.y + this.axis.height}
-            ${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}`
-        );
+            ${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}`);
         axis.setAttribute("stroke", `${this.axis.color}`);
         axis.setAttribute("fill", `transparent`);
         axis.setAttribute("stroke-width", `${this.axis.sWidth}`);
         return axis;
     }
-    public recreateScale(zoom: number, translate: number)
-    {
+    recreateScale(zoom, translate) {
         this.axis.width = Math.max(this.oneHour * 25 * zoom, this.width);
         this.body.innerHTML = "";
-
         this.body.appendChild(this.createAxis(translate));
-
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
-        for (let i = 1; i <= 24; i++)
-        {
+        for (let i = 1; i <= 24; i++) {
             const xh = this.axis.x + this.oneHour * i * zoom;
-            if (xh - interHour > this.width + translate) break;
-            if (xh < this.axis.x + translate) continue;
+            if (xh - interHour > this.width + translate)
+                break;
+            if (xh < this.axis.x + translate)
+                continue;
             const line = this.createLine(xh, y, this.scale.hours);
-            const number = this.createNumber(xh-6, y, i, this.scale.hours);
-
+            const number = this.createNumber(xh - 6, y, i, this.scale.hours);
             this.body.appendChild(line);
             this.body.appendChild(number);
-
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
-            for (let o = 0; o < this.minutesSteps.length; o++)
-            {
+            for (let o = 0; o < this.minutesSteps.length; o++) {
                 const minutsToDisplay = Math.round(60 / this.minutesSteps[o]);
                 const interMinuts = interHour / minutsToDisplay;
-                if (interMinuts >= 25)
-                {
-                    for (let j = 0; j < 60; j++)
-                    {
+                if (interMinuts >= 25) {
+                    for (let j = 0; j < 60; j++) {
                         const index = j + i * 60;
                         const xm = xh2 + this.oneHour / 60 * j * zoom;
-                        if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0)
-                        {
-                            if (xm > this.width + translate) break;
-                            if (xm > this.axis.x + translate)
-                            {
-                                let changes: { heght: number, color: [] } | {} = {}
-                                if (index % 10 == 0 && this.secondsSteps[o] < 5)
-                                {
+                        if (j % Math.round(60 / minutsToDisplay) == 0 && index % 60 != 0) {
+                            if (xm > this.width + translate)
+                                break;
+                            if (xm > this.axis.x + translate) {
+                                let changes = {};
+                                if (index % 10 == 0 && this.secondsSteps[o] < 5) {
                                     changes = {
                                         height: this.scale.minutes.height + 7,
-                                        // color: [this.scale.minutes.color[0], this.scale.minutes.color[1], this.scale.minutes.color[2] - 10],
-                                    }
+                                    };
                                 }
-
                                 const line = this.createLine(xm, y, this.scale.minutes, changes);
                                 const number = this.createNumber(xm - 6, y, j, this.scale.minutes, changes);
-
                                 this.body.appendChild(line);
                                 this.body.appendChild(number);
                             }
                         }
-                        if (o == 0)
-                        {
-                            for (let k = 0; k < this.secondsSteps.length; k++)
-                            {
+                        if (o == 0) {
+                            for (let k = 0; k < this.secondsSteps.length; k++) {
                                 const secondsToDisplay = Math.round(60 / this.secondsSteps[k]);
                                 const interSeconds = interMinuts / secondsToDisplay;
-                                if (interSeconds >= 15)
-                                {
-                                    for (let l = 0; l < 60; l++)
-                                    {
+                                if (interSeconds >= 15) {
+                                    for (let l = 0; l < 60; l++) {
                                         const index = l + j * 60 + i * 3600;
-                                        if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0)
-                                        {
-                                            let changes: { heght: number, color: [] } | {} = {}
-                                            if (index % 10 == 0 && this.secondsSteps[k] < 5)
-                                            {
+                                        if (l % Math.round(60 / secondsToDisplay) == 0 && index % 60 != 0) {
+                                            let changes = {};
+                                            if (index % 10 == 0 && this.secondsSteps[k] < 5) {
                                                 changes = {
                                                     height: this.scale.minutes.height + 6,
-                                                    // color: [this.scale.minutes.color[0], this.scale.minutes.color[1], this.scale.minutes.color[2] - 10],
-                                                }
+                                                };
                                             }
-                                            else if (index % 5 == 0 && this.secondsSteps[k] < 5)
-                                            {
+                                            else if (index % 5 == 0 && this.secondsSteps[k] < 5) {
                                                 changes = {
                                                     height: this.scale.minutes.height + 2,
-                                                    // color: [this.scale.minutes.color[0], this.scale.minutes.color[1], this.scale.minutes.color[2] - 10],
-                                                }
+                                                };
                                             }
-
                                             const xs = xm + this.oneHour / 60 / 60 * l * zoom;
-                                            if (xs > this.width + translate) break;
-                                            if (xs < this.axis.x + translate) continue;
+                                            if (xs > this.width + translate)
+                                                break;
+                                            if (xs < this.axis.x + translate)
+                                                continue;
                                             const line = this.createLine(xs, y, this.scale.seconds, changes);
-                                            const number = this.createNumber(xs-4, y, l, this.scale.seconds, changes);
-
+                                            const number = this.createNumber(xs - 4, y, l, this.scale.seconds, changes);
                                             this.body.appendChild(line);
                                             this.body.appendChild(number);
                                         }
@@ -145,14 +111,12 @@ export class Coordinates
                 }
             }
         }
-
         const zoomFixPoint = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         zoomFixPoint.setAttribute("cx", `${this.axis.x + this.scale.zoomFixPoint.second * (this.oneHour / 60 / 60 * zoom)}`);
         zoomFixPoint.setAttribute("cy", `${this.axis.y + this.axis.height}`);
         zoomFixPoint.setAttribute("r", `${this.scale.zoomFixPoint.radius}`);
         zoomFixPoint.setAttribute("fill", `${this.scale.zoomFixPoint.color}`);
         // this.body.appendChild(zoomFixPoint);
-
         const separateLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
         separateLine.setAttribute("x1", `${this.scale.separateLine.x}`);
         separateLine.setAttribute("x2", `${this.scale.separateLine.x}`);
@@ -164,9 +128,7 @@ export class Coordinates
         this.scale.separateLine.el = separateLine;
         this.body.appendChild(separateLine);
     }
-
-    private createLine(x: number, y: number, parametrs: {height: number, width: number, color: number[]}, changeParametrs = {})
-    {
+    createLine(x, y, parametrs, changeParametrs = {}) {
         const newParametrs = Object.assign({}, parametrs, changeParametrs);
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("x1", `${x}`);
@@ -178,9 +140,7 @@ export class Coordinates
         line.setAttribute("stroke-width", `${newParametrs.width}`);
         return line;
     }
-
-    private createNumber(x: number, y: number, value: number, parametrs: {fontSize: number, height: number, color: number[], fontFamily: string}, changeParametrs = {})
-    {
+    createNumber(x, y, value, parametrs, changeParametrs = {}) {
         const newParametrs = Object.assign({}, parametrs, changeParametrs);
         const number = document.createElementNS("http://www.w3.org/2000/svg", "text");
         number.setAttribute("x", `${x}`);
@@ -191,34 +151,27 @@ export class Coordinates
         number.innerHTML = `${value}`;
         return number;
     }
-
-    public changeZoomFixPoint(second: number)
-    {
+    changeZoomFixPoint(second) {
         this.scale.zoomFixPoint.second = second;
     }
-
-    private showSeparateLine(e: MouseEvent, lock = true)
-    {
+    showSeparateLine(e, lock = true) {
         const el = e.target;
-        if (el != null)
-        {
-            if (!lock && !this.scale.separateLine.lock || lock)
-            {
-                if (el instanceof SVGLineElement)
-                {
+        if (el != null) {
+            if (!lock && !this.scale.separateLine.lock || lock) {
+                if (el instanceof SVGLineElement) {
                     const x = e.offsetX;
                     this.scale.separateLine.x = x;
                     this.scale.separateLine.visible = true;
-                    if (lock) this.scale.separateLine.lock = true;
-
+                    if (lock)
+                        this.scale.separateLine.lock = true;
                     this.scale.separateLine.el.setAttribute("x1", `${x}`);
                     this.scale.separateLine.el.setAttribute("x2", `${x}`);
                     this.scale.separateLine.el.setAttribute("display", `inline`);
                 }
-                else
-                {
+                else {
                     this.scale.separateLine.visible = false;
-                    if (lock) this.scale.separateLine.lock = false;
+                    if (lock)
+                        this.scale.separateLine.lock = false;
                     this.scale.separateLine.el.setAttribute("display", `none`);
                 }
             }
