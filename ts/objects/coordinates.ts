@@ -15,13 +15,15 @@ export class Coordinates
     private secondsSteps = [1, 5, 10, 20, 30, 60];
     private oneHour: number;
     private body: SVGGElement;
+    private changeSVGHeight: (newHeight: number) => void;
 
-    constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0)
+    constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0, changeSVGHeight: (newHeight: number) => void)
     {
         this.body = body;
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
         this.height = bodyPrm.height;
+        this.changeSVGHeight = changeSVGHeight;
 
         this.axis.x = 10;
         this.axis.y = 10;
@@ -226,5 +228,12 @@ export class Coordinates
                 }
             }
         }
+    }
+
+    public changeHeightAndRecreate(newHeight: number, translate: number, zoom: number)
+    {
+        this.axis.height = newHeight - 65;
+        this.changeSVGHeight(newHeight - 20);
+        this.recreateScale(zoom, translate);
     }
 }

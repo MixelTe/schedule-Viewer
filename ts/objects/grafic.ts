@@ -18,6 +18,7 @@ export class Grafic
     private zoomSpeed = 1;
     private zoomFix = { second: 0, delta: 0 };
     private lastTime = 0;
+    private scrollLeftLast = 0;
 
     constructor(body: HTMLDivElement)
     {
@@ -25,7 +26,7 @@ export class Grafic
         this.body.style.height = "calc(100% - 0px)";
         this.body.style.width = "calc(100% - 0px)";
         this.body.style.overflowX = "scroll";
-        this.body.style.overflowY = "hidden";
+        this.body.style.overflowY = "auto";
 
         const scgBCR = this.body.getBoundingClientRect();
         this.body.style.height = `${scgBCR.height}px`;
@@ -35,16 +36,17 @@ export class Grafic
         this.svg.appendChild(this.defs);
 
         this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
-        this.svg.style.height = "100%";
+        this.svg.style.height = `${this.body.clientHeight - 4}`; //magic number
         this.svg.style.width = `${this.oneHour * this.zoom * 25}`;
+        console.log(this.body.clientHeight);
         {
             this.svg.appendChild(this.coordinatesBody);
-            this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom);
+            this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this));
 
             this.svg.appendChild(this.linesBody);
-            this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom);
+            this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
 
-            for (let i = 0; i < 16; i++)
+            for (let i = 0; i < 10; i++)
             {
                 this.lines.createLine({color: "lightgreen", dasharray: [20, 10] });
                 this.lines.createLine({color: "green", dasharray: [60, 30] });
@@ -120,6 +122,8 @@ export class Grafic
     {
         const zoomFixPointX = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom)
         const scrollLeft = this.body.scrollLeft;
+        if (scrollLeft == this.scrollLeftLast) return;
+        this.scrollLeftLast = scrollLeft;
         const width = this.body.getBoundingClientRect().width;
 
         if (zoomFixPointX - scrollLeft < 0 || zoomFixPointX - scrollLeft > width)
@@ -141,5 +145,11 @@ export class Grafic
 
         this.coordinates.recreateScale(this.zoom, scrollLeft);
         this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
+    }
+    private changeSVGHeight(newHeight: number)
+    {
+        this.svg.style.height = `${Math.max(newHeight, this.body.clientHeight - 4)}`;
+        this.body.scrollTop = parseInt(this.svg.style.height);
+        console.log(111);
     }
 }
