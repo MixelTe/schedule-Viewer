@@ -44,10 +44,13 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom);
 
-            this.lines.createLine({ y: scgBCR.height - 90, color: "lightgreen", width: 4, dasharray: [20, 10] });
-            this.lines.createLine({ y: scgBCR.height - 120, color: "green", width: 4, dasharray: [60, 30] });
-            this.lines.createLine({ y: scgBCR.height - 150, color: "blue", width: 4, dasharray: [5, 200] });
-            this.lines.createLine({ y: scgBCR.height - 180, color: "lightblue", width: 4, dasharray: [30, 30] });
+            for (let i = 0; i < 16; i++)
+            {
+                this.lines.createLine({color: "lightgreen", dasharray: [20, 10] });
+                this.lines.createLine({color: "green", dasharray: [60, 30] });
+                this.lines.createLine({color: "blue", dasharray: [5, 200] });
+                this.lines.createLine({ color: "lightblue", dasharray: [30, 30] });
+            }
             this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => { this.mouseWheel(e) });

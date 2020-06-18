@@ -5,7 +5,7 @@ export class Lines
 
     private oneHour: number;
     private body: SVGGElement;
-    private lines: { y: number, color: string, width: number, dasharray: number[] }[];
+    private lines: { color: string, width: number, dasharray: number[] }[];
     private clipRect: SVGRectElement;
 
     constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1)
@@ -19,13 +19,9 @@ export class Lines
         clipPath.id = "graficLinesClip";
         defs.appendChild(clipPath);
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        this.clipRect.setAttribute("x", `${axis.x}`);
-        this.clipRect.setAttribute("y", `${axis.y}`);
-        this.clipRect.setAttribute("width", `${axis.width}`);
-        this.clipRect.setAttribute("height", `${axis.height}`);
         clipPath.appendChild(this.clipRect);
 
-        this.lines = [];
+        this.lines = [{color: "red", width: 20, dasharray: [10, 10]}];
         this.recreateLines(axis, 0, zoom);
     }
 
@@ -38,23 +34,31 @@ export class Lines
         this.clipRect.setAttribute("width", `${axis.width - scroll}`);
         this.clipRect.setAttribute("height", `${axis.height}`);
 
-        this.lines.forEach(el => {
+        const downShift = 30;
+        let spaces = Math.floor((axis.height - downShift) / (Math.max(this.lines.length, 2)));
+        console.log(spaces);
+        if (spaces < 20)
+        {
+            spaces = 20;
+        }
+        for (let i = 1; i < this.lines.length; i++) {
+            const el = this.lines[i];
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", `${axis.x}`);
             line.setAttribute("x2", `${axis.x + axis.width}`);
-            line.setAttribute("y1", `${el.y}`);
-            line.setAttribute("y2", `${el.y}`);
+            line.setAttribute("y1", `${axis.y + axis.height - downShift - spaces * i}`);
+            line.setAttribute("y2", `${axis.y + axis.height - downShift - spaces * i}`);
             line.setAttribute("stroke", `${el.color}`);
             line.setAttribute("stroke-width", `${el.width}`);
             line.setAttribute("stroke-dasharray", `
             ${el.dasharray[0] * (this.oneHour / 60 / 60 * zoom)},
             ${el.dasharray[1] * (this.oneHour / 60 / 60 * zoom)}`);
-            line.setAttribute("clip-path", "url(#graficLinesClip)");
+            // line.setAttribute("clip-path", "url(#graficLinesClip)");
             this.body.appendChild(line);
-        });
+        };
     }
-    public createLine(parametrs: { y: number, color: string, width: number, dasharray: number[] })
+    public createLine(parametrs: { color: string, dasharray: number[] })
     {
-        this.lines.push({ y: parametrs.y, color: parametrs.color, width: parametrs.width, dasharray: parametrs.dasharray});
+        this.lines.push({ color: parametrs.color, width: 16, dasharray: parametrs.dasharray});
     }
 }
