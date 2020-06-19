@@ -35,7 +35,7 @@ export class Lines
         if (spaces < 20)
         {
             spaces = 20;
-            console.log(axis);
+            // console.log(axis);
             this.changeHeightAndRecreate((this.lines.length + 3) * spaces, scroll, zoom);
         }
 
@@ -43,7 +43,7 @@ export class Lines
         this.clipRect.setAttribute("y", `${axis.y}`);
         this.clipRect.setAttribute("width", `${axis.width - scroll}`);
         this.clipRect.setAttribute("height", `${axis.height}`);
-        console.log(this.clipRect);
+        // console.log(this.clipRect);
 
 
         for (let i = 1; i < this.lines.length; i++) {

@@ -38,7 +38,7 @@ export class Grafic
         this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
         this.svg.style.height = `${this.body.clientHeight - 4}`; //magic number
         this.svg.style.width = `${this.oneHour * this.zoom * 25}`;
-        console.log(this.body.clientHeight);
+        // console.log(this.body.clientHeight);
         {
             this.svg.appendChild(this.coordinatesBody);
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this));
@@ -59,6 +59,7 @@ export class Grafic
         this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
         this.body.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
+        this.body.scrollTop = parseInt(this.svg.style.height);
     }
 
     private mouseWheel(e: WheelEvent)
@@ -86,7 +87,7 @@ export class Grafic
         const zoomFixPointX = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom)
         const newTranslate = zoomFixPointX - this.zoomFix.delta;
 
-        this.body.scroll(newTranslate, 0)
+        this.body.scroll(newTranslate, this.body.scrollTop);
         if (this.body.scrollLeft == 0) this.zoomFix.delta = zoomFixPointX;
         this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
         this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
@@ -146,10 +147,9 @@ export class Grafic
         this.coordinates.recreateScale(this.zoom, scrollLeft);
         this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
     }
-    private changeSVGHeight(newHeight: number)
+    private changeSVGHeight(height: number)
     {
-        this.svg.style.height = `${Math.max(newHeight, this.body.clientHeight - 4)}`;
-        this.body.scrollTop = parseInt(this.svg.style.height);
-        console.log(111);
+        const newHeight = Math.max(height, this.body.clientHeight - 4);
+        this.svg.style.height = `${newHeight}`;
     }
 }
