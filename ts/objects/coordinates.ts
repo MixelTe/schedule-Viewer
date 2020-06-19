@@ -56,7 +56,7 @@ export class Coordinates
 
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
-        for (let i = 1; i <= 24; i++)
+        for (let i = 0; i <= 24; i++)
         {
             const xh = this.axis.x + this.oneHour * i * zoom;
             if (xh - interHour > this.width + translate) break;
@@ -68,6 +68,7 @@ export class Coordinates
             this.body.appendChild(number);
             number.setAttribute("x", `${xh - number.getBoundingClientRect().width / 2}`);
 
+            if (i == 0) continue;
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 0; o < this.minutesSteps.length; o++)
             {

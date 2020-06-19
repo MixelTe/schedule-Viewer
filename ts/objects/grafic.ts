@@ -36,10 +36,10 @@ export class Grafic
         this.body.appendChild(this.svg);
         this.svg.appendChild(this.defs);
 
-        this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
+        this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 24 + 30)), this.zoomMin);
         this.zoomMin = this.zoom;
         this.svg.style.height = `${this.body.clientHeight - 4}`; //magic number
-        this.svg.style.width = `${this.oneHour * this.zoom * 25}`;
+        this.svg.style.width = `${this.oneHour * this.zoom * 24 + 30}`;
         // console.log(this.body.clientHeight);
         {
             this.svg.appendChild(this.coordinatesBody);
@@ -92,7 +92,7 @@ export class Grafic
         this.zoom = Math.round(this.zoom * 100) / 100;
         // console.log(this.zoom);
 
-        this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 25, this.body.getBoundingClientRect().width)}`;
+        this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 24 + 30, this.body.getBoundingClientRect().width)}`;
 
         const zoomFixPointX = this.zoomFix.second * (this.oneHour / 60 / 60 * this.zoom)
         const newTranslate = zoomFixPointX - this.zoomFix.delta;
