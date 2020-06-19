@@ -36,7 +36,8 @@ export class Grafic
         this.body.appendChild(this.svg);
         this.svg.appendChild(this.defs);
 
-        this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
+        // this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
+        this.zoom = 30;
         this.zoomMin = this.zoom;
         this.svg.style.height = `${this.body.clientHeight - 4}`; //magic number
         this.svg.style.width = `${this.oneHour * this.zoom * 25}`;
@@ -48,13 +49,19 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
 
-            for (let i = 0; i < 4; i++)
+            for (let i = 0; i < 0; i++)
             {
                 this.lines.createLine(20, 10);
                 this.lines.createLine(60, 30);
                 this.lines.createLine(5, 200);
                 this.lines.createLine(30, 30);
             }
+            const duractions = []
+            for (let i = 0; i < 300; i++)
+            {
+                duractions.push(this.getRndInteger(10, 90))
+            }
+            this.lines.createRealLine(30, duractions);
             this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => {  if (this.zoomActive) this.mouseWheel(e) });
@@ -158,5 +165,9 @@ export class Grafic
     {
         const newHeight = Math.max(height, this.body.clientHeight - 4);
         this.svg.style.height = `${newHeight}`;
+    }
+
+    private getRndInteger(min: number, max: number) {
+        return Math.random() * (max - min) + min;
     }
 }
