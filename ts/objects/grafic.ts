@@ -36,8 +36,7 @@ export class Grafic
         this.body.appendChild(this.svg);
         this.svg.appendChild(this.defs);
 
-        // this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
-        this.zoom = 30;
+        this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 25)), this.zoomMin);
         this.zoomMin = this.zoom;
         this.svg.style.height = `${this.body.clientHeight - 4}`; //magic number
         this.svg.style.width = `${this.oneHour * this.zoom * 25}`;

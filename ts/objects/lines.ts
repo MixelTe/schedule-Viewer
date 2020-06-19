@@ -98,15 +98,18 @@ export class Lines
         for (let i = 0, x = 1; i < axis.width / interval; i++, x++)
         {
             const duration = durations[i];
-            if (typeof duration != "number" || duration / duration != 1) break;
-            const dx = duration * (this.oneHour / 60 / 60 * zoom);
+            let dx = `h ${duration * (this.oneHour / 60 / 60 * zoom)}`;
+            if (typeof duration != "number" || duration / duration != 1)
+            {
+                dx = "v1"
+            }
             if (duration / el.dasharray[0] > 1)
             {
                 x = x + Math.floor(duration / el.dasharray[0])
             }
             const nextX = axis.y + interval * x;
             path += `
-            h ${dx}
+            ${dx}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
         }
         line.setAttribute("d", path);
