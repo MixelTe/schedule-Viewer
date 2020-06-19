@@ -1,11 +1,11 @@
 export class Coordinates {
-    constructor(body, bodyPrm, oneHour, zoom = 1, translate = 0) {
+    constructor(body, bodyPrm, oneHour, zoom = 1, translate = 0, changeSVGHeight) {
         this.axis = { x: 0, y: 0, width: 0, height: 0, svgEl: {}, color: "black", sWidth: 3 };
         this.scale = {
             hours: { els: [], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
             minutes: { els: [], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
             seconds: { els: [], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
-            separateLine: { x: 200, visible: false, color: "orange", width: 1, dasharray: "10, 8", el: {}, lock: false },
+            separateLine: { x: 200, visible: false, color: "orange", width: 1, dasharray: "10, 8", el: {}, lock: false, active: true },
             zoomFixPoint: { second: 0, color: "red", radius: 4 },
         };
         this.minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -14,6 +14,7 @@ export class Coordinates {
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
         this.height = bodyPrm.height;
+        this.changeSVGHeight = changeSVGHeight;
         this.axis.x = 10;
         this.axis.y = 10;
         this.axis.width = this.width;
@@ -45,9 +46,10 @@ export class Coordinates {
             if (xh < this.axis.x + translate)
                 continue;
             const line = this.createLine(xh, y, this.scale.hours);
-            const number = this.createNumber(xh - 6, y, i, this.scale.hours);
+            const number = this.createNumber(xh, y, i, this.scale.hours);
             this.body.appendChild(line);
             this.body.appendChild(number);
+            number.setAttribute("x", `${xh - number.getBoundingClientRect().width / 2}`);
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 0; o < this.minutesSteps.length; o++) {
                 const minutsToDisplay = Math.round(60 / this.minutesSteps[o]);
@@ -67,9 +69,10 @@ export class Coordinates {
                                     };
                                 }
                                 const line = this.createLine(xm, y, this.scale.minutes, changes);
-                                const number = this.createNumber(xm - 6, y, j, this.scale.minutes, changes);
+                                const number = this.createNumber(xm, y, j, this.scale.minutes, changes);
                                 this.body.appendChild(line);
                                 this.body.appendChild(number);
+                                number.setAttribute("x", `${xm - number.getBoundingClientRect().width / 2}`);
                             }
                         }
                         if (o == 0) {
@@ -97,9 +100,10 @@ export class Coordinates {
                                             if (xs < this.axis.x + translate)
                                                 continue;
                                             const line = this.createLine(xs, y, this.scale.seconds, changes);
-                                            const number = this.createNumber(xs - 4, y, l, this.scale.seconds, changes);
+                                            const number = this.createNumber(xs, y, l, this.scale.seconds, changes);
                                             this.body.appendChild(line);
                                             this.body.appendChild(number);
+                                            number.setAttribute("x", `${xs - number.getBoundingClientRect().width / 2}`);
                                         }
                                     }
                                     break;
@@ -127,7 +131,8 @@ export class Coordinates {
         separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
         this.scale.separateLine.el = separateLine;
         this.body.appendChild(separateLine);
-        if (!this.scale.separateLine.visible) this.scale.separateLine.el.setAttribute("display", `none`);
+        if (!this.scale.separateLine.visible)
+            this.scale.separateLine.el.setAttribute("display", `none`);
     }
     createLine(x, y, parametrs, changeParametrs = {}) {
         const newParametrs = Object.assign({}, parametrs, changeParametrs);
@@ -157,7 +162,7 @@ export class Coordinates {
     }
     showSeparateLine(e, lock = true) {
         const el = e.target;
-        if (el != null) {
+        if (el != null && this.scale.separateLine.active) {
             if (!lock && !this.scale.separateLine.lock || lock) {
                 if (el instanceof SVGLineElement) {
                     const x = e.offsetX;
@@ -178,4 +183,9 @@ export class Coordinates {
             }
         }
     }
+    changeHeightAndRecreate(newHeight, translate, zoom) {
+        this.axis.height = newHeight - 65;
+        this.changeSVGHeight(newHeight - 20);
+        this.recreateScale(zoom, translate);
+}
 }
