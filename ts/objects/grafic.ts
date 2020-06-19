@@ -48,7 +48,7 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
 
-            for (let i = 0; i < 10; i++)
+            for (let i = 0; i < 4; i++)
             {
                 this.lines.createLine(20, 10);
                 this.lines.createLine(60, 30);

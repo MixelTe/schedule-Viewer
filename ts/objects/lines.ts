@@ -5,7 +5,7 @@ export class Lines
 
     private oneHour: number;
     private body: SVGGElement;
-    private lines: { color: string, width: number, dasharray: number[] }[];
+    private lines: LineF[];
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
 
@@ -47,20 +47,31 @@ export class Lines
 
 
         for (let i = 1; i < this.lines.length; i++) {
-            const el = this.lines[i];
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", `${axis.x}`);
-            line.setAttribute("x2", `${axis.x + axis.width}`);
-            line.setAttribute("y1", `${axis.y + axis.height - spaces * i}`);
-            line.setAttribute("y2", `${axis.y + axis.height - spaces * i}`);
-            line.setAttribute("stroke", `${el.color}`);
-            line.setAttribute("stroke-width", `${el.width}`);
-            line.setAttribute("stroke-dasharray", `
-            ${el.dasharray[0] * (this.oneHour / 60 / 60 * zoom)},
-            ${el.dasharray[1] * (this.oneHour / 60 / 60 * zoom)}`);
-            line.setAttribute("clip-path", "url(#graficLinesClip)");
-            this.body.appendChild(line);
+
+            this.body.appendChild(this.createPath(i, axis, spaces, zoom));
         };
+    }
+    private createPath(index: number, axis: Rect, spaces: number, zoom: number)
+    {
+        const el = this.lines[index];
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        line.setAttribute("stroke", `${el.color}`);
+        line.setAttribute("stroke-width", `${el.width}`);
+        line.setAttribute("clip-path", "url(#graficLinesClip)");
+
+
+        let path = `M ${axis.x} ${axis.y + axis.height - spaces * index} `;
+        const interval = el.dasharray[0] * (this.oneHour / 60 / 60 * zoom);
+        const duration = el.dasharray[1] * (this.oneHour / 60 / 60 * zoom);
+        for (let i = 0; i < axis.width / (interval + duration); i++)
+        {
+            path += `
+            h ${interval}
+            m ${duration} 0`
+        }
+        line.setAttribute("d", path);
+
+        return line;
     }
     public createLine(interval: number, duration: number)
     {
@@ -81,4 +92,11 @@ export class Lines
     private getRnd(min: number, max: number) {
         return Math.random() * (max - min) + min;
     }
+}
+
+interface LineF
+{
+    color: string,
+    width: number,
+    dasharray: number[]
 }
