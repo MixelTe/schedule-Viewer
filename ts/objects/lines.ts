@@ -62,8 +62,23 @@ export class Lines
             this.body.appendChild(line);
         };
     }
-    public createLine(parametrs: { color: string, dasharray: number[] })
+    public createLine(parametrs: { dasharray: number[] })
     {
-        this.lines.push({ color: parametrs.color, width: 16, dasharray: parametrs.dasharray});
+        this.lines.push({ color: "", width: 16, dasharray: parametrs.dasharray });
+        const colorStep = 360 / this.lines.length;
+        const colors = [""];
+        for (let i = 1; i < this.lines.length; i++)
+        {
+            colors.push(`hsl(${this.getRnd(colorStep * (i - 1), colorStep * i)}, ${100}%, ${Math.floor(this.getRnd(40, 60))}%)`);
+        }
+        for (let i = 1; i < this.lines.length; i++)
+        {
+            const colorIndex = Math.floor(this.getRnd(1, colors.length));
+            this.lines[i].color = colors[colorIndex];
+            colors.splice(colorIndex, 1);
+        }
+    }
+    private getRnd(min: number, max: number) {
+        return Math.random() * (max - min) + min;
     }
 }
