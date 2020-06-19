@@ -1,10 +1,15 @@
 import { Grafic } from "./objects/grafic.js";
+import { SettingsMenu } from "./objects/settingsMenu.js";
 
 export class scheduleViewer
 {
     private body: HTMLDivElement;
+
     private graficBody = document.createElement("div");
     private grafic: Grafic
+
+    private settingsMenuBody = document.createElement("div");
+    private settingsMenu: SettingsMenu
 
 
     constructor(body: HTMLDivElement)
@@ -13,8 +18,12 @@ export class scheduleViewer
         this.body.style.overflow = "hidden";
 
         {
+            const settingsMenuWidth = 300;
             this.body.appendChild(this.graficBody);
-            this.grafic = new Grafic(this.graficBody);
+            this.grafic = new Grafic(this.graficBody, settingsMenuWidth);
+
+            this.body.appendChild(this.settingsMenuBody);
+            this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth);
         }
     }
 }

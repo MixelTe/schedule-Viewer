@@ -21,17 +21,20 @@ export class Grafic
     private scrollLeftLast = 0;
     private zoomActive = false;
 
-    constructor(body: HTMLDivElement)
+    constructor(body: HTMLDivElement, rightSpace: number)
     {
+        const borderWidth = 2;
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
-        this.body.style.width = "calc(100% - 0px)";
+        this.body.style.width = `calc(100% - ${rightSpace + borderWidth}px)`;
         this.body.style.overflowX = "scroll";
         this.body.style.overflowY = "auto";
+        this.body.style.borderRight = `${borderWidth}px solid black`;
+        this.body.style.display = "inline-block";
 
         const scgBCR = this.body.getBoundingClientRect();
-        this.body.style.height = `${scgBCR.height}px`;
-        this.body.style.width = `${scgBCR.width}px`;
+        // this.body.style.height = `${scgBCR.height}px`;
+        // this.body.style.width = `${scgBCR.width}px`;
 
         this.body.appendChild(this.svg);
         this.svg.appendChild(this.defs);
