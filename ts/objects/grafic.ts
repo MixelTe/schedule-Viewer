@@ -15,7 +15,7 @@ export class Grafic
     private zoom = 2;
     private zoomMin = 0.6;
     private zoomMax = 1500;
-    private zoomSpeed = 1;
+    private zoomSpeed = 1.1;
     private zoomFix = { second: 0, delta: 0 };
     private lastTime = 0;
     private scrollLeftLast = 0;
@@ -86,9 +86,16 @@ export class Grafic
         const dz = (dy / Math.abs(dy)) * -1;
 
         let speed = this.zoomSpeed;
-        if (this.zoom > 70) speed *= 4;
-        if (this.zoom > 200) speed *= 4;
-        this.zoom = Math.max(Math.min(this.zoom + dz * speed, this.zoomMax), this.zoomMin);
+        // if (this.zoom > 70) speed *= 4;
+        // if (this.zoom > 200) speed *= 4;
+        if (dz > 0)
+        {
+            this.zoom = Math.max(Math.min(this.zoom * speed, this.zoomMax), this.zoomMin);
+        }
+        else
+        {
+            this.zoom = Math.max(Math.min(this.zoom / speed, this.zoomMax), this.zoomMin);
+        }
         this.zoom = Math.round(this.zoom * 100) / 100;
         // console.log(this.zoom);
 
