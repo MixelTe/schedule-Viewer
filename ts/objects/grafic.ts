@@ -49,10 +49,10 @@ export class Grafic
 
             for (let i = 0; i < 10; i++)
             {
-                this.lines.createLine({dasharray: [20, 10] });
-                this.lines.createLine({dasharray: [60, 30] });
-                this.lines.createLine({dasharray: [5, 200] });
-                this.lines.createLine({ dasharray: [30, 30] });
+                this.lines.createLine(20, 10);
+                this.lines.createLine(60, 30);
+                this.lines.createLine(5, 200);
+                this.lines.createLine(30, 30);
             }
             this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }

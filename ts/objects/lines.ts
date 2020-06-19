@@ -62,9 +62,9 @@ export class Lines
             this.body.appendChild(line);
         };
     }
-    public createLine(parametrs: { dasharray: number[] })
+    public createLine(interval: number, duration: number)
     {
-        this.lines.push({ color: "", width: 16, dasharray: parametrs.dasharray });
+        this.lines.push({ color: "", width: 16, dasharray: [interval, duration] });
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++)
