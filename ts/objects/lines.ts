@@ -8,6 +8,7 @@ export class Lines
     private lines: LineF[];
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
+    private drawEmptyLines = false;
 
     constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
@@ -101,7 +102,8 @@ export class Lines
             let dx = `h ${duration * (this.oneHour / 60 / 60 * zoom)}`;
             if (typeof duration != "number" || duration / duration != 1)
             {
-                dx = "v1"
+                if (this.drawEmptyLines) dx = "v1"
+                else break;
             }
             if (duration / el.dasharray[0] > 1)
             {
