@@ -19,6 +19,7 @@ export class Grafic
     private zoomFix = { second: 0, delta: 0 };
     private lastTime = 0;
     private scrollLeftLast = 0;
+    private zoomActive = false;
 
     constructor(body: HTMLDivElement)
     {
@@ -56,10 +57,11 @@ export class Grafic
             }
             this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }
-        this.svg.addEventListener("wheel", (e) => { this.mouseWheel(e) });
+        this.svg.addEventListener("wheel", (e) => {  if (this.zoomActive) this.mouseWheel(e) });
         this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
         this.body.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
+        document.addEventListener("keyup", (e) => { if (e.key == "Control") this.zoomActive = false; });
         this.body.scrollTop = parseInt(this.svg.style.height);
     }
 
@@ -114,6 +116,10 @@ export class Grafic
 
             case "ArrowRight":
                 this.svg.setAttribute("width", `${this.svg.getBoundingClientRect().width + 10}`);
+                break;
+
+            case "Control":
+                this.zoomActive = true;
                 break;
 
             default:
