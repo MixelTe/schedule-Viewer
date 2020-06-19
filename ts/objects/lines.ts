@@ -151,6 +151,14 @@ export class Lines
     private getRnd(min: number, max: number) {
         return Math.random() * (max - min) + min;
     }
+
+    public changeClip(axis: Rect, scroll: number)
+    {
+        this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
+        this.clipRect.setAttribute("y", `${axis.y}`);
+        this.clipRect.setAttribute("width", `${axis.width - scroll}`);
+        this.clipRect.setAttribute("height", `${axis.height}`);
+    }
 }
 
 interface LineF

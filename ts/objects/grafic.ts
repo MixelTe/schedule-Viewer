@@ -110,7 +110,6 @@ export class Grafic
         this.zoomFix.second = second;
         this.coordinates.changeZoomFixPoint(second);
         if (needRecreate) this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
-        if (needRecreate) this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         // console.log(second);
     }
     private keyDown(e: KeyboardEvent)
@@ -158,7 +157,7 @@ export class Grafic
         this.zoomFix.delta = zoomFixPointX - scrollLeft;
 
         this.coordinates.recreateScale(this.zoom, scrollLeft);
-        this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
+        this.lines.changeClip(this.coordinates.axis, this.body.scrollLeft);
     }
     private changeSVGHeight(height: number)
     {
