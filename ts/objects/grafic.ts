@@ -48,19 +48,20 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
 
-            for (let i = 0; i < 0; i++)
+            for (let i = 0; i < 9; i++)
             {
-                this.lines.createLine(20, 10);
-                this.lines.createLine(60, 30);
-                this.lines.createLine(5, 200);
-                this.lines.createLine(30, 30);
+                // this.lines.createLine(20, 10);
+                // this.lines.createLine(60, 30);
+                // this.lines.createLine(5, 200);
+                // this.lines.createLine(30, 30);
+
+                const duractions = []
+                for (let i = 0; i < this.getRndInteger(600, 900); i++)
+                {
+                    duractions.push(this.getRndInteger(40, 160));
+                }
+                this.lines.createRealLine(60, duractions);
             }
-            const duractions = []
-            for (let i = 0; i < 300; i++)
-            {
-                duractions.push(this.getRndInteger(10, 90))
-            }
-            this.lines.createRealLine(30, duractions);
             this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => {  if (this.zoomActive) this.mouseWheel(e) });
