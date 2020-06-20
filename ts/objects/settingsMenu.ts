@@ -88,7 +88,7 @@ export class SettingsMenu
             const title = document.createElement("div");
             title.style.height = "max-content";
             title.style.width = "max-content";
-            title.innerText = "Shcedule viewer"
+            title.innerText = "Schedule viewer"
             title.style.fontSize = "34px"
             this.titleDIV.appendChild(title);
 
@@ -171,7 +171,7 @@ export class SettingsMenu
                 addSympleLine.style.height = "max-content";
                 addSympleLine.style.fontSize = "21px"
                 addSympleLine.style.textAlign = "center"
-                addSympleLine.innerText = "symple line"
+                addSympleLine.innerText = "simple line"
                 this.addingLinesDIV.appendChild(addSympleLine);
 
                 const addSympleLineMenu = document.createElement("div");
