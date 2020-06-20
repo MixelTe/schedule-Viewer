@@ -178,11 +178,11 @@ export class Grafic
         return Math.random() * (max - min) + min;
     }
 
-    public getFunctions()
+    public getFunctions() : FunctionsForMenu
     {
         return {
-            toggleSepLine: this.coordinates.toggleSepLine.bind(this),
-            SepLineIsActive: this.coordinates.SepLineIsActive.bind(this),
+            toggleSepLine: this.coordinates.toggleSepLine.bind(this.coordinates),
+            SepLineIsActive: this.coordinates.SepLineIsActive.bind(this.coordinates),
         }
     }
 }
