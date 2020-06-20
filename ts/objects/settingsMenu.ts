@@ -15,7 +15,21 @@ export class SettingsMenu
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = {height: 340};
+    private addingLinesPrm = { height: 340 };
+    private sympleLineInputs = {
+        interval: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
+        duration: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
+        start: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
+        end: { h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{} },
+        button: <HTMLButtonElement>{}
+    };
+    private realLineInputs = {
+        interval: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
+        durations: <HTMLInputElement>{},
+        start: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
+        end: { h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{} },
+        button: <HTMLButtonElement>{}
+    };
 
 
 
@@ -201,6 +215,7 @@ export class SettingsMenu
                     sympleLineInputIntervalh.style.height = `${inputHeight}px`
                     sympleLineInputIntervalh.id = "scheduleViewer-SettingsMenu-sympleLineInputIntervalh";
                     sympleLineInterval.appendChild(sympleLineInputIntervalh);
+                    this.sympleLineInputs.interval.h = sympleLineInputIntervalh;
 
                     const sympleLineLableIntervalh = document.createElement("label");
                     sympleLineLableIntervalh.style.height = "max-content";
@@ -217,6 +232,7 @@ export class SettingsMenu
                     sympleLineInputIntervalm.style.height = `${inputHeight}px`
                     sympleLineInputIntervalm.id = "scheduleViewer-SettingsMenu-sympleLineInputIntervalm";
                     sympleLineInterval.appendChild(sympleLineInputIntervalm);
+                    this.sympleLineInputs.interval.m = sympleLineInputIntervalm;
 
                     const sympleLineLableIntervalm = document.createElement("label");
                     sympleLineLableIntervalm.style.height = "max-content";
@@ -233,6 +249,7 @@ export class SettingsMenu
                     sympleLineInputIntervals.style.height = `${inputHeight}px`
                     sympleLineInputIntervals.id = "scheduleViewer-SettingsMenu-sympleLineInputIntervals";
                     sympleLineInterval.appendChild(sympleLineInputIntervals);
+                    this.sympleLineInputs.interval.s = sympleLineInputIntervals;
 
                     const sympleLineLableIntervals = document.createElement("label");
                     sympleLineLableIntervals.style.height = "max-content";
@@ -264,6 +281,7 @@ export class SettingsMenu
                     sympleLineInputDurationh.style.height = `${inputHeight}px`
                     sympleLineInputDurationh.id = "scheduleViewer-SettingsMenu-sympleLineInputDurationh";
                     sympleLineDuration.appendChild(sympleLineInputDurationh);
+                    this.sympleLineInputs.duration.h = sympleLineInputDurationh;
 
                     const sepLineLableDurationh = document.createElement("label");
                     sepLineLableDurationh.style.height = "max-content";
@@ -280,6 +298,7 @@ export class SettingsMenu
                     sympleLineInputDurationm.style.height = `${inputHeight}px`
                     sympleLineInputDurationm.id = "scheduleViewer-SettingsMenu-sympleLineInputDurationm";
                     sympleLineDuration.appendChild(sympleLineInputDurationm);
+                    this.sympleLineInputs.duration.m = sympleLineInputDurationm;
 
                     const sepLineLableDurationm = document.createElement("label");
                     sepLineLableDurationm.style.height = "max-content";
@@ -296,6 +315,7 @@ export class SettingsMenu
                     sympleLineInputDurations.style.height = `${inputHeight}px`
                     sympleLineInputDurations.id = "scheduleViewer-SettingsMenu-sympleLineInputDurations";
                     sympleLineDuration.appendChild(sympleLineInputDurations);
+                    this.sympleLineInputs.duration.s = sympleLineInputDurations;
 
                     const sepLineLableDurations = document.createElement("label");
                     sepLineLableDurations.style.height = "max-content";
@@ -328,6 +348,7 @@ export class SettingsMenu
                     sympleLineInputStarth.style.height = `${inputHeight}px`
                     sympleLineInputStarth.id = "scheduleViewer-SettingsMenu-sympleLineInputStarth";
                     sympleLineStart.appendChild(sympleLineInputStarth);
+                    this.sympleLineInputs.start.h = sympleLineInputStarth;
 
                     const sympleLineLableStarth = document.createElement("label");
                     sympleLineLableStarth.style.height = "max-content";
@@ -344,6 +365,7 @@ export class SettingsMenu
                     sympleLineInputStartm.style.height = `${inputHeight}px`
                     sympleLineInputStartm.id = "scheduleViewer-SettingsMenu-sympleLineInputStartm";
                     sympleLineStart.appendChild(sympleLineInputStartm);
+                    this.sympleLineInputs.start.m = sympleLineInputStartm;
 
                     const sympleLineLableStartm = document.createElement("label");
                     sympleLineLableStartm.style.height = "max-content";
@@ -360,6 +382,7 @@ export class SettingsMenu
                     sympleLineInputStarts.style.height = `${inputHeight}px`
                     sympleLineInputStarts.id = "scheduleViewer-SettingsMenu-sympleLineInputStarts";
                     sympleLineStart.appendChild(sympleLineInputStarts);
+                    this.sympleLineInputs.start.s = sympleLineInputStarts;
 
                     const sympleLineLableStarts = document.createElement("label");
                     sympleLineLableStarts.style.height = "max-content";
@@ -392,6 +415,7 @@ export class SettingsMenu
                     sympleLineInputEndh.style.height = `${inputHeight}px`
                     sympleLineInputEndh.id = "scheduleViewer-SettingsMenu-sympleLineInputEndh";
                     sympleLineEnd.appendChild(sympleLineInputEndh);
+                    this.sympleLineInputs.end.h = sympleLineInputEndh;
 
                     const sympleLineLableEndh = document.createElement("label");
                     sympleLineLableEndh.style.height = "max-content";
@@ -408,6 +432,7 @@ export class SettingsMenu
                     sympleLineInputEndm.style.height = `${inputHeight}px`
                     sympleLineInputEndm.id = "scheduleViewer-SettingsMenu-sympleLineInputEndm";
                     sympleLineEnd.appendChild(sympleLineInputEndm);
+                    this.sympleLineInputs.end.m = sympleLineInputEndm;
 
                     const sympleLineLableEndm = document.createElement("label");
                     sympleLineLableEndm.style.height = "max-content";
@@ -424,6 +449,7 @@ export class SettingsMenu
                     sympleLineInputEnds.style.height = `${inputHeight}px`
                     sympleLineInputEnds.id = "scheduleViewer-SettingsMenu-sympleLineInputEnds";
                     sympleLineEnd.appendChild(sympleLineInputEnds);
+                    this.sympleLineInputs.end.s = sympleLineInputEnds;
 
                     const sympleLineLableEnds = document.createElement("label");
                     sympleLineLableEnds.style.height = "max-content";
@@ -442,6 +468,7 @@ export class SettingsMenu
                 const sympleLineButton = document.createElement("button");
                 sympleLineButton.innerText = "add";
                 addSympleLineMenu.appendChild(sympleLineButton);
+                this.sympleLineInputs.button = sympleLineButton;
             }
 
             {
@@ -494,6 +521,7 @@ export class SettingsMenu
                     realLineInputIntervalh.style.height = `${inputHeight}px`
                     realLineInputIntervalh.id = "scheduleViewer-SettingsMenu-realLineInputIntervalh";
                     realLineInterval.appendChild(realLineInputIntervalh);
+                    this.realLineInputs.interval.h = realLineInputIntervalh;
 
                     const realLineLableIntervalh = document.createElement("label");
                     realLineLableIntervalh.style.height = "max-content";
@@ -510,6 +538,7 @@ export class SettingsMenu
                     realLineInputIntervalm.style.height = `${inputHeight}px`
                     realLineInputIntervalm.id = "scheduleViewer-SettingsMenu-realLineInputIntervalm";
                     realLineInterval.appendChild(realLineInputIntervalm);
+                    this.realLineInputs.interval.m = realLineInputIntervalm;
 
                     const realLineLableIntervalm = document.createElement("label");
                     realLineLableIntervalm.style.height = "max-content";
@@ -526,6 +555,7 @@ export class SettingsMenu
                     realLineInputIntervals.style.height = `${inputHeight}px`
                     realLineInputIntervals.id = "scheduleViewer-SettingsMenu-realLineInputIntervals";
                     realLineInterval.appendChild(realLineInputIntervals);
+                    this.realLineInputs.interval.s = realLineInputIntervals;
 
                     const realLineLableIntervals = document.createElement("label");
                     realLineLableIntervals.style.height = "max-content";
@@ -557,6 +587,7 @@ export class SettingsMenu
                     realLineInputDuration.style.height = `${16}px`
                     realLineInputDuration.id = "scheduleViewer-SettingsMenu-realLineInputDuration";
                     realLineDuration.appendChild(realLineInputDuration);
+                    this.realLineInputs.durations = realLineInputDuration;
 
                     const realLineLableDurations = document.createElement("label");
                     realLineLableDurations.style.height = "max-content";
@@ -589,6 +620,7 @@ export class SettingsMenu
                     realLineInputStarth.style.height = `${inputHeight}px`
                     realLineInputStarth.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
                     realLineStart.appendChild(realLineInputStarth);
+                    this.realLineInputs.start.h = realLineInputStarth;
 
                     const realLineLableStarth = document.createElement("label");
                     realLineLableStarth.style.height = "max-content";
@@ -605,6 +637,7 @@ export class SettingsMenu
                     realLineInputStartm.style.height = `${inputHeight}px`
                     realLineInputStartm.id = "scheduleViewer-SettingsMenu-realLineInputStartm";
                     realLineStart.appendChild(realLineInputStartm);
+                    this.realLineInputs.start.m = realLineInputStartm;
 
                     const realLineLableStartm = document.createElement("label");
                     realLineLableStartm.style.height = "max-content";
@@ -621,6 +654,7 @@ export class SettingsMenu
                     realLineInputStarts.style.height = `${inputHeight}px`
                     realLineInputStarts.id = "scheduleViewer-SettingsMenu-realLineInputStarts";
                     realLineStart.appendChild(realLineInputStarts);
+                    this.realLineInputs.start.s = realLineInputStarts;
 
                     const realLineLableStarts = document.createElement("label");
                     realLineLableStarts.style.height = "max-content";
@@ -653,6 +687,7 @@ export class SettingsMenu
                     realLineInputEndh.style.height = `${inputHeight}px`
                     realLineInputEndh.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
                     realLineEnd.appendChild(realLineInputEndh);
+                    this.realLineInputs.end.h = realLineInputEndh;
 
                     const realLineLableEndh = document.createElement("label");
                     realLineLableEndh.style.height = "max-content";
@@ -669,6 +704,7 @@ export class SettingsMenu
                     realLineInputEndm.style.height = `${inputHeight}px`
                     realLineInputEndm.id = "scheduleViewer-SettingsMenu-realLineInputEndm";
                     realLineEnd.appendChild(realLineInputEndm);
+                    this.realLineInputs.end.m = realLineInputEndm;
 
                     const realLineLableEndm = document.createElement("label");
                     realLineLableEndm.style.height = "max-content";
@@ -685,6 +721,7 @@ export class SettingsMenu
                     realLineInputEnds.style.height = `${inputHeight}px`
                     realLineInputEnds.id = "scheduleViewer-SettingsMenu-realLineInputEnds";
                     realLineEnd.appendChild(realLineInputEnds);
+                    this.realLineInputs.end.s = realLineInputEnds;
 
                     const realLineLableEnds = document.createElement("label");
                     realLineLableEnds.style.height = "max-content";
@@ -703,6 +740,7 @@ export class SettingsMenu
                 const sympleLineButton = document.createElement("button");
                 sympleLineButton.innerText = "add";
                 addRealLineMenu.appendChild(sympleLineButton);
+                this.realLineInputs.button = sympleLineButton;
             }
         }
 

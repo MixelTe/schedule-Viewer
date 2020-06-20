@@ -10,4 +10,6 @@ interface FunctionsForMenu
 {
     toggleSepLine: () => void,
     SepLineIsActive: () => boolean,
+    addSympleLine: (interval: number, duration: number, start: number, end: number) => void,
+    addRealLine: (interval: number, durations: number[], start: number, end: number) => void,
 }

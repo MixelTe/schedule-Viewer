@@ -183,6 +183,8 @@ export class Grafic
         return {
             toggleSepLine: this.coordinates.toggleSepLine.bind(this.coordinates),
             SepLineIsActive: this.coordinates.SepLineIsActive.bind(this.coordinates),
+            addSympleLine: this.lines.createLine.bind(this.lines),
+            addRealLine: this.lines.createRealLine.bind(this.lines),
         }
     }
 }
