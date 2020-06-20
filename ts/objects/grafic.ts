@@ -26,7 +26,7 @@ export class Grafic
         const borderWidth = 2;
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
-        this.body.style.width = `calc(100% - ${rightSpace + borderWidth}px)`;
+        this.body.style.width = "100%";
         this.body.style.overflowX = "scroll";
         this.body.style.overflowY = "auto";
         this.body.style.borderRight = `${borderWidth}px solid black`;
@@ -39,7 +39,7 @@ export class Grafic
         this.body.appendChild(this.svg);
         this.svg.appendChild(this.defs);
 
-        this.zoom = Math.max(Math.min(scgBCR.width / (this.oneHour * 24 + 30)), this.zoomMin);
+        this.zoom = Math.max(Math.min((scgBCR.width - rightSpace) / (this.oneHour * 24 + 30)), this.zoomMin);
         this.zoomMin = this.zoom;
         this.svg.style.height = `${this.body.clientHeight - 4}`; //magic number
         this.svg.style.width = `${this.oneHour * this.zoom * 24 + 30}`;

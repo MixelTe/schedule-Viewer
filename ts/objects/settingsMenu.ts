@@ -20,6 +20,7 @@ export class SettingsMenu
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
         this.body.style.width = `${width}px`;
+        this.body.style.minWidth = `${width}px`;
         this.body.style.backgroundColor = "lightblue";
         this.body.style.overflowY = "auto"
         this.body.style.display = "inline-block";
