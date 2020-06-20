@@ -1037,6 +1037,31 @@ export class SettingsMenu
         const filesList = eTarget.files;
         if (filesList == null) return;
         const fileText = await filesList[0].text();
+        this.addLinesFromFile(fileText, functions);
+    }
+
+    public mainBodyDragover(e: DragEvent)
+    {
+        e.stopPropagation();
+        e.preventDefault();
+        const dragData = e.dataTransfer;
+        if (dragData == null) return;
+        dragData.dropEffect = 'copy';
+    }
+
+    public async mainBodyDrop(e: DragEvent, functions: FunctionsForMenu)
+    {
+        e.stopPropagation();
+        e.preventDefault();
+        const dragData = e.dataTransfer;
+        if (dragData == null) return;
+        const filesList = dragData.files;
+        if (filesList == null) return;
+        const fileText = await filesList[0].text();
+        this.addLinesFromFile(fileText, functions);
+    }
+    private addLinesFromFile(fileText: string, functions: FunctionsForMenu)
+    {
         const newSchedule = <Schedule>JSON.parse(fileText);
         console.log(newSchedule);
 
