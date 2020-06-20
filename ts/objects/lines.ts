@@ -8,7 +8,8 @@ export class Lines
     private lines: LineF[];
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
-    private drawEmptyLines = true;
+    private drawEmptyLines = false;
+    private showLineAfterEnd = false;
 
     constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
@@ -103,7 +104,7 @@ export class Lines
             let dx = `h ${duration * oneSecond}`;
             if (typeof duration != "number" || duration / duration != 1)
             {
-                if (this.drawEmptyLines) dx = "v1"
+                if (this.drawEmptyLines || duration == 0) dx = "v1"
                 else break;
             }
             if (duration / el.dasharray[0] > 1)
@@ -111,6 +112,7 @@ export class Lines
                 x = x + Math.floor(duration / el.dasharray[0])
             }
             const nextX = axis.x + interval * x + el.start * oneSecond;
+            if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
             path += `
             ${dx}
             M ${nextX} ${axis.y + axis.height - spaces * index}`

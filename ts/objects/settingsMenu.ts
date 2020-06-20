@@ -88,7 +88,7 @@ export class SettingsMenu
             const title = document.createElement("div");
             title.style.height = "max-content";
             title.style.width = "max-content";
-            title.innerText = "Shedule viewer"
+            title.innerText = "Shcedule viewer"
             title.style.fontSize = "34px"
             this.titleDIV.appendChild(title);
 
@@ -923,6 +923,17 @@ export class SettingsMenu
         if (this.isNumber(inputsData.end.s)) this.markAsCorrect(this.realLineInputs.end.s);
         else { this.markAsUncorrect(this.realLineInputs.end.s); return; }
 
+        const durations = inputsData.duration.split(',').map(num =>
+            {
+                const newNum = Number(num);
+            if (newNum / newNum == 1 || newNum == 0) return newNum;
+            else
+            {
+                this.markAsUncorrect(this.realLineInputs.durations);
+                throw new Error(`uncorrect value in duration: "${num}"`)
+            };
+            });
+
         this.UnmarkAndClear(this.realLineInputs.interval.h);
         this.UnmarkAndClear(this.realLineInputs.interval.m);
         this.UnmarkAndClear(this.realLineInputs.interval.s);
@@ -946,15 +957,9 @@ export class SettingsMenu
         console.log("Yee!!!");
 
         const interval = inputsData.interval.h * 60 * 60 + inputsData.interval.m * 60 + inputsData.interval.s;
-        const duration = inputsData.duration.split(',').map(num =>
-        {
-            const newNum = Number(num);
-            if (newNum / newNum == 1 || newNum == 0) return newNum;
-            else throw new Error(`uncorrect value in duration: ${num}`);
-        });
         const start = inputsData.start.h * 60 * 60 + inputsData.start.m * 60 + inputsData.start.s;
         const end = inputsData.end.h * 60 * 60 + inputsData.end.m * 60 + inputsData.end.s;
-        functions.addRealLine(interval, duration, start, end);
+        functions.addRealLine(interval, durations, start, end);
         functions.recreate();
     }
     private isNumber(num: any)
