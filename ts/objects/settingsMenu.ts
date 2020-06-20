@@ -15,7 +15,7 @@ export class SettingsMenu
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = { height: 340 };
+    private addingLinesPrm = { height: 340, inputsBorder: "1px solid grey" };
     private sympleLineInputs = {
         interval: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
         duration: {h: <HTMLInputElement>{}, m: <HTMLInputElement>{}, s: <HTMLInputElement>{}},
@@ -213,6 +213,7 @@ export class SettingsMenu
                     sympleLineInputIntervalh.type = "input";
                     sympleLineInputIntervalh.style.width = `${inputWidth}px`
                     sympleLineInputIntervalh.style.height = `${inputHeight}px`
+                    sympleLineInputIntervalh.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineInputIntervalh.id = "scheduleViewer-SettingsMenu-sympleLineInputIntervalh";
                     sympleLineInterval.appendChild(sympleLineInputIntervalh);
                     this.sympleLineInputs.interval.h = sympleLineInputIntervalh;
@@ -231,6 +232,7 @@ export class SettingsMenu
                     sympleLineInputIntervalm.style.width = `${inputWidth}px`
                     sympleLineInputIntervalm.style.height = `${inputHeight}px`
                     sympleLineInputIntervalm.id = "scheduleViewer-SettingsMenu-sympleLineInputIntervalm";
+                    sympleLineInputIntervalm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineInterval.appendChild(sympleLineInputIntervalm);
                     this.sympleLineInputs.interval.m = sympleLineInputIntervalm;
 
@@ -248,6 +250,7 @@ export class SettingsMenu
                     sympleLineInputIntervals.style.width = `${inputWidth}px`
                     sympleLineInputIntervals.style.height = `${inputHeight}px`
                     sympleLineInputIntervals.id = "scheduleViewer-SettingsMenu-sympleLineInputIntervals";
+                    sympleLineInputIntervals.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineInterval.appendChild(sympleLineInputIntervals);
                     this.sympleLineInputs.interval.s = sympleLineInputIntervals;
 
@@ -280,6 +283,7 @@ export class SettingsMenu
                     sympleLineInputDurationh.style.width = `${inputWidth}px`
                     sympleLineInputDurationh.style.height = `${inputHeight}px`
                     sympleLineInputDurationh.id = "scheduleViewer-SettingsMenu-sympleLineInputDurationh";
+                    sympleLineInputDurationh.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineDuration.appendChild(sympleLineInputDurationh);
                     this.sympleLineInputs.duration.h = sympleLineInputDurationh;
 
@@ -297,6 +301,7 @@ export class SettingsMenu
                     sympleLineInputDurationm.style.width = `${inputWidth}px`
                     sympleLineInputDurationm.style.height = `${inputHeight}px`
                     sympleLineInputDurationm.id = "scheduleViewer-SettingsMenu-sympleLineInputDurationm";
+                    sympleLineInputDurationm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineDuration.appendChild(sympleLineInputDurationm);
                     this.sympleLineInputs.duration.m = sympleLineInputDurationm;
 
@@ -314,6 +319,7 @@ export class SettingsMenu
                     sympleLineInputDurations.style.width = `${inputWidth}px`
                     sympleLineInputDurations.style.height = `${inputHeight}px`
                     sympleLineInputDurations.id = "scheduleViewer-SettingsMenu-sympleLineInputDurations";
+                    sympleLineInputDurations.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineDuration.appendChild(sympleLineInputDurations);
                     this.sympleLineInputs.duration.s = sympleLineInputDurations;
 
@@ -347,6 +353,7 @@ export class SettingsMenu
                     sympleLineInputStarth.style.width = `${inputWidth}px`
                     sympleLineInputStarth.style.height = `${inputHeight}px`
                     sympleLineInputStarth.id = "scheduleViewer-SettingsMenu-sympleLineInputStarth";
+                    sympleLineInputStarth.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineStart.appendChild(sympleLineInputStarth);
                     this.sympleLineInputs.start.h = sympleLineInputStarth;
 
@@ -364,6 +371,7 @@ export class SettingsMenu
                     sympleLineInputStartm.style.width = `${inputWidth}px`
                     sympleLineInputStartm.style.height = `${inputHeight}px`
                     sympleLineInputStartm.id = "scheduleViewer-SettingsMenu-sympleLineInputStartm";
+                    sympleLineInputStartm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineStart.appendChild(sympleLineInputStartm);
                     this.sympleLineInputs.start.m = sympleLineInputStartm;
 
@@ -381,6 +389,7 @@ export class SettingsMenu
                     sympleLineInputStarts.style.width = `${inputWidth}px`
                     sympleLineInputStarts.style.height = `${inputHeight}px`
                     sympleLineInputStarts.id = "scheduleViewer-SettingsMenu-sympleLineInputStarts";
+                    sympleLineInputStarts.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineStart.appendChild(sympleLineInputStarts);
                     this.sympleLineInputs.start.s = sympleLineInputStarts;
 
@@ -414,6 +423,7 @@ export class SettingsMenu
                     sympleLineInputEndh.style.width = `${inputWidth}px`
                     sympleLineInputEndh.style.height = `${inputHeight}px`
                     sympleLineInputEndh.id = "scheduleViewer-SettingsMenu-sympleLineInputEndh";
+                    sympleLineInputEndh.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineEnd.appendChild(sympleLineInputEndh);
                     this.sympleLineInputs.end.h = sympleLineInputEndh;
 
@@ -431,6 +441,7 @@ export class SettingsMenu
                     sympleLineInputEndm.style.width = `${inputWidth}px`
                     sympleLineInputEndm.style.height = `${inputHeight}px`
                     sympleLineInputEndm.id = "scheduleViewer-SettingsMenu-sympleLineInputEndm";
+                    sympleLineInputEndm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineEnd.appendChild(sympleLineInputEndm);
                     this.sympleLineInputs.end.m = sympleLineInputEndm;
 
@@ -448,6 +459,7 @@ export class SettingsMenu
                     sympleLineInputEnds.style.width = `${inputWidth}px`
                     sympleLineInputEnds.style.height = `${inputHeight}px`
                     sympleLineInputEnds.id = "scheduleViewer-SettingsMenu-sympleLineInputEnds";
+                    sympleLineInputEnds.style.border = `${this.addingLinesPrm.inputsBorder}`
                     sympleLineEnd.appendChild(sympleLineInputEnds);
                     this.sympleLineInputs.end.s = sympleLineInputEnds;
 
@@ -520,6 +532,7 @@ export class SettingsMenu
                     realLineInputIntervalh.style.width = `${inputWidth}px`
                     realLineInputIntervalh.style.height = `${inputHeight}px`
                     realLineInputIntervalh.id = "scheduleViewer-SettingsMenu-realLineInputIntervalh";
+                    realLineInputIntervalh.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineInterval.appendChild(realLineInputIntervalh);
                     this.realLineInputs.interval.h = realLineInputIntervalh;
 
@@ -537,6 +550,7 @@ export class SettingsMenu
                     realLineInputIntervalm.style.width = `${inputWidth}px`
                     realLineInputIntervalm.style.height = `${inputHeight}px`
                     realLineInputIntervalm.id = "scheduleViewer-SettingsMenu-realLineInputIntervalm";
+                    realLineInputIntervalm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineInterval.appendChild(realLineInputIntervalm);
                     this.realLineInputs.interval.m = realLineInputIntervalm;
 
@@ -554,6 +568,7 @@ export class SettingsMenu
                     realLineInputIntervals.style.width = `${inputWidth}px`
                     realLineInputIntervals.style.height = `${inputHeight}px`
                     realLineInputIntervals.id = "scheduleViewer-SettingsMenu-realLineInputIntervals";
+                    realLineInputIntervals.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineInterval.appendChild(realLineInputIntervals);
                     this.realLineInputs.interval.s = realLineInputIntervals;
 
@@ -586,6 +601,7 @@ export class SettingsMenu
                     realLineInputDuration.style.width = `${55}px`
                     realLineInputDuration.style.height = `${16}px`
                     realLineInputDuration.id = "scheduleViewer-SettingsMenu-realLineInputDuration";
+                    realLineInputDuration.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineDuration.appendChild(realLineInputDuration);
                     this.realLineInputs.durations = realLineInputDuration;
 
@@ -619,6 +635,7 @@ export class SettingsMenu
                     realLineInputStarth.style.width = `${inputWidth}px`
                     realLineInputStarth.style.height = `${inputHeight}px`
                     realLineInputStarth.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
+                    realLineInputStarth.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineStart.appendChild(realLineInputStarth);
                     this.realLineInputs.start.h = realLineInputStarth;
 
@@ -636,6 +653,7 @@ export class SettingsMenu
                     realLineInputStartm.style.width = `${inputWidth}px`
                     realLineInputStartm.style.height = `${inputHeight}px`
                     realLineInputStartm.id = "scheduleViewer-SettingsMenu-realLineInputStartm";
+                    realLineInputStartm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineStart.appendChild(realLineInputStartm);
                     this.realLineInputs.start.m = realLineInputStartm;
 
@@ -653,6 +671,7 @@ export class SettingsMenu
                     realLineInputStarts.style.width = `${inputWidth}px`
                     realLineInputStarts.style.height = `${inputHeight}px`
                     realLineInputStarts.id = "scheduleViewer-SettingsMenu-realLineInputStarts";
+                    realLineInputStarts.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineStart.appendChild(realLineInputStarts);
                     this.realLineInputs.start.s = realLineInputStarts;
 
@@ -686,6 +705,7 @@ export class SettingsMenu
                     realLineInputEndh.style.width = `${inputWidth}px`
                     realLineInputEndh.style.height = `${inputHeight}px`
                     realLineInputEndh.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
+                    realLineInputEndh.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineEnd.appendChild(realLineInputEndh);
                     this.realLineInputs.end.h = realLineInputEndh;
 
@@ -703,6 +723,7 @@ export class SettingsMenu
                     realLineInputEndm.style.width = `${inputWidth}px`
                     realLineInputEndm.style.height = `${inputHeight}px`
                     realLineInputEndm.id = "scheduleViewer-SettingsMenu-realLineInputEndm";
+                    realLineInputEndm.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineEnd.appendChild(realLineInputEndm);
                     this.realLineInputs.end.m = realLineInputEndm;
 
@@ -720,6 +741,7 @@ export class SettingsMenu
                     realLineInputEnds.style.width = `${inputWidth}px`
                     realLineInputEnds.style.height = `${inputHeight}px`
                     realLineInputEnds.id = "scheduleViewer-SettingsMenu-realLineInputEnds";
+                    realLineInputEnds.style.border = `${this.addingLinesPrm.inputsBorder}`
                     realLineEnd.appendChild(realLineInputEnds);
                     this.realLineInputs.end.s = realLineInputEnds;
 
@@ -747,6 +769,8 @@ export class SettingsMenu
 
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
+        this.sympleLineInputs.button.addEventListener("click", () => this.addSympleLine(functions));
+        this.realLineInputs.button.addEventListener("click", () => this.addRealLine(functions));
     }
 
     private toggleMenu()
@@ -769,6 +793,145 @@ export class SettingsMenu
             this.addingLinesDIV.style.visibility = "visible";
             this.menuOpen = true;
         }
+    }
+
+    private addSympleLine(functions: FunctionsForMenu)
+    {
+        const inputsData = {
+            interval: {
+                h: parseInt(this.sympleLineInputs.interval.h.value),
+                m: parseInt(this.sympleLineInputs.interval.m.value),
+                s: parseInt(this.sympleLineInputs.interval.s.value),
+            },
+            duration: {
+                h: parseInt(this.sympleLineInputs.duration.h.value),
+                m: parseInt(this.sympleLineInputs.duration.m.value),
+                s: parseInt(this.sympleLineInputs.duration.s.value),
+            },
+            start: {
+                h: parseInt(this.sympleLineInputs.start.h.value),
+                m: parseInt(this.sympleLineInputs.start.m.value),
+                s: parseInt(this.sympleLineInputs.start.s.value),
+            },
+            end: {
+                h: parseInt(this.sympleLineInputs.end.h.value),
+                m: parseInt(this.sympleLineInputs.end.m.value),
+                s: parseInt(this.sympleLineInputs.end.s.value),
+            },
+        };
+        if (this.isNumber(inputsData.interval.h)) this.markAsCorrect(this.sympleLineInputs.interval.h);
+        else { this.markAsUncorrect(this.sympleLineInputs.interval.h); return; }
+        if (this.isNumber(inputsData.interval.m)) this.markAsCorrect(this.sympleLineInputs.interval.m);
+        else { this.markAsUncorrect(this.sympleLineInputs.interval.m); return; }
+        if (this.isNumber(inputsData.interval.s)) this.markAsCorrect(this.sympleLineInputs.interval.s);
+        else { this.markAsUncorrect(this.sympleLineInputs.interval.s); return; }
+
+        if (this.isNumber(inputsData.duration.h)) this.markAsCorrect(this.sympleLineInputs.duration.h);
+        else { this.markAsUncorrect(this.sympleLineInputs.duration.h); return; }
+        if (this.isNumber(inputsData.duration.m)) this.markAsCorrect(this.sympleLineInputs.duration.m);
+        else { this.markAsUncorrect(this.sympleLineInputs.duration.m); return; }
+        if (this.isNumber(inputsData.duration.s)) this.markAsCorrect(this.sympleLineInputs.duration.s);
+        else { this.markAsUncorrect(this.sympleLineInputs.duration.s); return; }
+
+        if (this.isNumber(inputsData.start.h)) this.markAsCorrect(this.sympleLineInputs.start.h);
+        else { this.markAsUncorrect(this.sympleLineInputs.start.h); return; }
+        if (this.isNumber(inputsData.start.m)) this.markAsCorrect(this.sympleLineInputs.start.m);
+        else { this.markAsUncorrect(this.sympleLineInputs.start.m); return; }
+        if (this.isNumber(inputsData.start.s)) this.markAsCorrect(this.sympleLineInputs.start.s);
+        else { this.markAsUncorrect(this.sympleLineInputs.start.s); return; }
+
+        if (this.isNumber(inputsData.end.h)) this.markAsCorrect(this.sympleLineInputs.end.h);
+        else { this.markAsUncorrect(this.sympleLineInputs.end.h); return; }
+        if (this.isNumber(inputsData.end.m)) this.markAsCorrect(this.sympleLineInputs.end.m);
+        else { this.markAsUncorrect(this.sympleLineInputs.end.m); return; }
+        if (this.isNumber(inputsData.end.s)) this.markAsCorrect(this.sympleLineInputs.end.s);
+        else { this.markAsUncorrect(this.sympleLineInputs.end.s); return; }
+
+        console.log("Yee!!!");
+
+        this.UnmarkAndClear(this.sympleLineInputs.interval.h);
+        this.UnmarkAndClear(this.sympleLineInputs.interval.m);
+        this.UnmarkAndClear(this.sympleLineInputs.interval.s);
+        this.UnmarkAndClear(this.sympleLineInputs.duration.h);
+        this.UnmarkAndClear(this.sympleLineInputs.duration.m);
+        this.UnmarkAndClear(this.sympleLineInputs.duration.s);
+        this.UnmarkAndClear(this.sympleLineInputs.start.h);
+        this.UnmarkAndClear(this.sympleLineInputs.start.m);
+        this.UnmarkAndClear(this.sympleLineInputs.start.s);
+        this.UnmarkAndClear(this.sympleLineInputs.end.h);
+        this.UnmarkAndClear(this.sympleLineInputs.end.m);
+        this.UnmarkAndClear(this.sympleLineInputs.end.s);
+    }
+    private addRealLine(functions: FunctionsForMenu)
+    {
+        const inputsData = {
+            interval: {
+                h: parseInt(this.realLineInputs.interval.h.value),
+                s: parseInt(this.realLineInputs.interval.s.value),
+                m: parseInt(this.realLineInputs.interval.m.value),
+            },
+            duration: this.realLineInputs.durations.value,
+            start: {
+                h: parseInt(this.realLineInputs.start.h.value),
+                m: parseInt(this.realLineInputs.start.m.value),
+                s: parseInt(this.realLineInputs.start.s.value),
+            },
+            end: {
+                h: parseInt(this.realLineInputs.end.h.value),
+                m: parseInt(this.realLineInputs.end.m.value),
+                s: parseInt(this.realLineInputs.end.s.value),
+            },
+        };
+        if (this.isNumber(inputsData.interval.h)) this.markAsCorrect(this.realLineInputs.interval.h);
+        else { this.markAsUncorrect(this.realLineInputs.interval.h); return; }
+        if (this.isNumber(inputsData.interval.m)) this.markAsCorrect(this.realLineInputs.interval.m);
+        else { this.markAsUncorrect(this.realLineInputs.interval.m); return; }
+        if (this.isNumber(inputsData.interval.s)) this.markAsCorrect(this.realLineInputs.interval.s);
+        else { this.markAsUncorrect(this.realLineInputs.interval.s); return; }
+
+        if (this.isNumber(inputsData.start.h)) this.markAsCorrect(this.realLineInputs.start.h);
+        else { this.markAsUncorrect(this.realLineInputs.start.h); return; }
+        if (this.isNumber(inputsData.start.m)) this.markAsCorrect(this.realLineInputs.start.m);
+        else { this.markAsUncorrect(this.realLineInputs.start.m); return; }
+        if (this.isNumber(inputsData.start.s)) this.markAsCorrect(this.realLineInputs.start.s);
+        else { this.markAsUncorrect(this.realLineInputs.start.s); return; }
+
+        if (this.isNumber(inputsData.end.h)) this.markAsCorrect(this.realLineInputs.end.h);
+        else { this.markAsUncorrect(this.realLineInputs.end.h); return; }
+        if (this.isNumber(inputsData.end.m)) this.markAsCorrect(this.realLineInputs.end.m);
+        else { this.markAsUncorrect(this.realLineInputs.end.m); return; }
+        if (this.isNumber(inputsData.end.s)) this.markAsCorrect(this.realLineInputs.end.s);
+        else { this.markAsUncorrect(this.realLineInputs.end.s); return; }
+
+        console.log("Yee!!!");
+
+        this.UnmarkAndClear(this.realLineInputs.interval.h);
+        this.UnmarkAndClear(this.realLineInputs.interval.m);
+        this.UnmarkAndClear(this.realLineInputs.interval.s);
+        this.UnmarkAndClear(this.realLineInputs.start.h);
+        this.UnmarkAndClear(this.realLineInputs.start.m);
+        this.UnmarkAndClear(this.realLineInputs.start.s);
+        this.UnmarkAndClear(this.realLineInputs.end.h);
+        this.UnmarkAndClear(this.realLineInputs.end.m);
+        this.UnmarkAndClear(this.realLineInputs.end.s);
+    }
+    private isNumber(num: number)
+    {
+        if (typeof num == "number" && num / num == 1) return true;
+        return false;
+    }
+    private markAsUncorrect(el: HTMLInputElement)
+    {
+        el.style.border = "1px solid red";
+    }
+    private markAsCorrect(el: HTMLInputElement)
+    {
+        el.style.border = "1px solid green";
+    }
+    private UnmarkAndClear(el: HTMLInputElement)
+    {
+        el.style.border = `${this.addingLinesPrm.inputsBorder}`;
+        el.value = "";
     }
 
 }
