@@ -13,7 +13,7 @@ export class SettingsMenu
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = {height: 260};
+    private addingLinesPrm = {height: 340};
 
 
     constructor(body: HTMLDivElement, width: number)
@@ -152,11 +152,11 @@ export class SettingsMenu
                 addSympleLine.style.height = "max-content";
                 addSympleLine.style.fontSize = "21px"
                 addSympleLine.style.textAlign = "center"
-                addSympleLine.innerText = "symle line"
+                addSympleLine.innerText = "symple line"
                 this.addingLinesDIV.appendChild(addSympleLine);
 
                 const addSympleLineMenu = document.createElement("div");
-                addSympleLineMenu.style.height = "60px";
+                addSympleLineMenu.style.height = "100px";
                 addSympleLineMenu.style.display = "flex";
                 addSympleLineMenu.style.justifyContent = "space-evenly";
                 addSympleLineMenu.style.alignItems = "center";
@@ -164,7 +164,7 @@ export class SettingsMenu
                 this.addingLinesDIV.appendChild(addSympleLineMenu);
 
                 const sympleLineMenu = document.createElement("div");
-                sympleLineMenu.style.height = "60px";
+                sympleLineMenu.style.height = "100px";
                 sympleLineMenu.style.width = "200px";
                 sympleLineMenu.style.display = "flex";
                 sympleLineMenu.style.justifyContent = "space-around";
@@ -301,6 +301,134 @@ export class SettingsMenu
                     sympleLineDuration.appendChild(sepLineLableDurations);
                 }
 
+                {
+                    const sympleLineStart = document.createElement("div");
+                    sympleLineStart.style.height = "max-content";
+                    sympleLineStart.style.width = "max-content";
+                    // sympleLineInterval.style.marginRight = "30px";
+                    sympleLineMenu.appendChild(sympleLineStart);
+
+                    const sympleLineLableStart = document.createElement("label");
+                    sympleLineLableStart.style.height = "max-content";
+                    sympleLineLableStart.style.marginRight = "3px";
+                    sympleLineLableStart.style.fontSize = "16px";
+                    sympleLineLableStart.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputStarth"
+                    sympleLineLableStart.innerText = "start";
+                    sympleLineStart.appendChild(sympleLineLableStart);
+
+
+                    const sympleLineInputStarth = document.createElement("input");
+                    sympleLineInputStarth.type = "input";
+                    sympleLineInputStarth.style.width = `${inputWidth}px`
+                    sympleLineInputStarth.style.height = `${inputHeight}px`
+                    sympleLineInputStarth.id = "scheduleViewer-SettingsMenu-sympleLineInputStarth";
+                    sympleLineStart.appendChild(sympleLineInputStarth);
+
+                    const sympleLineLableStarth = document.createElement("label");
+                    sympleLineLableStarth.style.height = "max-content";
+                    sympleLineLableStarth.style.marginRight = "3px";
+                    sympleLineLableStarth.style.fontSize = "16px";
+                    sympleLineLableStarth.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputStarth"
+                    sympleLineLableStarth.innerText = "h";
+                    sympleLineStart.appendChild(sympleLineLableStarth);
+
+
+                    const sympleLineInputStartm = document.createElement("input");
+                    sympleLineInputStartm.type = "input";
+                    sympleLineInputStartm.style.width = `${inputWidth}px`
+                    sympleLineInputStartm.style.height = `${inputHeight}px`
+                    sympleLineInputStartm.id = "scheduleViewer-SettingsMenu-sympleLineInputStartm";
+                    sympleLineStart.appendChild(sympleLineInputStartm);
+
+                    const sympleLineLableStartm = document.createElement("label");
+                    sympleLineLableStartm.style.height = "max-content";
+                    sympleLineLableStartm.style.marginRight = "3px";
+                    sympleLineLableStartm.style.fontSize = "16px";
+                    sympleLineLableStartm.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputStartm"
+                    sympleLineLableStartm.innerText = "m";
+                    sympleLineStart.appendChild(sympleLineLableStartm);
+
+
+                    const sympleLineInputStarts = document.createElement("input");
+                    sympleLineInputStarts.type = "input";
+                    sympleLineInputStarts.style.width = `${inputWidth}px`
+                    sympleLineInputStarts.style.height = `${inputHeight}px`
+                    sympleLineInputStarts.id = "scheduleViewer-SettingsMenu-sympleLineInputStarts";
+                    sympleLineStart.appendChild(sympleLineInputStarts);
+
+                    const sympleLineLableStarts = document.createElement("label");
+                    sympleLineLableStarts.style.height = "max-content";
+                    sympleLineLableStarts.style.marginRight = "3px";
+                    sympleLineLableStarts.style.fontSize = "16px";
+                    sympleLineLableStarts.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputStarts"
+                    sympleLineLableStarts.innerText = "s";
+                    sympleLineStart.appendChild(sympleLineLableStarts);
+                }
+
+                {
+                    const sympleLineEnd = document.createElement("div");
+                    sympleLineEnd.style.height = "max-content";
+                    sympleLineEnd.style.width = "max-content";
+                    // sympleLineInterval.style.marginRight = "30px";
+                    sympleLineMenu.appendChild(sympleLineEnd);
+
+                    const sympleLineLableEnd = document.createElement("label");
+                    sympleLineLableEnd.style.height = "max-content";
+                    sympleLineLableEnd.style.marginRight = "3px";
+                    sympleLineLableEnd.style.fontSize = "16px";
+                    sympleLineLableEnd.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputEndh"
+                    sympleLineLableEnd.innerText = "end";
+                    sympleLineEnd.appendChild(sympleLineLableEnd);
+
+
+                    const sympleLineInputEndh = document.createElement("input");
+                    sympleLineInputEndh.type = "input";
+                    sympleLineInputEndh.style.width = `${inputWidth}px`
+                    sympleLineInputEndh.style.height = `${inputHeight}px`
+                    sympleLineInputEndh.id = "scheduleViewer-SettingsMenu-sympleLineInputEndh";
+                    sympleLineEnd.appendChild(sympleLineInputEndh);
+
+                    const sympleLineLableEndh = document.createElement("label");
+                    sympleLineLableEndh.style.height = "max-content";
+                    sympleLineLableEndh.style.marginRight = "3px";
+                    sympleLineLableEndh.style.fontSize = "16px";
+                    sympleLineLableEndh.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputEndh"
+                    sympleLineLableEndh.innerText = "h";
+                    sympleLineEnd.appendChild(sympleLineLableEndh);
+
+
+                    const sympleLineInputEndm = document.createElement("input");
+                    sympleLineInputEndm.type = "input";
+                    sympleLineInputEndm.style.width = `${inputWidth}px`
+                    sympleLineInputEndm.style.height = `${inputHeight}px`
+                    sympleLineInputEndm.id = "scheduleViewer-SettingsMenu-sympleLineInputEndm";
+                    sympleLineEnd.appendChild(sympleLineInputEndm);
+
+                    const sympleLineLableEndm = document.createElement("label");
+                    sympleLineLableEndm.style.height = "max-content";
+                    sympleLineLableEndm.style.marginRight = "3px";
+                    sympleLineLableEndm.style.fontSize = "16px";
+                    sympleLineLableEndm.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputEndm"
+                    sympleLineLableEndm.innerText = "m";
+                    sympleLineEnd.appendChild(sympleLineLableEndm);
+
+
+                    const sympleLineInputEnds = document.createElement("input");
+                    sympleLineInputEnds.type = "input";
+                    sympleLineInputEnds.style.width = `${inputWidth}px`
+                    sympleLineInputEnds.style.height = `${inputHeight}px`
+                    sympleLineInputEnds.id = "scheduleViewer-SettingsMenu-sympleLineInputEnds";
+                    sympleLineEnd.appendChild(sympleLineInputEnds);
+
+                    const sympleLineLableEnds = document.createElement("label");
+                    sympleLineLableEnds.style.height = "max-content";
+                    sympleLineLableEnds.style.marginRight = "3px";
+                    sympleLineLableEnds.style.fontSize = "16px";
+                    sympleLineLableEnds.htmlFor = "scheduleViewer-SettingsMenu-sympleLineInputEnds"
+                    sympleLineLableEnds.innerText = "s";
+                    sympleLineEnd.appendChild(sympleLineLableEnds);
+                }
+
                 const breakDiv = document.createElement("div");
                 breakDiv.style.height = "0px";
                 breakDiv.style.flexBasis = "100%"
@@ -321,7 +449,7 @@ export class SettingsMenu
                 this.addingLinesDIV.appendChild(addRealLine);
 
                 const addRealLineMenu = document.createElement("div");
-                addRealLineMenu.style.height = "60px";
+                addRealLineMenu.style.height = "100px";
                 addRealLineMenu.style.display = "flex";
                 addRealLineMenu.style.justifyContent = "space-evenly";
                 addRealLineMenu.style.alignItems = "center";
@@ -329,7 +457,7 @@ export class SettingsMenu
                 this.addingLinesDIV.appendChild(addRealLineMenu);
 
                 const realLineMenu = document.createElement("div");
-                realLineMenu.style.height = "60px";
+                realLineMenu.style.height = "100px";
                 realLineMenu.style.width = "200px";
                 realLineMenu.style.display = "flex";
                 realLineMenu.style.justifyContent = "space-around";
@@ -432,6 +560,134 @@ export class SettingsMenu
                     realLineLableDurations.htmlFor = "scheduleViewer-SettingsMenu-realLineInputDuration"
                     realLineLableDurations.innerText = "sec list";
                     realLineDuration.appendChild(realLineLableDurations);
+                }
+
+                {
+                    const realLineStart = document.createElement("div");
+                    realLineStart.style.height = "max-content";
+                    realLineStart.style.width = "max-content";
+                    // sympleLineStart.style.marginRight = "30px";
+                    realLineMenu.appendChild(realLineStart);
+
+                    const realLineLableStart = document.createElement("label");
+                    realLineLableStart.style.height = "max-content";
+                    realLineLableStart.style.marginRight = "3px";
+                    realLineLableStart.style.fontSize = "16px";
+                    realLineLableStart.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth"
+                    realLineLableStart.innerText = "start";
+                    realLineStart.appendChild(realLineLableStart);
+
+
+                    const realLineInputStarth = document.createElement("input");
+                    realLineInputStarth.type = "input";
+                    realLineInputStarth.style.width = `${inputWidth}px`
+                    realLineInputStarth.style.height = `${inputHeight}px`
+                    realLineInputStarth.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
+                    realLineStart.appendChild(realLineInputStarth);
+
+                    const realLineLableStarth = document.createElement("label");
+                    realLineLableStarth.style.height = "max-content";
+                    realLineLableStarth.style.marginRight = "3px";
+                    realLineLableStarth.style.fontSize = "16px";
+                    realLineLableStarth.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth"
+                    realLineLableStarth.innerText = "h";
+                    realLineStart.appendChild(realLineLableStarth);
+
+
+                    const realLineInputStartm = document.createElement("input");
+                    realLineInputStartm.type = "input";
+                    realLineInputStartm.style.width = `${inputWidth}px`
+                    realLineInputStartm.style.height = `${inputHeight}px`
+                    realLineInputStartm.id = "scheduleViewer-SettingsMenu-realLineInputStartm";
+                    realLineStart.appendChild(realLineInputStartm);
+
+                    const realLineLableStartm = document.createElement("label");
+                    realLineLableStartm.style.height = "max-content";
+                    realLineLableStartm.style.marginRight = "3px";
+                    realLineLableStartm.style.fontSize = "16px";
+                    realLineLableStartm.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStartm"
+                    realLineLableStartm.innerText = "m";
+                    realLineStart.appendChild(realLineLableStartm);
+
+
+                    const realLineInputStarts = document.createElement("input");
+                    realLineInputStarts.type = "input";
+                    realLineInputStarts.style.width = `${inputWidth}px`
+                    realLineInputStarts.style.height = `${inputHeight}px`
+                    realLineInputStarts.id = "scheduleViewer-SettingsMenu-realLineInputStarts";
+                    realLineStart.appendChild(realLineInputStarts);
+
+                    const realLineLableStarts = document.createElement("label");
+                    realLineLableStarts.style.height = "max-content";
+                    realLineLableStarts.style.marginRight = "3px";
+                    realLineLableStarts.style.fontSize = "16px";
+                    realLineLableStarts.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarts"
+                    realLineLableStarts.innerText = "s";
+                    realLineStart.appendChild(realLineLableStarts);
+                }
+
+                {
+                    const realLineEnd = document.createElement("div");
+                    realLineEnd.style.height = "max-content";
+                    realLineEnd.style.width = "max-content";
+                    // sympleLineEnd.style.marginRight = "30px";
+                    realLineMenu.appendChild(realLineEnd);
+
+                    const realLineLableEnd = document.createElement("label");
+                    realLineLableEnd.style.height = "max-content";
+                    realLineLableEnd.style.marginRight = "3px";
+                    realLineLableEnd.style.fontSize = "16px";
+                    realLineLableEnd.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh"
+                    realLineLableEnd.innerText = "end";
+                    realLineEnd.appendChild(realLineLableEnd);
+
+
+                    const realLineInputEndh = document.createElement("input");
+                    realLineInputEndh.type = "input";
+                    realLineInputEndh.style.width = `${inputWidth}px`
+                    realLineInputEndh.style.height = `${inputHeight}px`
+                    realLineInputEndh.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
+                    realLineEnd.appendChild(realLineInputEndh);
+
+                    const realLineLableEndh = document.createElement("label");
+                    realLineLableEndh.style.height = "max-content";
+                    realLineLableEndh.style.marginRight = "3px";
+                    realLineLableEndh.style.fontSize = "16px";
+                    realLineLableEndh.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh"
+                    realLineLableEndh.innerText = "h";
+                    realLineEnd.appendChild(realLineLableEndh);
+
+
+                    const realLineInputEndm = document.createElement("input");
+                    realLineInputEndm.type = "input";
+                    realLineInputEndm.style.width = `${inputWidth}px`
+                    realLineInputEndm.style.height = `${inputHeight}px`
+                    realLineInputEndm.id = "scheduleViewer-SettingsMenu-realLineInputEndm";
+                    realLineEnd.appendChild(realLineInputEndm);
+
+                    const realLineLableEndm = document.createElement("label");
+                    realLineLableEndm.style.height = "max-content";
+                    realLineLableEndm.style.marginRight = "3px";
+                    realLineLableEndm.style.fontSize = "16px";
+                    realLineLableEndm.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndm"
+                    realLineLableEndm.innerText = "m";
+                    realLineEnd.appendChild(realLineLableEndm);
+
+
+                    const realLineInputEnds = document.createElement("input");
+                    realLineInputEnds.type = "input";
+                    realLineInputEnds.style.width = `${inputWidth}px`
+                    realLineInputEnds.style.height = `${inputHeight}px`
+                    realLineInputEnds.id = "scheduleViewer-SettingsMenu-realLineInputEnds";
+                    realLineEnd.appendChild(realLineInputEnds);
+
+                    const realLineLableEnds = document.createElement("label");
+                    realLineLableEnds.style.height = "max-content";
+                    realLineLableEnds.style.marginRight = "3px";
+                    realLineLableEnds.style.fontSize = "16px";
+                    realLineLableEnds.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEnds"
+                    realLineLableEnds.innerText = "s";
+                    realLineEnd.appendChild(realLineLableEnds);
                 }
 
                 const breakDiv = document.createElement("div");
