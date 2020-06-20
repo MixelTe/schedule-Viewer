@@ -22,6 +22,8 @@ export class SettingsMenu {
             end: { h: {}, m: {}, s: {} },
             button: {}
         };
+        this.loadFilesDIV = document.createElement("div");
+        this.loadFilesPrm = { height: 50 };
         this.menuWidth = width;
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
@@ -635,10 +637,29 @@ export class SettingsMenu {
                 this.realLineInputs.button = sympleLineButton;
             }
         }
+        {
+            this.loadFilesDIV.style.height = `${this.loadFilesPrm.height}px`;
+            this.loadFilesDIV.style.display = "flex";
+            this.loadFilesDIV.style.justifyContent = "center";
+            this.loadFilesDIV.style.alignItems = "center";
+            this.loadFilesDIV.style.flexDirection = "column";
+            this.body.appendChild(this.loadFilesDIV);
+            const title = document.createElement("div");
+            title.style.height = "max-content";
+            title.style.width = "max-content";
+            title.innerText = "Load schedule";
+            title.style.fontSize = "20px";
+            this.loadFilesDIV.appendChild(title);
+            this.filesInput = document.createElement("input");
+            this.filesInput.type = "file";
+            this.filesInput.accept = ".json";
+            this.loadFilesDIV.appendChild(this.filesInput);
+        }
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
         this.sympleLineInputs.button.addEventListener("click", () => this.addSympleLine(functions));
         this.realLineInputs.button.addEventListener("click", () => this.addRealLine(functions));
+        this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions));
     }
     toggleMenu() {
         if (this.menuOpen) {
@@ -929,5 +950,48 @@ export class SettingsMenu {
         }
         else
             throw new Error("value is too small");
+    }
+    async loadSchedule(e, functions) {
+        const eTarget = e.target;
+        if (eTarget == null)
+            return;
+        const filesList = eTarget.files;
+        if (filesList == null)
+            return;
+        const fileText = await filesList[0].text();
+        this.addLinesFromFile(fileText, functions);
+    }
+    mainBodyDragover(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        const dragData = e.dataTransfer;
+        if (dragData == null)
+            return;
+        dragData.dropEffect = 'copy';
+    }
+    async mainBodyDrop(e, functions) {
+        e.stopPropagation();
+        e.preventDefault();
+        const dragData = e.dataTransfer;
+        if (dragData == null)
+            return;
+        const filesList = dragData.files;
+        if (filesList == null)
+            return;
+        const fileText = await filesList[0].text();
+        this.addLinesFromFile(fileText, functions);
+    }
+    addLinesFromFile(fileText, functions) {
+        const newSchedule = JSON.parse(fileText);
+        console.log(newSchedule);
+        for (let i = 0; i < newSchedule.simleLines.length; i++) {
+            const el = newSchedule.simleLines[i];
+            functions.addSympleLine(el.interval, el.duration, el.start, el.end);
+        }
+        for (let i = 0; i < newSchedule.realLines.length; i++) {
+            const el = newSchedule.realLines[i];
+            functions.addRealLine(el.interval, el.durations, el.start, el.end);
+        }
+        functions.recreate();
     }
 }
