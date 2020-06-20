@@ -39,7 +39,7 @@ export class Coordinates {
         this.body.appendChild(this.createAxis(translate));
         const y = this.axis.y + this.axis.height;
         const interHour = this.oneHour * zoom;
-        for (let i = 1; i <= 24; i++) {
+        for (let i = 0; i <= 24; i++) {
             const xh = this.axis.x + this.oneHour * i * zoom;
             if (xh - interHour > this.width + translate)
                 break;
@@ -50,6 +50,8 @@ export class Coordinates {
             this.body.appendChild(line);
             this.body.appendChild(number);
             number.setAttribute("x", `${xh - number.getBoundingClientRect().width / 2}`);
+            if (i == 0)
+                continue;
             const xh2 = this.axis.x + this.oneHour * (i - 1) * zoom;
             for (let o = 0; o < this.minutesSteps.length; o++) {
                 const minutsToDisplay = Math.round(60 / this.minutesSteps[o]);
@@ -187,5 +189,16 @@ export class Coordinates {
         this.axis.height = newHeight - 65;
         this.changeSVGHeight(newHeight - 20);
         this.recreateScale(zoom, translate);
-}
+    }
+    toggleSepLine() {
+        if (this.scale.separateLine.active) {
+            this.scale.separateLine.active = false;
+        }
+        else {
+            this.scale.separateLine.active = true;
+        }
+    }
+    SepLineIsActive() {
+        return this.scale.separateLine.active;
+    }
 }
