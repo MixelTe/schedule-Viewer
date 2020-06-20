@@ -2,8 +2,9 @@ export class SettingsMenu
 {
     private body: HTMLDivElement
 
-    private headDIV = document.createElement("div");
-    private headPrm = { height: 43 };
+    private toggleMenuEl: SVGSVGElement;
+    private menuWidth: number
+    private menuOpen = true;
 
     private titleDIV = document.createElement("div");
     private titlePrm = {height: 100};
@@ -17,28 +18,32 @@ export class SettingsMenu
 
     constructor(body: HTMLDivElement, width: number)
     {
+        this.menuWidth = width;
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
         this.body.style.width = `${width}px`;
         this.body.style.minWidth = `${width}px`;
         this.body.style.backgroundColor = "lightblue";
         this.body.style.overflowY = "auto"
+        this.body.style.overflowX = "hidden"
         this.body.style.display = "inline-block";
 
         {
-            this.headDIV.style.height = `${this.headPrm.height}px`
-            this.headDIV.style.display = "flex";
-            this.headDIV.style.justifyContent = "flex-end";
-            this.headDIV.style.alignItems = "center";
-            this.body.appendChild(this.headDIV);
+            const toggleMenuDiv = document.createElement("div");
+            toggleMenuDiv.style.height = `${40}px`
+            toggleMenuDiv.style.position = "absolute";
+            toggleMenuDiv.style.top = `${2}px`;
+            toggleMenuDiv.style.right = `${2}px`;
+            toggleMenuDiv.style.display = "block";
+            toggleMenuDiv.style.width = "100%";
+            toggleMenuDiv.style.textAlign = "right";
+            this.body.appendChild(toggleMenuDiv);
 
-            const symbolSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            symbolSVG.style.marginTop = "3px";
-            symbolSVG.style.marginRight = "3px";
-            symbolSVG.setAttribute("width", `${40}`);
-            symbolSVG.setAttribute("height", `${40}`);
-            symbolSVG.setAttribute("viewBox", `0 0 20 20`);
-            this.headDIV.appendChild(symbolSVG);
+            this.toggleMenuEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            this.toggleMenuEl.setAttribute("width", `${40}`);
+            this.toggleMenuEl.setAttribute("height", `${40}`);
+            this.toggleMenuEl.setAttribute("viewBox", `0 0 20 20`);
+            toggleMenuDiv.appendChild(this.toggleMenuEl);
             const symbol = document.createElementNS("http://www.w3.org/2000/svg", "path");
             symbol.setAttribute("stroke", `black`);
             symbol.setAttribute("d", `M15.808,14.066H6.516v-1.162H5.354v1.162H4.193c-0.321,0-0.581,0.26-0.581,0.58s0.26,0.58,0.581,0.58h1.162
@@ -49,10 +54,8 @@ export class SettingsMenu
             c0,0.32-0.26,0.58-0.58,0.58H2.451c-0.321,0-0.581-0.26-0.581-0.58v-15.1c0-0.321,0.26-0.581,0.581-0.581H17.55
             c0.32,0,0.58,0.26,0.58,0.581V17.551z M15.808,4.774H9.419V3.612H8.258v1.162H4.193c-0.321,0-0.581,0.26-0.581,0.581
             s0.26,0.581,0.581,0.581h4.065v1.162h1.161V5.935h6.388c0.32,0,0.58-0.26,0.58-0.581S16.128,4.774,15.808,4.774z`);
-            symbolSVG.appendChild(symbol);
+            this.toggleMenuEl.appendChild(symbol);
         }
-
-
 
         {
             this.titleDIV.style.height = `${this.titlePrm.height}px`
@@ -437,6 +440,31 @@ export class SettingsMenu
                 sympleLineButton.innerText = "add";
                 addRealLineMenu.appendChild(sympleLineButton);
             }
+        }
+
+
+        this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
+    }
+
+    private toggleMenu()
+    {
+        if (this.menuOpen)
+        {
+            this.body.style.width = `${0}px`;
+            this.body.style.minWidth = `${0}px`;
+            this.titleDIV.style.visibility = "hidden";
+            this.settingsDIV.style.visibility = "hidden";
+            this.addingLinesDIV.style.visibility = "hidden";
+            this.menuOpen = false;
+        }
+        else
+        {
+            this.body.style.width = `${this.menuWidth}px`;
+            this.body.style.minWidth = `${this.menuWidth}px`;
+            this.titleDIV.style.visibility = "visible";
+            this.settingsDIV.style.visibility = "visible";
+            this.addingLinesDIV.style.visibility = "visible";
+            this.menuOpen = true;
         }
     }
 }

@@ -15,6 +15,7 @@ export class scheduleViewer
     constructor(body: HTMLDivElement)
     {
         this.body = body;
+        this.body.style.position = "relative";
         this.body.style.overflow = "hidden";
         this.body.style.display = "flex";
         this.body.style.userSelect = "none";
