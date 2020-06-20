@@ -133,22 +133,22 @@ export class SettingsMenu
 
 
 
-            // const empLine = document.createElement("div");
-            // empLine.style.height = "max-content";
-            // empLine.style.width = "max-content";
-            // menu.appendChild(empLine);
+            // const showAfterEnd = document.createElement("div");
+            // showAfterEnd.style.height = "max-content";
+            // showAfterEnd.style.width = "max-content";
+            // menu.appendChild(showAfterEnd);
 
-            // const empLineInput = document.createElement("input");
-            // empLineInput.type = "checkbox";
-            // empLineInput.id = "scheduleViewer-SettingsMenu-empLineInput";
-            // empLine.appendChild(empLineInput);
+            // const showAfterEndInput = document.createElement("input");
+            // showAfterEndInput.type = "checkbox";
+            // showAfterEndInput.id = "scheduleViewer-SettingsMenu-showAfterEndInput";
+            // showAfterEnd.appendChild(showAfterEndInput);
 
-            // const empLineLable = document.createElement("label");
-            // empLineLable.style.height = "max-content";
-            // empLineLable.style.fontSize = "16px";
-            // empLineLable.htmlFor = "scheduleViewer-SettingsMenu-empLineInput"
-            // empLineLable.innerText = "show empty line";
-            // empLine.appendChild(empLineLable);
+            // const showAfterEndLable = document.createElement("label");
+            // showAfterEndLable.style.height = "max-content";
+            // showAfterEndLable.style.fontSize = "16px";
+            // showAfterEndLable.htmlFor = "scheduleViewer-SettingsMenu-showAfterEndInput"
+            // showAfterEndLable.innerText = "hide after end";
+            // showAfterEnd.appendChild(showAfterEndLable);
 
         }
 
