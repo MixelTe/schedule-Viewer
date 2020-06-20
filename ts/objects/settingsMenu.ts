@@ -16,7 +16,7 @@ export class SettingsMenu
     private addingLinesPrm = {height: 340};
 
 
-    constructor(body: HTMLDivElement, width: number)
+    constructor(body: HTMLDivElement, width: number, open = true)
     {
         this.menuWidth = width;
         this.body = body;
@@ -29,6 +29,7 @@ export class SettingsMenu
         this.body.style.display = "inline-block";
         this.body.style.borderLeft = `${2}px solid black`;
 
+        if (!open) this.toggleMenu();
         this.body.style.transition = "width 1s";
 
         {
