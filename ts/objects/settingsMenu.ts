@@ -27,6 +27,9 @@ export class SettingsMenu
         this.body.style.overflowY = "auto"
         this.body.style.overflowX = "hidden"
         this.body.style.display = "inline-block";
+        this.body.style.borderLeft = `${2}px solid black`;
+
+        this.body.style.transition = "width 1s, border 1s";
 
         {
             const toggleMenuDiv = document.createElement("div");
@@ -455,6 +458,7 @@ export class SettingsMenu
             this.titleDIV.style.visibility = "hidden";
             this.settingsDIV.style.visibility = "hidden";
             this.addingLinesDIV.style.visibility = "hidden";
+            this.body.style.borderLeftColor = `transparent`;
             this.menuOpen = false;
         }
         else
@@ -464,6 +468,7 @@ export class SettingsMenu
             this.titleDIV.style.visibility = "visible";
             this.settingsDIV.style.visibility = "visible";
             this.addingLinesDIV.style.visibility = "visible";
+            this.body.style.borderLeftColor = `black`;
             this.menuOpen = true;
         }
     }

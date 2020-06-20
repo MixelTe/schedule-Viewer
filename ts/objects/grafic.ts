@@ -23,13 +23,11 @@ export class Grafic
 
     constructor(body: HTMLDivElement, rightSpace: number)
     {
-        const borderWidth = 2;
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
         this.body.style.width = "100%";
         this.body.style.overflowX = "scroll";
         this.body.style.overflowY = "auto";
-        this.body.style.borderRight = `${borderWidth}px solid black`;
         this.body.style.display = "inline-block";
 
         const scgBCR = this.body.getBoundingClientRect();
