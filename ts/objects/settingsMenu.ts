@@ -31,6 +31,9 @@ export class SettingsMenu
         button: <HTMLButtonElement>{}
     };
 
+    private loadFilesDIV = document.createElement("div");
+    private loadFilesPrm = { height: 50 };
+    private filesInput: HTMLInputElement;
 
 
     constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, open = true)
@@ -766,11 +769,32 @@ export class SettingsMenu
             }
         }
 
+        {
+            this.loadFilesDIV.style.height = `${this.loadFilesPrm.height}px`
+            this.loadFilesDIV.style.display = "flex";
+            this.loadFilesDIV.style.justifyContent = "center";
+            this.loadFilesDIV.style.alignItems = "center";
+            this.loadFilesDIV.style.flexDirection = "column";
+            this.body.appendChild(this.loadFilesDIV);
+
+            const title = document.createElement("div");
+            title.style.height = "max-content";
+            title.style.width = "max-content";
+            title.innerText = "Load schedule"
+            title.style.fontSize = "20px"
+            this.loadFilesDIV.appendChild(title);
+
+            this.filesInput = document.createElement("input");
+            this.filesInput.type = "file";
+            this.filesInput.accept = ".json";
+            this.loadFilesDIV.appendChild(this.filesInput);
+        }
 
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
         this.sympleLineInputs.button.addEventListener("click", () => this.addSympleLine(functions));
         this.realLineInputs.button.addEventListener("click", () => this.addRealLine(functions));
+        this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
     }
 
     private toggleMenu()
@@ -1005,4 +1029,25 @@ export class SettingsMenu
         else throw new Error("value is too small");
     }
 
+
+    private async loadSchedule(e: Event, functions: FunctionsForMenu)
+    {
+        const eTarget = <HTMLInputElement>e.target;
+        if (eTarget == null) return;
+        const filesList = eTarget.files;
+        if (filesList == null) return;
+        const fileText = await filesList[0].text();
+        const newSchedule = <Schedule>JSON.parse(fileText);
+        console.log(newSchedule);
+
+        for (let i = 0; i < newSchedule.simleLines.length; i++) {
+            const el = newSchedule.simleLines[i];
+            functions.addSympleLine(el.interval, el.duration, el.start, el.end);
+        }
+        for (let i = 0; i < newSchedule.realLines.length; i++) {
+            const el = newSchedule.realLines[i];
+            functions.addRealLine(el.interval, el.durations, el.start, el.end);
+        }
+        functions.recreate();
+    }
 }

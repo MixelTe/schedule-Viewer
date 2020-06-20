@@ -14,3 +14,25 @@ interface FunctionsForMenu
     addRealLine: (interval: number, durations: number[], start: number, end: number) => void,
     recreate: () => void,
 }
+
+interface Schedule
+{
+    simleLines:
+    [
+        {
+            interval: number,
+            duration: number,
+            start: number,
+            end: number
+        }
+    ]
+    realLines:
+    [
+        {
+            interval: number,
+            durations: number[],
+            start: number,
+            end: number
+        }
+    ]
+}
