@@ -24,7 +24,7 @@ export class Lines
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
 
-        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false }];
+        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0  }];
         this.recreateLines(axis, 0, zoom);
     }
 
@@ -67,12 +67,12 @@ export class Lines
         line.setAttribute("stroke-width", `${el.width}`);
         line.setAttribute("clip-path", "url(#graficLinesClip)");
 
-
-        let path = `M ${axis.x} ${axis.y + axis.height - spaces * index} `;
-        const interval = el.dasharray[0] * (this.oneHour / 60 / 60 * zoom);
+        const oneSecond = (this.oneHour / 60 / 60 * zoom);
+        let path = `M ${axis.x + el.start * oneSecond} ${axis.y + axis.height - spaces * index} `;
+        const interval = el.dasharray[0] * oneSecond;
         if (typeof el.dasharray[1] != "number") throw new Error("NaN");
-        const duration = el.dasharray[1] * (this.oneHour / 60 / 60 * zoom);
-        for (let i = 0; i < axis.width / (interval + duration); i++)
+        const duration = el.dasharray[1] * oneSecond;
+        for (let i = 0; i < axis.width / (interval + duration) && i < el.end * oneSecond; i++)
         {
             path += `
             h ${interval}
@@ -91,15 +91,16 @@ export class Lines
         line.setAttribute("clip-path", "url(#graficLinesClip)");
 
 
-        let path = `M ${axis.x} ${axis.y + axis.height - spaces * index} `;
-        const interval = el.dasharray[0] * (this.oneHour / 60 / 60 * zoom);
+        const oneSecond = (this.oneHour / 60 / 60 * zoom);
+        let path = `M ${axis.x + el.start * oneSecond} ${axis.y + axis.height - spaces * index} `;
+        const interval = el.dasharray[0] * oneSecond;
         if (typeof el.dasharray[1] != "object") throw new Error("Number");
         const durations = el.dasharray[1];
 
         for (let i = 0, x = 1; i < axis.width / interval; i++, x++)
         {
             const duration = durations[i];
-            let dx = `h ${duration * (this.oneHour / 60 / 60 * zoom)}`;
+            let dx = `h ${duration * oneSecond}`;
             if (typeof duration != "number" || duration / duration != 1)
             {
                 if (this.drawEmptyLines) dx = "v1"
@@ -109,7 +110,7 @@ export class Lines
             {
                 x = x + Math.floor(duration / el.dasharray[0])
             }
-            const nextX = axis.y + interval * x;
+            const nextX = axis.x + interval * x + el.start * oneSecond;
             path += `
             ${dx}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
@@ -118,9 +119,9 @@ export class Lines
 
         return line;
     }
-    public createLine(interval: number, duration: number)
+    public createLine(interval: number, duration: number, start: number, end: number)
     {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, duration], real: false });
+        this.lines.push({ color: "", width: 16, dasharray: [interval, duration], real: false, start, end });
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++)
@@ -134,9 +135,9 @@ export class Lines
             colors.splice(colorIndex, 1);
         }
     }
-    public createRealLine(interval: number, durations: number[])
+    public createRealLine(interval: number, durations: number[], start: number, end: number)
     {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true });
+        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end  });
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++)
@@ -168,5 +169,7 @@ interface LineF
     color: string,
     width: number,
     dasharray: number[] | [number, number[]],
-    real: boolean
+    real: boolean,
+    start: number,
+    end: number
 }
