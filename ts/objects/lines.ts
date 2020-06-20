@@ -8,7 +8,7 @@ export class Lines
     private lines: LineF[];
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
-    private drawEmptyLines = false;
+    private drawEmptyLines = true;
 
     constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {

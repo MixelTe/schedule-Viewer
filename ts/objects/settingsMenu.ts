@@ -879,7 +879,6 @@ export class SettingsMenu
         const duration = inputsData.duration.h * 60 * 60 + inputsData.duration.m * 60 + inputsData.duration.s;
         const start = inputsData.start.h * 60 * 60 + inputsData.start.m * 60 + inputsData.start.s;
         const end = inputsData.end.h * 60 * 60 + inputsData.end.m * 60 + inputsData.end.s;
-        console.log(interval, duration, start, end);
         functions.addSympleLine(interval, duration, start, end);
         functions.recreate();
     }
@@ -945,6 +944,18 @@ export class SettingsMenu
         this.checkNumber(inputsData.end.s, "s");
 
         console.log("Yee!!!");
+
+        const interval = inputsData.interval.h * 60 * 60 + inputsData.interval.m * 60 + inputsData.interval.s;
+        const duration = inputsData.duration.split(',').map(num =>
+        {
+            const newNum = Number(num);
+            if (newNum / newNum == 1 || newNum == 0) return newNum;
+            else throw new Error(`uncorrect value in duration: ${num}`);
+        });
+        const start = inputsData.start.h * 60 * 60 + inputsData.start.m * 60 + inputsData.start.s;
+        const end = inputsData.end.h * 60 * 60 + inputsData.end.m * 60 + inputsData.end.s;
+        functions.addRealLine(interval, duration, start, end);
+        functions.recreate();
     }
     private isNumber(num: any)
     {
