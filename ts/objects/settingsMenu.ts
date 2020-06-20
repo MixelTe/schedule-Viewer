@@ -10,13 +10,16 @@ export class SettingsMenu
     private titlePrm = {height: 100};
 
     private settingsDIV = document.createElement("div");
+    private showSepLine = true;
+    private toggleSepLineEl: HTMLInputElement;
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
     private addingLinesPrm = {height: 340};
 
 
-    constructor(body: HTMLDivElement, width: number, open = true)
+
+    constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, open = true)
     {
         this.menuWidth = width;
         this.body = body;
@@ -101,10 +104,11 @@ export class SettingsMenu
             sepLine.style.width = "max-content";
             menu.appendChild(sepLine);
 
-            const sepLineInput = document.createElement("input");
-            sepLineInput.type = "checkbox";
-            sepLineInput.id = "scheduleViewer-SettingsMenu-sepLineInput";
-            sepLine.appendChild(sepLineInput);
+            this.toggleSepLineEl = document.createElement("input");
+            this.toggleSepLineEl.type = "checkbox";
+            this.toggleSepLineEl.checked = functions.SepLineIsActive();
+            this.toggleSepLineEl.id = "scheduleViewer-SettingsMenu-sepLineInput";
+            sepLine.appendChild(this.toggleSepLineEl);
 
             const sepLineLable = document.createElement("label");
             sepLineLable.style.height = "max-content";
@@ -115,22 +119,22 @@ export class SettingsMenu
 
 
 
-            const empLine = document.createElement("div");
-            empLine.style.height = "max-content";
-            empLine.style.width = "max-content";
-            menu.appendChild(empLine);
+            // const empLine = document.createElement("div");
+            // empLine.style.height = "max-content";
+            // empLine.style.width = "max-content";
+            // menu.appendChild(empLine);
 
-            const empLineInput = document.createElement("input");
-            empLineInput.type = "checkbox";
-            empLineInput.id = "scheduleViewer-SettingsMenu-empLineInput";
-            empLine.appendChild(empLineInput);
+            // const empLineInput = document.createElement("input");
+            // empLineInput.type = "checkbox";
+            // empLineInput.id = "scheduleViewer-SettingsMenu-empLineInput";
+            // empLine.appendChild(empLineInput);
 
-            const empLineLable = document.createElement("label");
-            empLineLable.style.height = "max-content";
-            empLineLable.style.fontSize = "16px";
-            empLineLable.htmlFor = "scheduleViewer-SettingsMenu-empLineInput"
-            empLineLable.innerText = "show empty line";
-            empLine.appendChild(empLineLable);
+            // const empLineLable = document.createElement("label");
+            // empLineLable.style.height = "max-content";
+            // empLineLable.style.fontSize = "16px";
+            // empLineLable.htmlFor = "scheduleViewer-SettingsMenu-empLineInput"
+            // empLineLable.innerText = "show empty line";
+            // empLine.appendChild(empLineLable);
 
         }
 
@@ -704,6 +708,7 @@ export class SettingsMenu
 
 
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
+        this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
     }
 
     private toggleMenu()
@@ -727,4 +732,5 @@ export class SettingsMenu
             this.menuOpen = true;
         }
     }
+
 }

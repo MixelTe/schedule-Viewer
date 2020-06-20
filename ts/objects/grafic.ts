@@ -177,4 +177,12 @@ export class Grafic
     private getRndInteger(min: number, max: number) {
         return Math.random() * (max - min) + min;
     }
+
+    public getFunctions()
+    {
+        return {
+            toggleSepLine: this.coordinates.toggleSepLine.bind(this),
+            SepLineIsActive: this.coordinates.SepLineIsActive.bind(this),
+        }
+    }
 }

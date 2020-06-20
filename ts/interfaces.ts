@@ -5,3 +5,9 @@ interface Rect
     width: number;
     height: number;
 }
+
+interface FunctionsForMenu
+{
+    toggleSepLine: () => void,
+    SepLineIsActive: () => boolean,
+}

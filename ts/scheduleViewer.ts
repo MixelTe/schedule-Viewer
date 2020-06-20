@@ -26,7 +26,7 @@ export class scheduleViewer
             this.grafic = new Grafic(this.graficBody, settingsMenuWidth);
 
             this.body.appendChild(this.settingsMenuBody);
-            this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth);
+            this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions());
         }
     }
 }

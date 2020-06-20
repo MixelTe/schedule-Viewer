@@ -237,4 +237,20 @@ export class Coordinates
         this.changeSVGHeight(newHeight - 20);
         this.recreateScale(zoom, translate);
     }
+
+    public toggleSepLine()
+    {
+        if (this.scale.separateLine.active)
+        {
+            this.scale.separateLine.active = false;
+        }
+        else
+        {
+            this.scale.separateLine.active = true;
+        }
+    }
+    public SepLineIsActive()
+    {
+        return this.scale.separateLine.active;
+    }
 }
