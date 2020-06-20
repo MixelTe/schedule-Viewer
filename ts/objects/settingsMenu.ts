@@ -847,8 +847,6 @@ export class SettingsMenu
         if (this.isNumber(inputsData.end.s)) this.markAsCorrect(this.sympleLineInputs.end.s);
         else { this.markAsUncorrect(this.sympleLineInputs.end.s); return; }
 
-        console.log("Yee!!!");
-
         this.UnmarkAndClear(this.sympleLineInputs.interval.h);
         this.UnmarkAndClear(this.sympleLineInputs.interval.m);
         this.UnmarkAndClear(this.sympleLineInputs.interval.s);
@@ -861,6 +859,21 @@ export class SettingsMenu
         this.UnmarkAndClear(this.sympleLineInputs.end.h);
         this.UnmarkAndClear(this.sympleLineInputs.end.m);
         this.UnmarkAndClear(this.sympleLineInputs.end.s);
+
+        this.checkNumber(inputsData.interval.h, "h");
+        this.checkNumber(inputsData.interval.m, "m");
+        this.checkNumber(inputsData.interval.s, "s");
+        this.checkNumber(inputsData.duration.h, "h");
+        this.checkNumber(inputsData.duration.m, "m");
+        this.checkNumber(inputsData.duration.s, "s");
+        this.checkNumber(inputsData.start.h, "h");
+        this.checkNumber(inputsData.start.m, "m");
+        this.checkNumber(inputsData.start.s, "s");
+        this.checkNumber(inputsData.end.h, "h");
+        this.checkNumber(inputsData.end.m, "m");
+        this.checkNumber(inputsData.end.s, "s");
+
+        console.log("Yee!!!");
     }
     private addRealLine(functions: FunctionsForMenu)
     {
@@ -903,8 +916,6 @@ export class SettingsMenu
         if (this.isNumber(inputsData.end.s)) this.markAsCorrect(this.realLineInputs.end.s);
         else { this.markAsUncorrect(this.realLineInputs.end.s); return; }
 
-        console.log("Yee!!!");
-
         this.UnmarkAndClear(this.realLineInputs.interval.h);
         this.UnmarkAndClear(this.realLineInputs.interval.m);
         this.UnmarkAndClear(this.realLineInputs.interval.s);
@@ -914,8 +925,20 @@ export class SettingsMenu
         this.UnmarkAndClear(this.realLineInputs.end.h);
         this.UnmarkAndClear(this.realLineInputs.end.m);
         this.UnmarkAndClear(this.realLineInputs.end.s);
+
+        this.checkNumber(inputsData.interval.h, "h");
+        this.checkNumber(inputsData.interval.m, "m");
+        this.checkNumber(inputsData.interval.s, "s");
+        this.checkNumber(inputsData.start.h, "h");
+        this.checkNumber(inputsData.start.m, "m");
+        this.checkNumber(inputsData.start.s, "s");
+        this.checkNumber(inputsData.end.h, "h");
+        this.checkNumber(inputsData.end.m, "m");
+        this.checkNumber(inputsData.end.s, "s");
+        
+        console.log("Yee!!!");
     }
-    private isNumber(num: number)
+    private isNumber(num: any)
     {
         if (typeof num == "number" && num / num == 1) return true;
         return false;
@@ -932,6 +955,30 @@ export class SettingsMenu
     {
         el.style.border = `${this.addingLinesPrm.inputsBorder}`;
         el.value = "";
+    }
+    private checkNumber(num: number, type: string)
+    {
+        if (num >= 0)
+        {
+            switch (type)
+            {
+                case "h":
+                    if (num > 24) throw new Error("value is too large")
+                    break;
+
+                case "m":
+                    if (num > 60) throw new Error("value is too large")
+                    break;
+
+                case "s":
+                    if (num > 60) throw new Error("value is too large")
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else throw new Error("value is too small");
     }
 
 }
