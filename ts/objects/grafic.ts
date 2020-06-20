@@ -49,7 +49,7 @@ export class Grafic
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
 
-            for (let i = 0; i < 9; i++)
+            for (let i = 0; i < 0; i++)
             {
                 // this.lines.createLine(this.getRndInteger(10, 20), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
                 // this.lines.createLine(this.getRndInteger(20, 40), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
@@ -177,6 +177,11 @@ export class Grafic
     private getRndInteger(min: number, max: number) {
         return Math.random() * (max - min) + min;
     }
+    private recreate()
+    {
+        this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
+        this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
+    }
 
     public getFunctions() : FunctionsForMenu
     {
@@ -185,6 +190,7 @@ export class Grafic
             SepLineIsActive: this.coordinates.SepLineIsActive.bind(this.coordinates),
             addSympleLine: this.lines.createLine.bind(this.lines),
             addRealLine: this.lines.createRealLine.bind(this.lines),
+            recreate: this.recreate.bind(this),
         }
     }
 }

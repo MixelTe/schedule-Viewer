@@ -874,6 +874,14 @@ export class SettingsMenu
         this.checkNumber(inputsData.end.s, "s");
 
         console.log("Yee!!!");
+
+        const interval = inputsData.interval.h * 60 * 60 + inputsData.interval.m * 60 + inputsData.interval.s;
+        const duration = inputsData.duration.h * 60 * 60 + inputsData.duration.m * 60 + inputsData.duration.s;
+        const start = inputsData.start.h * 60 * 60 + inputsData.start.m * 60 + inputsData.start.s;
+        const end = inputsData.end.h * 60 * 60 + inputsData.end.m * 60 + inputsData.end.s;
+        console.log(interval, duration, start, end);
+        functions.addSympleLine(interval, duration, start, end);
+        functions.recreate();
     }
     private addRealLine(functions: FunctionsForMenu)
     {
@@ -935,7 +943,7 @@ export class SettingsMenu
         this.checkNumber(inputsData.end.h, "h");
         this.checkNumber(inputsData.end.m, "m");
         this.checkNumber(inputsData.end.s, "s");
-        
+
         console.log("Yee!!!");
     }
     private isNumber(num: any)
