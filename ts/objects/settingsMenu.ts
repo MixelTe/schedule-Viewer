@@ -948,7 +948,7 @@ export class SettingsMenu
     }
     private isNumber(num: any)
     {
-        if (typeof num == "number" && num / num == 1) return true;
+        if (typeof num == "number" && (num / num == 1 || num == 0)) return true;
         return false;
     }
     private markAsUncorrect(el: HTMLInputElement)
