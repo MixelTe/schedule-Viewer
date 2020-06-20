@@ -16,6 +16,7 @@ export class scheduleViewer
     {
         this.body = body;
         this.body.style.overflow = "hidden";
+        this.body.style.userSelect = "none";
 
         {
             const settingsMenuWidth = 300;
