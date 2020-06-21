@@ -127,4 +127,10 @@ export class Lines {
         this.clipRect.setAttribute("width", `${axis.width - scroll}`);
         this.clipRect.setAttribute("height", `${axis.height}`);
     }
+    resetLines() {
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0 }];
+    }
+    getLines() {
+        return this.lines;
+    }
 }

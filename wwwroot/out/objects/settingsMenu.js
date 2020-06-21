@@ -23,7 +23,12 @@ export class SettingsMenu {
             button: {}
         };
         this.loadFilesDIV = document.createElement("div");
-        this.loadFilesPrm = { height: 50 };
+        this.loadFilesPrm = { height: 80 };
+        this.saveFileDIV = document.createElement("div");
+        this.saveFilesPrm = { height: 50 };
+        this.overDiv = document.createElement("div");
+        this.overDivText = document.createElement("div");
+        this.overDivPrm = { width: 0, height: 0, minusWidth: 0 };
         this.menuWidth = width;
         this.body = body;
         this.body.style.height = "calc(100% - 0px)";
@@ -640,7 +645,7 @@ export class SettingsMenu {
         {
             this.loadFilesDIV.style.height = `${this.loadFilesPrm.height}px`;
             this.loadFilesDIV.style.display = "flex";
-            this.loadFilesDIV.style.justifyContent = "center";
+            this.loadFilesDIV.style.justifyContent = "space-around";
             this.loadFilesDIV.style.alignItems = "center";
             this.loadFilesDIV.style.flexDirection = "column";
             this.body.appendChild(this.loadFilesDIV);
@@ -654,12 +659,56 @@ export class SettingsMenu {
             this.filesInput.type = "file";
             this.filesInput.accept = ".json";
             this.loadFilesDIV.appendChild(this.filesInput);
+            const text = document.createElement("div");
+            text.style.height = "max-content";
+            text.style.width = "max-content";
+            text.innerText = "or drag'n'drop file";
+            text.style.fontSize = "18px";
+            this.loadFilesDIV.appendChild(text);
+        }
+        {
+            this.saveFileDIV.style.height = `${this.saveFilesPrm.height}px`;
+            this.saveFileDIV.style.display = "flex";
+            this.saveFileDIV.style.justifyContent = "space-around";
+            this.saveFileDIV.style.alignItems = "center";
+            this.saveFileDIV.style.flexDirection = "column";
+            this.saveFileDIV.style.marginTop = "20px";
+            this.body.appendChild(this.saveFileDIV);
+            const title = document.createElement("div");
+            title.style.height = "max-content";
+            title.style.width = "max-content";
+            title.innerText = "Save schedule";
+            title.style.fontSize = "20px";
+            this.saveFileDIV.appendChild(title);
+            this.saveFileButton = document.createElement("button");
+            this.saveFileButton.innerText = "Save";
+            this.saveFileDIV.appendChild(this.saveFileButton);
+        }
+        {
+            this.overDivPrm.minusWidth = width;
+            this.overDivPrm.width = 260;
+            this.overDivPrm.height = 100;
+            this.overDiv.style.position = "absolute";
+            this.overDiv.style.top = `calc(50% - ${this.overDivPrm.height / 2}px)`;
+            this.overDiv.style.left = `calc((100% - ${width}px) / 2 - ${this.overDivPrm.width / 2}px)`;
+            this.overDiv.style.display = "flex";
+            this.overDiv.style.justifyContent = "center";
+            this.overDiv.style.alignItems = "center";
+            this.overDiv.style.height = `${this.overDivPrm.height}px`;
+            this.overDiv.style.width = `${this.overDivPrm.width}px`;
+            this.overDiv.style.visibility = "hidden";
+            this.body.appendChild(this.overDiv);
+            this.overDivText.innerText = "Drop file here";
+            this.overDivText.style.fontSize = "40px";
+            this.overDivText.classList.add("scheduleViewer_SVGoverText");
+            this.overDiv.appendChild(this.overDivText);
         }
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
         this.sympleLineInputs.button.addEventListener("click", () => this.addSympleLine(functions));
         this.realLineInputs.button.addEventListener("click", () => this.addRealLine(functions));
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions));
+        this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
     }
     toggleMenu() {
         if (this.menuOpen) {
@@ -668,6 +717,8 @@ export class SettingsMenu {
             this.titleDIV.style.visibility = "hidden";
             this.settingsDIV.style.visibility = "hidden";
             this.addingLinesDIV.style.visibility = "hidden";
+            this.loadFilesDIV.style.visibility = "hidden";
+            this.saveFileDIV.style.visibility = "hidden";
             this.menuOpen = false;
         }
         else {
@@ -676,6 +727,8 @@ export class SettingsMenu {
             this.titleDIV.style.visibility = "visible";
             this.settingsDIV.style.visibility = "visible";
             this.addingLinesDIV.style.visibility = "visible";
+            this.loadFilesDIV.style.visibility = "visible";
+            this.saveFileDIV.style.visibility = "visible";
             this.menuOpen = true;
         }
     }
@@ -961,9 +1014,15 @@ export class SettingsMenu {
         const fileText = await filesList[0].text();
         this.addLinesFromFile(fileText, functions);
     }
+    mainBodyDragleave() {
+        this.overDiv.style.visibility = "hidden";
+        this.overDivText.classList.remove("scheduleViewer_SVGoverTextShow");
+    }
     mainBodyDragover(e) {
         e.stopPropagation();
         e.preventDefault();
+        this.overDiv.style.visibility = "visible";
+        this.overDivText.classList.add("scheduleViewer_SVGoverTextShow");
         const dragData = e.dataTransfer;
         if (dragData == null)
             return;
@@ -972,6 +1031,7 @@ export class SettingsMenu {
     async mainBodyDrop(e, functions) {
         e.stopPropagation();
         e.preventDefault();
+        this.overDiv.style.visibility = "hidden";
         const dragData = e.dataTransfer;
         if (dragData == null)
             return;
@@ -983,9 +1043,10 @@ export class SettingsMenu {
     }
     addLinesFromFile(fileText, functions) {
         const newSchedule = JSON.parse(fileText);
-        console.log(newSchedule);
-        for (let i = 0; i < newSchedule.simleLines.length; i++) {
-            const el = newSchedule.simleLines[i];
+        // console.log(newSchedule);
+        functions.resetLines();
+        for (let i = 0; i < newSchedule.simpleLines.length; i++) {
+            const el = newSchedule.simpleLines[i];
             functions.addSympleLine(el.interval, el.duration, el.start, el.end);
         }
         for (let i = 0; i < newSchedule.realLines.length; i++) {
@@ -993,5 +1054,47 @@ export class SettingsMenu {
             functions.addRealLine(el.interval, el.durations, el.start, el.end);
         }
         functions.recreate();
+    }
+    saveSchedule(functions) {
+        const scheduleRaw = functions.getLines();
+        const scheduleSave = { simpleLines: [], realLines: [] };
+        for (let i = 1; i < scheduleRaw.length; i++) {
+            const el = scheduleRaw[i];
+            if (el.real) {
+                const newEl = {
+                    interval: el.dasharray[0],
+                    durations: el.dasharray[1],
+                    start: el.start,
+                    end: el.end,
+                };
+                scheduleSave.realLines.push(newEl);
+            }
+            else {
+                const newEl = {
+                    interval: el.dasharray[0],
+                    duration: el.dasharray[1],
+                    start: el.start,
+                    end: el.end,
+                };
+                scheduleSave.simpleLines.push(newEl);
+            }
+        }
+        const scheduleText = JSON.stringify(scheduleSave, undefined, "  ");
+        // console.log(scheduleRaw);
+        // console.log(scheduleSave);
+        const scheduleTextSimplify = scheduleText.replace(/\n        /g, "");
+        const codeArea = document.getElementById("codeArea");
+        if (codeArea != null)
+            codeArea.innerText = scheduleTextSimplify;
+        this.downloadFile("schedule.json", scheduleTextSimplify);
+    }
+    downloadFile(filename, text) {
+        var el = document.createElement('a');
+        el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        el.setAttribute('download', filename);
+        el.style.display = 'none';
+        document.body.appendChild(el);
+        el.click();
+        document.body.removeChild(el);
     }
 }

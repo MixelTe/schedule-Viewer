@@ -36,8 +36,8 @@ export class Grafic {
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this));
             this.svg.appendChild(this.linesBody);
             this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
-            for (let i = 0; i < 0; i++) {
-                // this.lines.createLine(this.getRndInteger(10, 20), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+            for (let i = 0; i < 4; i++) {
+                this.lines.createLine(this.getRndInteger(10, 20), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
                 // this.lines.createLine(this.getRndInteger(20, 40), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
                 // this.lines.createLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
                 // this.lines.createLine(this.getRndInteger(80, 120), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
@@ -141,7 +141,7 @@ export class Grafic {
         this.svg.style.height = `${newHeight}`;
     }
     getRndInteger(min, max) {
-        return Math.random() * (max - min) + min;
+        return Math.floor(Math.random() * (max - min) + min);
     }
     recreate() {
         this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
@@ -154,6 +154,8 @@ export class Grafic {
             addSympleLine: this.lines.createLine.bind(this.lines),
             addRealLine: this.lines.createRealLine.bind(this.lines),
             recreate: this.recreate.bind(this),
+            resetLines: this.lines.resetLines.bind(this.lines),
+            getLines: this.lines.getLines.bind(this.lines),
         };
     }
 }

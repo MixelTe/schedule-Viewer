@@ -15,6 +15,21 @@
             background: rgb(85, 85, 85);
             cursor: pointer;
         }
+        .scheduleViewer_SVGoverText:after {
+            position: absolute;
+            left: 17px;
+            content: '';
+            height: 48px;
+            width: 225px;
+            border-bottom: solid 3px black;
+
+            transform: scaleX(0.0001);
+            transition: transform 250ms ease-in-out;
+        }
+
+        .scheduleViewer_SVGoverTextShow:after {
+            transform: scaleX(1);
+	}
         .sorceCode {
             display: flex;
             background-color: aqua;
@@ -38,6 +53,7 @@
     <a href="https://github.com/MixelTe/schedule-Viewer" class="sorceCode">
         <div>source code</div>
     </a>
+    <pre style="width: 100%;" id="codeArea"></pre>
 </body>
 
 </html>
