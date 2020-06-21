@@ -175,7 +175,7 @@ export class Grafic
     }
 
     private getRndInteger(min: number, max: number) {
-        return Math.random() * (max - min) + min;
+        return Math.floor(Math.random() * (max - min) + min);
     }
     private recreate()
     {
