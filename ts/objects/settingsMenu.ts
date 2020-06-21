@@ -32,9 +32,12 @@ export class SettingsMenu
     };
 
     private loadFilesDIV = document.createElement("div");
-    private loadFilesPrm = { height: 50 };
+    private loadFilesPrm = { height: 80 };
     private filesInput: HTMLInputElement;
 
+    private overDiv = document.createElement("div");
+    private overDivText = document.createElement("div");
+    private overDivPrm = { width: 0, height: 0, minusWidth: 0 };
 
     constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, open = true)
     {
@@ -772,7 +775,7 @@ export class SettingsMenu
         {
             this.loadFilesDIV.style.height = `${this.loadFilesPrm.height}px`
             this.loadFilesDIV.style.display = "flex";
-            this.loadFilesDIV.style.justifyContent = "center";
+            this.loadFilesDIV.style.justifyContent = "space-around";
             this.loadFilesDIV.style.alignItems = "center";
             this.loadFilesDIV.style.flexDirection = "column";
             this.body.appendChild(this.loadFilesDIV);
@@ -781,14 +784,43 @@ export class SettingsMenu
             title.style.height = "max-content";
             title.style.width = "max-content";
             title.innerText = "Load schedule"
-            title.style.fontSize = "20px"
+            title.style.fontSize = "20px";
             this.loadFilesDIV.appendChild(title);
 
             this.filesInput = document.createElement("input");
             this.filesInput.type = "file";
             this.filesInput.accept = ".json";
             this.loadFilesDIV.appendChild(this.filesInput);
+
+            const text = document.createElement("div");
+            text.style.height = "max-content";
+            text.style.width = "max-content";
+            text.innerText = "or drag'n'drop file"
+            text.style.fontSize = "18px";
+            this.loadFilesDIV.appendChild(text);
         }
+
+        {
+            this.overDivPrm.minusWidth = width;
+            this.overDivPrm.width = 260;
+            this.overDivPrm.height = 100;
+            this.overDiv.style.position = "absolute";
+            this.overDiv.style.top = `calc(50% - ${this.overDivPrm.height / 2}px)`;
+            this.overDiv.style.left = `calc((100% - ${width}px) / 2 - ${this.overDivPrm.width / 2}px)`;
+            this.overDiv.style.display = "flex";
+            this.overDiv.style.justifyContent = "center";
+            this.overDiv.style.alignItems = "center";
+            this.overDiv.style.height = `${this.overDivPrm.height}px`;
+            this.overDiv.style.width = `${this.overDivPrm.width}px`;
+            this.overDiv.style.visibility = "hidden";
+            this.body.appendChild(this.overDiv);
+
+            this.overDivText.innerText = "Drop file here";
+            this.overDivText.style.fontSize = "40px"
+            this.overDivText.classList.add("scheduleViewer_SVGoverText");
+            this.overDiv.appendChild(this.overDivText);
+        }
+
 
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
@@ -1040,10 +1072,17 @@ export class SettingsMenu
         this.addLinesFromFile(fileText, functions);
     }
 
+    public mainBodyDragleave()
+    {
+        this.overDiv.style.visibility = "hidden";
+        this.overDivText.classList.remove("scheduleViewer_SVGoverTextShow");
+    }
     public mainBodyDragover(e: DragEvent)
     {
         e.stopPropagation();
         e.preventDefault();
+        this.overDiv.style.visibility = "visible";
+        this.overDivText.classList.add("scheduleViewer_SVGoverTextShow");
         const dragData = e.dataTransfer;
         if (dragData == null) return;
         dragData.dropEffect = 'copy';
@@ -1053,6 +1092,7 @@ export class SettingsMenu
     {
         e.stopPropagation();
         e.preventDefault();
+        this.overDiv.style.visibility = "hidden";
         const dragData = e.dataTransfer;
         if (dragData == null) return;
         const filesList = dragData.files;
@@ -1063,7 +1103,7 @@ export class SettingsMenu
     private addLinesFromFile(fileText: string, functions: FunctionsForMenu)
     {
         const newSchedule = <Schedule>JSON.parse(fileText);
-        console.log(newSchedule);
+        // console.log(newSchedule);
         functions.resetLines();
 
         for (let i = 0; i < newSchedule.simpleLines.length; i++) {
