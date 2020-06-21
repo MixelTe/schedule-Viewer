@@ -1065,8 +1065,8 @@ export class SettingsMenu
         const newSchedule = <Schedule>JSON.parse(fileText);
         console.log(newSchedule);
 
-        for (let i = 0; i < newSchedule.simleLines.length; i++) {
-            const el = newSchedule.simleLines[i];
+        for (let i = 0; i < newSchedule.simpleLines.length; i++) {
+            const el = newSchedule.simpleLines[i];
             functions.addSympleLine(el.interval, el.duration, el.start, el.end);
         }
         for (let i = 0; i < newSchedule.realLines.length; i++) {

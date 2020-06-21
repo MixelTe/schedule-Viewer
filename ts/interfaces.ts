@@ -17,7 +17,7 @@ interface FunctionsForMenu
 
 interface Schedule
 {
-    simleLines:
+    simpleLines:
     [
         {
             interval: number,
