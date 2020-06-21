@@ -192,6 +192,7 @@ export class Grafic
             addRealLine: this.lines.createRealLine.bind(this.lines),
             recreate: this.recreate.bind(this),
             resetLines: this.lines.resetLines.bind(this.lines),
+            getLines: this.lines.getLines.bind(this.lines),
         }
     }
 }

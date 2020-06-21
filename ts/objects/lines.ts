@@ -168,14 +168,8 @@ export class Lines
     {
         this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0  }];
     }
-}
-
-interface LineF
-{
-    color: string,
-    width: number,
-    dasharray: number[] | [number, number[]],
-    real: boolean,
-    start: number,
-    end: number
+    public getLines()
+    {
+        return this.lines;
+    }
 }

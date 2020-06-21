@@ -35,6 +35,11 @@ export class SettingsMenu
     private loadFilesPrm = { height: 80 };
     private filesInput: HTMLInputElement;
 
+    private saveFileDIV = document.createElement("div");
+    private saveFilesPrm = { height: 50 };
+    private saveFileButton: HTMLButtonElement;
+
+
     private overDiv = document.createElement("div");
     private overDivText = document.createElement("div");
     private overDivPrm = { width: 0, height: 0, minusWidth: 0 };
@@ -801,6 +806,27 @@ export class SettingsMenu
         }
 
         {
+            this.saveFileDIV.style.height = `${this.saveFilesPrm.height}px`
+            this.saveFileDIV.style.display = "flex";
+            this.saveFileDIV.style.justifyContent = "space-around";
+            this.saveFileDIV.style.alignItems = "center";
+            this.saveFileDIV.style.flexDirection = "column";
+            this.saveFileDIV.style.marginTop = "20px"
+            this.body.appendChild(this.saveFileDIV);
+
+            const title = document.createElement("div");
+            title.style.height = "max-content";
+            title.style.width = "max-content";
+            title.innerText = "Save schedule"
+            title.style.fontSize = "20px";
+            this.saveFileDIV.appendChild(title);
+
+            this.saveFileButton = document.createElement("button");
+            this.saveFileButton.innerText = "Save";
+            this.saveFileDIV.appendChild(this.saveFileButton);
+        }
+
+        {
             this.overDivPrm.minusWidth = width;
             this.overDivPrm.width = 260;
             this.overDivPrm.height = 100;
@@ -827,6 +853,7 @@ export class SettingsMenu
         this.sympleLineInputs.button.addEventListener("click", () => this.addSympleLine(functions));
         this.realLineInputs.button.addEventListener("click", () => this.addRealLine(functions));
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
+        this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
     }
 
     private toggleMenu()
@@ -838,6 +865,8 @@ export class SettingsMenu
             this.titleDIV.style.visibility = "hidden";
             this.settingsDIV.style.visibility = "hidden";
             this.addingLinesDIV.style.visibility = "hidden";
+            this.loadFilesDIV.style.visibility = "hidden";
+            this.saveFileDIV.style.visibility = "hidden";
             this.menuOpen = false;
         }
         else
@@ -847,6 +876,8 @@ export class SettingsMenu
             this.titleDIV.style.visibility = "visible";
             this.settingsDIV.style.visibility = "visible";
             this.addingLinesDIV.style.visibility = "visible";
+            this.loadFilesDIV.style.visibility = "visible";
+            this.saveFileDIV.style.visibility = "visible";
             this.menuOpen = true;
         }
     }
@@ -1115,5 +1146,11 @@ export class SettingsMenu
             functions.addRealLine(el.interval, el.durations, el.start, el.end);
         }
         functions.recreate();
+    }
+
+
+    private saveSchedule(functions: FunctionsForMenu)
+    {
+        console.log("not saved");
     }
 }

@@ -14,6 +14,7 @@ interface FunctionsForMenu
     addRealLine: (interval: number, durations: number[], start: number, end: number) => void,
     recreate: () => void,
     resetLines: () => void,
+    getLines: () => LineF[],
 }
 
 interface Schedule
@@ -36,4 +37,14 @@ interface Schedule
             end: number
         }
     ]
+}
+
+interface LineF
+{
+    color: string,
+    width: number,
+    dasharray: number[] | [number, number[]],
+    real: boolean,
+    start: number,
+    end: number
 }
