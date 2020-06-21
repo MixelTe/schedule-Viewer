@@ -1151,6 +1151,36 @@ export class SettingsMenu
 
     private saveSchedule(functions: FunctionsForMenu)
     {
-        console.log("not saved");
+        const scheduleRaw = functions.getLines();
+        const scheduleSave = <Schedule><unknown>{ simpleLines: [], realLines: [] };
+        for (let i = 1; i < scheduleRaw.length; i++) {
+            const el = scheduleRaw[i];
+            if (el.real)
+            {
+                const newEl = {
+                    interval: el.dasharray[0],
+                    durations: <number[]>el.dasharray[1],
+                    start: el.start,
+                    end: el.end,
+                };
+                scheduleSave.realLines.push(newEl);
+            }
+            else
+            {
+                const newEl = {
+                    interval: el.dasharray[0],
+                    duration: <number>el.dasharray[1],
+                    start: el.start,
+                    end: el.end,
+                };
+                scheduleSave.simpleLines.push(newEl);
+            }
+        }
+        const scheduleText = JSON.stringify(scheduleSave, undefined, "  ");
+        console.log(scheduleRaw);
+        console.log(scheduleSave);
+        const scheduleTextSimplify = scheduleText.replace(/\n        /g, "");
+        const codeArea = document.getElementById("codeArea");
+        if (codeArea != null) codeArea.innerText = scheduleTextSimplify;
     }
 }
