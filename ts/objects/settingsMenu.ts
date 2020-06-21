@@ -1177,10 +1177,25 @@ export class SettingsMenu
             }
         }
         const scheduleText = JSON.stringify(scheduleSave, undefined, "  ");
-        console.log(scheduleRaw);
-        console.log(scheduleSave);
+        // console.log(scheduleRaw);
+        // console.log(scheduleSave);
         const scheduleTextSimplify = scheduleText.replace(/\n        /g, "");
         const codeArea = document.getElementById("codeArea");
         if (codeArea != null) codeArea.innerText = scheduleTextSimplify;
+
+        this.downloadFile("schedule.json", scheduleTextSimplify);
     }
+
+    private downloadFile(filename: string, text: string) {
+        var el = document.createElement('a');
+        el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        el.setAttribute('download', filename);
+
+        el.style.display = 'none';
+        document.body.appendChild(el);
+
+        el.click();
+
+        document.body.removeChild(el);
+      }
 }
