@@ -1064,6 +1064,7 @@ export class SettingsMenu
     {
         const newSchedule = <Schedule>JSON.parse(fileText);
         console.log(newSchedule);
+        functions.resetLines();
 
         for (let i = 0; i < newSchedule.simpleLines.length; i++) {
             const el = newSchedule.simpleLines[i];

@@ -191,6 +191,7 @@ export class Grafic
             addSympleLine: this.lines.createLine.bind(this.lines),
             addRealLine: this.lines.createRealLine.bind(this.lines),
             recreate: this.recreate.bind(this),
+            resetLines: this.lines.resetLines.bind(this.lines),
         }
     }
 }

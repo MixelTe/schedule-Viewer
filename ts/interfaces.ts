@@ -13,6 +13,7 @@ interface FunctionsForMenu
     addSympleLine: (interval: number, duration: number, start: number, end: number) => void,
     addRealLine: (interval: number, durations: number[], start: number, end: number) => void,
     recreate: () => void,
+    resetLines: () => void,
 }
 
 interface Schedule
