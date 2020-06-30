@@ -518,16 +518,15 @@ export class SettingsMenu
         this.lineInputs.buttonAdd.addEventListener("click", () => this.addSympleLine(functions));
         this.lineInputs.buttonChange.addEventListener("click", () => this.sympleLineButtons("change", functions));
         this.lineInputs.buttonRemove.addEventListener("click", () => this.sympleLineButtons("remove", functions));
-        this.lineInputs.radioReal.input.addEventListener("click", () => this.lineTypeSelection("real"));
-        this.lineInputs.radioSimple.input.addEventListener("click", () => this.lineTypeSelection("simple"));
+        this.lineInputs.radioReal.input.addEventListener("click", () => this.disableDuractionInput("real"));
+        this.lineInputs.radioSimple.input.addEventListener("click", () => this.disableDuractionInput("simple"));
 
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
 
         this.lineInputs.radioReal.input.checked = true;
-        this.lineTypeSelection("real");
 
-        this.menuSystem("simple");
+        this.menuSystem("noSelect");
     }
 
     private toggleMenu()
@@ -854,20 +853,6 @@ export class SettingsMenu
                 this.lineInputs.duration.div.style.color = "gray";
                 this.lineInputs.durations.div.style.color = "black";
                 break;
-
-            default:
-                break;
-        }
-    }
-    private lineTypeSelection(type: "simple" | "real" | "none")
-    {
-        switch (type) {
-            case "simple":
-            case "real":
-            case "none":
-                this.disableDuractionInput(type);
-                break;
-
             default: throw new Error();
         }
     }
