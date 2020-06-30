@@ -630,35 +630,6 @@ export class SettingsMenu
             else throw e;
         }
 
-        let inputsDataString;
-        if (this.isNumber(inputsDataString.interval.h)) this.markAsCorrect(this.lineInputs.interval);
-        else { this.markAsUncorrect(this.lineInputs.interval); return; }
-        if (this.isNumber(inputsDataString.interval.m)) this.markAsCorrect(this.lineInputs.interval);
-        else { this.markAsUncorrect(this.lineInputs.interval); return; }
-        if (this.isNumber(inputsDataString.interval.s)) this.markAsCorrect(this.lineInputs.interval);
-        else { this.markAsUncorrect(this.lineInputs.interval); return; }
-
-        if (this.isNumber(inputsDataString.duration.h)) this.markAsCorrect(this.lineInputs.duration.input);
-        else { this.markAsUncorrect(this.lineInputs.duration.input); return; }
-        if (this.isNumber(inputsDataString.duration.m)) this.markAsCorrect(this.lineInputs.duration.input);
-        else { this.markAsUncorrect(this.lineInputs.duration.input); return; }
-        if (this.isNumber(inputsDataString.duration.s)) this.markAsCorrect(this.lineInputs.duration.input);
-        else { this.markAsUncorrect(this.lineInputs.duration.input); return; }
-
-        if (this.isNumber(inputsDataString.start.h)) this.markAsCorrect(this.lineInputs.start);
-        else { this.markAsUncorrect(this.lineInputs.start); return; }
-        if (this.isNumber(inputsDataString.start.m)) this.markAsCorrect(this.lineInputs.start);
-        else { this.markAsUncorrect(this.lineInputs.start); return; }
-        if (this.isNumber(inputsDataString.start.s)) this.markAsCorrect(this.lineInputs.start);
-        else { this.markAsUncorrect(this.lineInputs.start); return; }
-
-        if (this.isNumber(inputsDataString.end.h)) this.markAsCorrect(this.lineInputs.end);
-        else { this.markAsUncorrect(this.lineInputs.end); return; }
-        if (this.isNumber(inputsDataString.end.m)) this.markAsCorrect(this.lineInputs.end);
-        else { this.markAsUncorrect(this.lineInputs.end); return; }
-        if (this.isNumber(inputsDataString.end.s)) this.markAsCorrect(this.lineInputs.end);
-        else { this.markAsUncorrect(this.lineInputs.end); return; }
-
         this.UnmarkAndClear(this.lineInputs.interval);
         if (this.lineInputs.radioSimple.input.checked)
         {
@@ -671,26 +642,17 @@ export class SettingsMenu
         this.UnmarkAndClear(this.lineInputs.start);
         this.UnmarkAndClear(this.lineInputs.end);
 
-        this.checkNumber(inputsData.interval.h, "h");
-        this.checkNumber(inputsData.interval.m, "m");
-        this.checkNumber(inputsData.interval.s, "s");
-        this.checkNumber(inputsData.duration.h, "h");
-        this.checkNumber(inputsData.duration.m, "m");
-        this.checkNumber(inputsData.duration.s, "s");
-        this.checkNumber(inputsData.start.h, "h");
-        this.checkNumber(inputsData.start.m, "m");
-        this.checkNumber(inputsData.start.s, "s");
-        this.checkNumber(inputsData.end.h, "h");
-        this.checkNumber(inputsData.end.m, "m");
-        this.checkNumber(inputsData.end.s, "s");
+        
+        // console.log("Yee!!!");
 
-        console.log("Yee!!!");
-
-        const interval = inputsData.interval.h * 60 * 60 + inputsData.interval.m * 60 + inputsData.interval.s;
-        const duration = inputsData.duration.h * 60 * 60 + inputsData.duration.m * 60 + inputsData.duration.s;
-        const start = inputsData.start.h * 60 * 60 + inputsData.start.m * 60 + inputsData.start.s;
-        const end = inputsData.end.h * 60 * 60 + inputsData.end.m * 60 + inputsData.end.s;
-        functions.addSympleLine(interval, duration, start, end);
+        if (typeof lineData.duration == "number")
+        {
+            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
+        }
+        else
+        {
+            functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
+        }
         functions.recreate();
     }
     private createLineData(rawData: {interval: string, duration: string, durations: string, start: string, end: string})
@@ -738,7 +700,6 @@ export class SettingsMenu
             duration: duration,
             start: start,
             end: end,
-            durations: 0,
         };
     }
     private turnStringToSeconds(string: string)
