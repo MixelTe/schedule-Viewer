@@ -939,6 +939,9 @@ export class SettingsMenu
                 this.lineInputs.duration.input.disabled = false;
                 this.lineInputs.durations.input.disabled = false;
 
+                this.lineInputs.duration.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.durations.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+
                 this.lineInputs.duration.div.style.color = "black";
                 this.lineInputs.durations.div.style.color = "black";
                 break;
@@ -947,6 +950,9 @@ export class SettingsMenu
                 this.lineInputs.duration.input.disabled = false;
                 this.lineInputs.durations.input.disabled = true;
 
+                this.lineInputs.duration.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.durations.input.style.backgroundColor = "lightgray";
+
                 this.lineInputs.duration.div.style.color = "black";
                 this.lineInputs.durations.div.style.color = "gray";
                 break;
@@ -954,6 +960,9 @@ export class SettingsMenu
             case "real":
                 this.lineInputs.duration.input.disabled = true;
                 this.lineInputs.durations.input.disabled = false;
+
+                this.lineInputs.duration.input.style.backgroundColor = "lightgray";
+                this.lineInputs.durations.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
 
                 this.lineInputs.duration.div.style.color = "gray";
                 this.lineInputs.durations.div.style.color = "black";
