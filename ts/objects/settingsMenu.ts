@@ -14,10 +14,10 @@ export class SettingsMenu
     private toggleSepLineEl: HTMLInputElement;
     private revTimeInputEl: HTMLInputElement;
     private revTimeInput = false;
-    private settingsPrm = {height: 100};
+    private settingsPrm = {height: 120};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = { height: 250, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
+    private addingLinesPrm = { height: 300, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
     private lineInputs = {
         radioReal: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         radioSimple: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
