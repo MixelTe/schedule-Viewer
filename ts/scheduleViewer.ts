@@ -21,7 +21,7 @@ export class scheduleViewer
         this.body.style.userSelect = "none";
 
         {
-            const settingsMenuWidth = 300;
+            const settingsMenuWidth = 310;
             this.body.appendChild(this.graficBody);
             this.grafic = new Grafic(this.graficBody, settingsMenuWidth);
 
