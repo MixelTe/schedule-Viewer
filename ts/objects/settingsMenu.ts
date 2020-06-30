@@ -17,7 +17,7 @@ export class SettingsMenu
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = { height: 230, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
+    private addingLinesPrm = { height: 250, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
     private lineInputs = {
         radioReal: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         radioSimple: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
@@ -176,13 +176,16 @@ export class SettingsMenu
             title.innerText = "Events"
             this.addingLinesDIV.appendChild(title);
 
-            const inputWidth = 60;
+            const inputWidth = 100;
             const inputHeight = 15;
+            const inputRadius = 3;
+
+            const leftRowPadingRight = 10;
 
             {
                 const linesMenuTableDIV = document.createElement("div");
                 linesMenuTableDIV.style.width = "100%";
-                linesMenuTableDIV.style.height = "140px";
+                linesMenuTableDIV.style.height = "160px";
                 linesMenuTableDIV.style.display = "flex";
                 linesMenuTableDIV.style.justifyContent = "center";
                 this.addingLinesDIV.appendChild(linesMenuTableDIV);
@@ -199,10 +202,8 @@ export class SettingsMenu
 
                     {
                         const tableCell = document.createElement("td");
-                        tableRow.appendChild(tableCell);
-                    }
-                    {
-                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
                         tableRow.appendChild(tableCell);
 
                         const startLable = document.createElement("label");
@@ -210,9 +211,12 @@ export class SettingsMenu
                         // startLable.style.marginRight = "3px";
                         startLable.style.fontSize = "16px";
                         startLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth"
-                        startLable.innerText = "start:";
+                        startLable.innerText = "Start:";
                         tableCell.appendChild(startLable);
-
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
 
                         const startInput = document.createElement("input");
                         startInput.type = "input";
@@ -222,6 +226,7 @@ export class SettingsMenu
                         startInput.title = this.addingLinesPrm.inputtitle;
                         startInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         startInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        startInput.style.borderRadius = `${inputRadius}px`
                         startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(startInput);
                         this.lineInputs.start = startInput;
@@ -235,10 +240,8 @@ export class SettingsMenu
 
                     {
                         const tableCell = document.createElement("td");
-                        tableRow.appendChild(tableCell);
-                    }
-                    {
-                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
                         tableRow.appendChild(tableCell);
 
                         const durationLable = document.createElement("label");
@@ -246,9 +249,13 @@ export class SettingsMenu
                         // durationLable.style.marginRight = "3px";
                         durationLable.style.fontSize = "16px";
                         durationLable.htmlFor = "scheduleViewer-SettingsMenu-inputDuration"
-                        durationLable.innerText = "duration:";
+                        durationLable.innerText = "Duration:";
                         tableCell.appendChild(durationLable);
 
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
 
                         const durationInput = document.createElement("input");
                         durationInput.type = "input";
@@ -258,6 +265,7 @@ export class SettingsMenu
                         durationInput.title = this.addingLinesPrm.inputtitle;
                         durationInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        durationInput.style.borderRadius = `${inputRadius}px`
                         durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(durationInput);
                         this.lineInputs.duration.input = durationInput;
@@ -272,27 +280,42 @@ export class SettingsMenu
 
                     {
                         const tableCell = document.createElement("td");
+                        tableCell.innerText = "Freqence:"
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
                         tableRow.appendChild(tableCell);
-
-                        const type = document.createElement("input");
-                        type.type = "radio";
-                        type.name = "scheduleViewer-SettingsMenu-type";
-                        type.id = "scheduleViewer-SettingsMenu-realType";
-                        tableCell.appendChild(type);
-                        this.lineInputs.radioReal.input = type;
-                        // this.lineInputs.radioReal.div = DIV;
-
-                        const typeLable = document.createElement("label");
-                        typeLable.style.height = "max-content";
-                        typeLable.style.fontSize = "16px";
-                        typeLable.htmlFor = "scheduleViewer-SettingsMenu-realType"
-                        typeLable.innerText = "once";
-                        tableCell.appendChild(typeLable);
                     }
-
                     {
                         const tableCell = document.createElement("td");
                         tableRow.appendChild(tableCell);
+
+                        const typeO = document.createElement("input");
+                        typeO.type = "radio";
+                        typeO.name = "scheduleViewer-SettingsMenu-type";
+                        typeO.id = "scheduleViewer-SettingsMenu-realType";
+                        tableCell.appendChild(typeO);
+                        this.lineInputs.radioReal.input = typeO;
+
+                        const typeLableO = document.createElement("label");
+                        typeLableO.style.height = "max-content";
+                        typeLableO.style.fontSize = "16px";
+                        typeLableO.htmlFor = "scheduleViewer-SettingsMenu-realType"
+                        typeLableO.innerText = "once";
+                        tableCell.appendChild(typeLableO);
+
+                        const typeR = document.createElement("input");
+                        typeR.type = "radio";
+                        typeR.name = "scheduleViewer-SettingsMenu-type";
+                        typeR.id = "scheduleViewer-SettingsMenu-sympleType";
+                        tableCell.appendChild(typeR);
+                        this.lineInputs.radioSimple.input = typeR;
+
+                        const typeLableR = document.createElement("label");
+                        typeLableR.style.height = "max-content";
+                        typeLableR.style.fontSize = "16px";
+                        typeLableR.htmlFor = "scheduleViewer-SettingsMenu-sympleType"
+                        typeLableR.innerText = "repeat";
+                        tableCell.appendChild(typeLableR);
                     }
                 }
 
@@ -302,26 +325,8 @@ export class SettingsMenu
 
                     {
                         const tableCell = document.createElement("td");
-                        tableRow.appendChild(tableCell);
-
-                        const type = document.createElement("input");
-                        type.type = "radio";
-                        type.name = "scheduleViewer-SettingsMenu-type";
-                        type.id = "scheduleViewer-SettingsMenu-sympleType";
-                        tableCell.appendChild(type);
-                        this.lineInputs.radioSimple.input = type;
-                        // this.lineInputs.radioSimple.div = DIV;
-
-                        const typeLable = document.createElement("label");
-                        typeLable.style.height = "max-content";
-                        typeLable.style.fontSize = "16px";
-                        typeLable.htmlFor = "scheduleViewer-SettingsMenu-sympleType"
-                        typeLable.innerText = "repeat:";
-                        tableCell.appendChild(typeLable);
-                    }
-
-                    {
-                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
                         tableRow.appendChild(tableCell);
 
                         const intervalLable = document.createElement("label");
@@ -329,9 +334,13 @@ export class SettingsMenu
                         // intervalLable.style.marginRight = "3px";
                         intervalLable.style.fontSize = "16px";
                         intervalLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputInterval"
-                        intervalLable.innerText = "interval";
+                        intervalLable.innerText = "Interval";
                         tableCell.appendChild(intervalLable);
 
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
 
                         const intervalInput = document.createElement("input");
                         intervalInput.type = "input";
@@ -341,6 +350,7 @@ export class SettingsMenu
                         intervalInput.title = this.addingLinesPrm.inputtitle;
                         intervalInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        intervalInput.style.borderRadius = `${inputRadius}px`
                         intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(intervalInput);
                         this.lineInputs.interval = intervalInput;
@@ -353,10 +363,8 @@ export class SettingsMenu
 
                     {
                         const tableCell = document.createElement("td");
-                        tableRow.appendChild(tableCell);
-                    }
-                    {
-                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
                         tableRow.appendChild(tableCell);
 
                         const endLable = document.createElement("label");
@@ -364,9 +372,13 @@ export class SettingsMenu
                         // endLable.style.marginRight = "3px";
                         endLable.style.fontSize = "16px";
                         endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh"
-                        endLable.innerText = "end:";
+                        endLable.innerText = "End:";
                         tableCell.appendChild(endLable);
 
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
 
                         const endInput = document.createElement("input");
                         endInput.type = "input";
@@ -376,9 +388,56 @@ export class SettingsMenu
                         endInput.title = this.addingLinesPrm.inputtitle;
                         endInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         endInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        endInput.style.borderRadius = `${inputRadius}px`
                         endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(endInput);
                         this.lineInputs.end = endInput;
+                    }
+                }
+
+                {
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+
+                        const endLable = document.createElement("label");
+                        // endLable.style.height = "max-content";
+                        // endLable.style.marginRight = "3px";
+                        endLable.style.fontSize = "16px";
+                        endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh"
+                        endLable.innerText = "Color:";
+                        tableCell.appendChild(endLable);
+
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+
+                        const colorDiv = document.createElement("div");
+                        colorDiv.style.display = "inline-block"
+                        colorDiv.style.width = "50px";
+                        colorDiv.style.height = "70%";
+                        colorDiv.style.backgroundColor = "lightgreen";
+                        colorDiv.style.border = "1px solid gray";
+                        tableCell.appendChild(colorDiv);
+
+                        const radio = document.createElement("input");
+                        radio.type = "checkBox";
+                        radio.checked = true;
+                        radio.id = "scheduleViewer-SettingsMenu-colorAuto";
+                        tableCell.appendChild(radio);
+
+                        const radioLable = document.createElement("label");
+                        radioLable.style.height = "max-content";
+                        radioLable.style.fontSize = "16px";
+                        radioLable.htmlFor = "scheduleViewer-SettingsMenu-colorAuto"
+                        radioLable.innerText = "auto";
+                        tableCell.appendChild(radioLable);
                     }
                 }
 
@@ -406,7 +465,7 @@ export class SettingsMenu
                 buttonsDIV.style.height = "25px";
                 buttonsDIV.style.width = "100%";
                 buttonsDIV.style.display = "flex";
-                buttonsDIV.style.justifyContent = "space-around";
+                buttonsDIV.style.justifyContent = "space-evenly";
                 buttonsDIV.style.alignItems = "center";
                 buttonsDIV.style.flexWrap = "wrap"
                 this.addingLinesDIV.appendChild(buttonsDIV);
