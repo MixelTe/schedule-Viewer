@@ -29,8 +29,6 @@ export class scheduleViewer
             this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions());
         }
 
-        this.body.addEventListener("drop", (e) => this.settingsMenu.mainBodyDrop.bind(this.settingsMenu)(e, this.grafic.getFunctions()));
         this.body.addEventListener("dragover", (e) => this.settingsMenu.mainBodyDragover.bind(this.settingsMenu)(e));
-        this.body.addEventListener("dragleave", this.settingsMenu.mainBodyDragleave.bind(this.settingsMenu));
     }
 }

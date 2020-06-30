@@ -504,17 +504,20 @@ export class SettingsMenu
             this.overDivPrm.width = 260;
             this.overDivPrm.height = 100;
             this.overDiv.style.position = "absolute";
-            this.overDiv.style.top = `calc(50% - ${this.overDivPrm.height / 2}px)`;
-            this.overDiv.style.left = `calc((100% - ${width}px) / 2 - ${this.overDivPrm.width / 2}px)`;
+            this.overDiv.style.top = "0px";
+            this.overDiv.style.left = "0px";
             this.overDiv.style.display = "flex";
             this.overDiv.style.justifyContent = "center";
             this.overDiv.style.alignItems = "center";
-            this.overDiv.style.height = `${this.overDivPrm.height}px`;
-            this.overDiv.style.width = `${this.overDivPrm.width}px`;
+            this.overDiv.style.height = "100%";
+            this.overDiv.style.width = "100%";
             this.overDiv.style.visibility = "hidden";
+            this.overDiv.style.backgroundColor = "transparent";
+            this.overDiv.style.transition = "background-Color 250ms ease-in-out"
             this.body.appendChild(this.overDiv);
 
             this.overDivText.innerText = "Drop file here";
+            this.overDivText.style.position = "relative";
             this.overDivText.style.fontSize = "40px"
             this.overDivText.classList.add("scheduleViewer_SVGoverText");
             this.overDiv.appendChild(this.overDivText);
@@ -533,6 +536,9 @@ export class SettingsMenu
 
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
+
+        this.overDiv.addEventListener("drop", (e) => this.dragDrop(e, functions));
+        this.overDiv.addEventListener("dragleave", () => this.dragleave());
 
         this.menuSystem("noSelect");
 
@@ -642,7 +648,7 @@ export class SettingsMenu
         this.UnmarkAndClear(this.lineInputs.start);
         this.UnmarkAndClear(this.lineInputs.end);
 
-        
+
         // console.log("Yee!!!");
 
         if (typeof lineData.duration == "number")
@@ -926,23 +932,25 @@ export class SettingsMenu
         this.addLinesFromFile(fileText, functions);
     }
 
-    public mainBodyDragleave()
+    public dragleave()
     {
         this.overDiv.style.visibility = "hidden";
         this.overDivText.classList.remove("scheduleViewer_SVGoverTextShow");
+        this.overDiv.style.backgroundColor = "transparent";
     }
     public mainBodyDragover(e: DragEvent)
     {
         e.stopPropagation();
         e.preventDefault();
         this.overDiv.style.visibility = "visible";
+        this.overDiv.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
         this.overDivText.classList.add("scheduleViewer_SVGoverTextShow");
         const dragData = e.dataTransfer;
         if (dragData == null) return;
         dragData.dropEffect = 'copy';
     }
 
-    public async mainBodyDrop(e: DragEvent, functions: FunctionsForMenu)
+    public async dragDrop(e: DragEvent, functions: FunctionsForMenu)
     {
         e.stopPropagation();
         e.preventDefault();
