@@ -17,7 +17,7 @@ export class SettingsMenu
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = { height: 200, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
+    private addingLinesPrm = { height: 230, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
     private lineInputs = {
         radioReal: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         radioSimple: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
@@ -173,169 +173,81 @@ export class SettingsMenu
             title.style.height = "40px";
             title.style.fontSize = "25px"
             title.style.textAlign = "center"
-            title.innerText = "Lines"
+            title.innerText = "Events"
             this.addingLinesDIV.appendChild(title);
 
             const inputWidth = 60;
             const inputHeight = 15;
 
             {
-                const addRealLineMenu = document.createElement("div");
-                addRealLineMenu.style.height = "120px";
-                addRealLineMenu.style.display = "flex";
-                addRealLineMenu.style.justifyContent = "space-evenly";
-                addRealLineMenu.style.alignItems = "center";
-                addRealLineMenu.style.flexWrap = "wrap"
-                this.addingLinesDIV.appendChild(addRealLineMenu);
+                const linesMenuTableDIV = document.createElement("div");
+                linesMenuTableDIV.style.width = "100%";
+                linesMenuTableDIV.style.height = "140px";
+                linesMenuTableDIV.style.display = "flex";
+                linesMenuTableDIV.style.justifyContent = "center";
+                this.addingLinesDIV.appendChild(linesMenuTableDIV);
 
-                const realLineMenu = document.createElement("div");
-                realLineMenu.style.height = "100%";
-                realLineMenu.style.width = "235px";
-                realLineMenu.style.display = "flex";
-                realLineMenu.style.justifyContent = "space-around";
-                realLineMenu.style.alignItems = "center";
-                realLineMenu.style.flexWrap = "wrap"
-                addRealLineMenu.appendChild(realLineMenu);
-
+                const linesMenuTable = document.createElement("table");
+                linesMenuTable.style.width = "90%";
+                linesMenuTable.style.height = "100%";
+                linesMenuTableDIV.appendChild(linesMenuTable);
 
 
                 {
-                    const intervalDiv = document.createElement("div");
-                    intervalDiv.style.height = "max-content";
-                    intervalDiv.style.width = "max-content";
-                    // sympleLineInterval.style.marginRight = "30px";
-                    realLineMenu.appendChild(intervalDiv);
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
 
-                    const intervalLable = document.createElement("label");
-                    intervalLable.style.height = "max-content";
-                    intervalLable.style.marginRight = "3px";
-                    intervalLable.style.fontSize = "16px";
-                    intervalLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputInterval"
-                    intervalLable.innerText = "interval";
-                    intervalDiv.appendChild(intervalLable);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+
+                        const startLable = document.createElement("label");
+                        // startLable.style.height = "max-content";
+                        // startLable.style.marginRight = "3px";
+                        startLable.style.fontSize = "16px";
+                        startLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth"
+                        startLable.innerText = "start:";
+                        tableCell.appendChild(startLable);
 
 
-                    const intervalInput = document.createElement("input");
-                    intervalInput.type = "input";
-                    intervalInput.style.width = `${inputWidth}px`
-                    intervalInput.style.height = `${inputHeight}px`
-                    intervalInput.id = "scheduleViewer-SettingsMenu-realLineInputInterval";
-                    intervalInput.title = this.addingLinesPrm.inputtitle;
-                    intervalInput.placeholder = this.addingLinesPrm.inputplaceholder;
-                    intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`
-                    intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
-                    intervalDiv.appendChild(intervalInput);
-                    this.lineInputs.interval = intervalInput;
+                        const startInput = document.createElement("input");
+                        startInput.type = "input";
+                        startInput.style.width = `${inputWidth}px`
+                        startInput.style.height = `${inputHeight}px`
+                        startInput.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
+                        startInput.title = this.addingLinesPrm.inputtitle;
+                        startInput.placeholder = this.addingLinesPrm.inputplaceholder;
+                        startInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
+                        tableCell.appendChild(startInput);
+                        this.lineInputs.start = startInput;
+                    }
+
                 }
 
                 {
-                    const durationInputMenu = document.createElement("div");
-                    durationInputMenu.style.height = "40px";
-                    durationInputMenu.style.width = "100%";
-                    durationInputMenu.style.display = "flex";
-                    durationInputMenu.style.justifyContent = "space-around";
-                    durationInputMenu.style.flexDirection = "column"
-                    durationInputMenu.style.alignItems = "center";
-                    durationInputMenu.style.flexWrap = "wrap"
-                    realLineMenu.appendChild(durationInputMenu);
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
 
                     {
-                        const typeDIV = document.createElement("div");
-                        typeDIV.style.height = "max-content";
-                        typeDIV.style.width = "64px";
-                        durationInputMenu.appendChild(typeDIV);
-
-                        {
-                            const DIV = document.createElement("div");
-                            DIV.style.height = "max-content";
-                            DIV.style.width = "max-content";
-                            typeDIV.appendChild(DIV);
-
-                            const typeLable = document.createElement("label");
-                            typeLable.style.height = "max-content";
-                            typeLable.style.fontSize = "16px";
-                            typeLable.htmlFor = "scheduleViewer-SettingsMenu-realType"
-                            typeLable.innerText = "real";
-                            DIV.appendChild(typeLable);
-
-                            const type = document.createElement("input");
-                            type.type = "radio";
-                            type.name = "scheduleViewer-SettingsMenu-type";
-                            type.id = "scheduleViewer-SettingsMenu-realType";
-                            DIV.appendChild(type);
-                            this.lineInputs.radioReal.input = type;
-                            this.lineInputs.radioReal.div = DIV;
-                        }
-                        {
-                            const DIV = document.createElement("div");
-                            DIV.style.height = "max-content";
-                            DIV.style.width = "max-content";
-                            typeDIV.appendChild(DIV);
-
-                            const typeLable = document.createElement("label");
-                            typeLable.style.height = "max-content";
-                            typeLable.style.fontSize = "16px";
-                            typeLable.htmlFor = "scheduleViewer-SettingsMenu-sympleType"
-                            typeLable.innerText = "simple";
-                            DIV.appendChild(typeLable);
-
-                            const type = document.createElement("input");
-                            type.type = "radio";
-                            type.name = "scheduleViewer-SettingsMenu-type";
-                            type.id = "scheduleViewer-SettingsMenu-sympleType";
-                            DIV.appendChild(type);
-                            this.lineInputs.radioSimple.input = type;
-                            this.lineInputs.radioSimple.div = DIV;
-                        }
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
                     }
                     {
-                        const durationDIV = document.createElement("div");
-                        durationDIV.style.height = "max-content";
-                        durationDIV.style.width = "max-content";
-                        durationInputMenu.appendChild(durationDIV);
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
 
                         const durationLable = document.createElement("label");
-                        durationLable.style.height = "max-content";
-                        durationLable.style.marginRight = "3px";
-                        durationLable.style.fontSize = "16px";
-                        durationLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputDuration"
-                        durationLable.innerText = "durations";
-                        durationDIV.appendChild(durationLable);
-
-
-                        const durationInput = document.createElement("input");
-                        durationInput.type = "input";
-                        durationInput.style.width = `${55}px`
-                        durationInput.style.height = `${16}px`
-                        durationInput.id = "scheduleViewer-SettingsMenu-realLineInputDuration";
-                        durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
-                        durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
-                        durationDIV.appendChild(durationInput);
-                        this.lineInputs.durations.input = durationInput;
-                        this.lineInputs.durations.div = durationDIV;
-
-                        const durationLable2 = document.createElement("label");
-                        durationLable2.style.height = "max-content";
-                        durationLable2.style.marginRight = "3px";
-                        durationLable2.style.fontSize = "16px";
-                        durationLable2.htmlFor = "scheduleViewer-SettingsMenu-realLineInputDuration"
-                        durationLable2.innerText = "sec list";
-                        durationDIV.appendChild(durationLable2);
-                    }
-
-                    {
-                        const durationDIV = document.createElement("div");
-                        durationDIV.style.height = "max-content";
-                        durationDIV.style.width = "max-content";
-                        durationInputMenu.appendChild(durationDIV);
-
-                        const durationLable = document.createElement("label");
-                        durationLable.style.height = "max-content";
-                        durationLable.style.marginRight = "3px";
+                        // durationLable.style.height = "max-content";
+                        // durationLable.style.marginRight = "3px";
                         durationLable.style.fontSize = "16px";
                         durationLable.htmlFor = "scheduleViewer-SettingsMenu-inputDuration"
                         durationLable.innerText = "duration:";
-                        durationDIV.appendChild(durationLable);
+                        tableCell.appendChild(durationLable);
 
 
                         const durationInput = document.createElement("input");
@@ -347,106 +259,172 @@ export class SettingsMenu
                         durationInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                         durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
-                        durationDIV.appendChild(durationInput);
+                        tableCell.appendChild(durationInput);
                         this.lineInputs.duration.input = durationInput;
-                        this.lineInputs.duration.div = durationDIV;
+                        // this.lineInputs.duration.div = durationDIV;
+                    }
+
+                }
+
+                {
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+
+                        const type = document.createElement("input");
+                        type.type = "radio";
+                        type.name = "scheduleViewer-SettingsMenu-type";
+                        type.id = "scheduleViewer-SettingsMenu-realType";
+                        tableCell.appendChild(type);
+                        this.lineInputs.radioReal.input = type;
+                        // this.lineInputs.radioReal.div = DIV;
+
+                        const typeLable = document.createElement("label");
+                        typeLable.style.height = "max-content";
+                        typeLable.style.fontSize = "16px";
+                        typeLable.htmlFor = "scheduleViewer-SettingsMenu-realType"
+                        typeLable.innerText = "once";
+                        tableCell.appendChild(typeLable);
+                    }
+
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
                     }
                 }
 
                 {
-                    const startDIV = document.createElement("div");
-                    startDIV.style.height = "max-content";
-                    startDIV.style.width = "max-content";
-                    // sympleLineStart.style.marginRight = "30px";
-                    realLineMenu.appendChild(startDIV);
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
 
-                    const startLable = document.createElement("label");
-                    startLable.style.height = "max-content";
-                    startLable.style.marginRight = "3px";
-                    startLable.style.fontSize = "16px";
-                    startLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth"
-                    startLable.innerText = "start:";
-                    startDIV.appendChild(startLable);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+
+                        const type = document.createElement("input");
+                        type.type = "radio";
+                        type.name = "scheduleViewer-SettingsMenu-type";
+                        type.id = "scheduleViewer-SettingsMenu-sympleType";
+                        tableCell.appendChild(type);
+                        this.lineInputs.radioSimple.input = type;
+                        // this.lineInputs.radioSimple.div = DIV;
+
+                        const typeLable = document.createElement("label");
+                        typeLable.style.height = "max-content";
+                        typeLable.style.fontSize = "16px";
+                        typeLable.htmlFor = "scheduleViewer-SettingsMenu-sympleType"
+                        typeLable.innerText = "repeat:";
+                        tableCell.appendChild(typeLable);
+                    }
+
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+
+                        const intervalLable = document.createElement("label");
+                        // intervalLable.style.height = "max-content";
+                        // intervalLable.style.marginRight = "3px";
+                        intervalLable.style.fontSize = "16px";
+                        intervalLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputInterval"
+                        intervalLable.innerText = "interval";
+                        tableCell.appendChild(intervalLable);
 
 
-                    const startInput = document.createElement("input");
-                    startInput.type = "input";
-                    startInput.style.width = `${inputWidth}px`
-                    startInput.style.height = `${inputHeight}px`
-                    startInput.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
-                    startInput.title = this.addingLinesPrm.inputtitle;
-                    startInput.placeholder = this.addingLinesPrm.inputplaceholder;
-                    startInput.style.border = `${this.addingLinesPrm.inputsBorder}`
-                    startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
-                    startDIV.appendChild(startInput);
-                    this.lineInputs.start = startInput;
+                        const intervalInput = document.createElement("input");
+                        intervalInput.type = "input";
+                        intervalInput.style.width = `${inputWidth}px`
+                        intervalInput.style.height = `${inputHeight}px`
+                        intervalInput.id = "scheduleViewer-SettingsMenu-realLineInputInterval";
+                        intervalInput.title = this.addingLinesPrm.inputtitle;
+                        intervalInput.placeholder = this.addingLinesPrm.inputplaceholder;
+                        intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
+                        tableCell.appendChild(intervalInput);
+                        this.lineInputs.interval = intervalInput;
+                    }
                 }
 
                 {
-                    const endDIV = document.createElement("div");
-                    endDIV.style.height = "max-content";
-                    endDIV.style.width = "max-content";
-                    // sympleLineEnd.style.marginRight = "30px";
-                    realLineMenu.appendChild(endDIV);
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
 
-                    const endLable = document.createElement("label");
-                    endLable.style.height = "max-content";
-                    endLable.style.marginRight = "3px";
-                    endLable.style.fontSize = "16px";
-                    endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh"
-                    endLable.innerText = "end:";
-                    endDIV.appendChild(endLable);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+
+                        const endLable = document.createElement("label");
+                        // endLable.style.height = "max-content";
+                        // endLable.style.marginRight = "3px";
+                        endLable.style.fontSize = "16px";
+                        endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh"
+                        endLable.innerText = "end:";
+                        tableCell.appendChild(endLable);
 
 
-                    const endInput = document.createElement("input");
-                    endInput.type = "input";
-                    endInput.style.width = `${inputWidth}px`
-                    endInput.style.height = `${inputHeight}px`
-                    endInput.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
-                    endInput.title = this.addingLinesPrm.inputtitle;
-                    endInput.placeholder = this.addingLinesPrm.inputplaceholder;
-                    endInput.style.border = `${this.addingLinesPrm.inputsBorder}`
-                    endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
-                    endDIV.appendChild(endInput);
-                    this.lineInputs.end = endInput;
+                        const endInput = document.createElement("input");
+                        endInput.type = "input";
+                        endInput.style.width = `${inputWidth}px`
+                        endInput.style.height = `${inputHeight}px`
+                        endInput.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
+                        endInput.title = this.addingLinesPrm.inputtitle;
+                        endInput.placeholder = this.addingLinesPrm.inputplaceholder;
+                        endInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
+                        tableCell.appendChild(endInput);
+                        this.lineInputs.end = endInput;
+                    }
                 }
 
-                const breakDiv = document.createElement("div");
-                breakDiv.style.height = "0px";
-                breakDiv.style.flexBasis = "100%"
-                // sympleLineMenu.appendChild(breakDiv);
+                // {
+                //     const tableRow = document.createElement("tr");
+                //     linesMenuTable.appendChild(tableRow);
 
+                //     {
+                //         const tableCell = document.createElement("td");
+                //         tableRow.appendChild(tableCell);
+                //     }
+                // }
+            }
+
+            this.hintForLinesInputs = document.createElement("div");
+            this.hintForLinesInputs.style.height = "25px";
+            this.hintForLinesInputs.style.width = "100%";
+            this.hintForLinesInputs.style.fontSize = "14px"
+            this.hintForLinesInputs.style.textAlign = "center";
+            this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
+            this.addingLinesDIV.appendChild(this.hintForLinesInputs);
+
+            {
                 const buttonsDIV = document.createElement("div");
-                buttonsDIV.style.height = "100%";
-                buttonsDIV.style.width = "70px";
+                buttonsDIV.style.height = "25px";
+                buttonsDIV.style.width = "100%";
                 buttonsDIV.style.display = "flex";
                 buttonsDIV.style.justifyContent = "space-around";
                 buttonsDIV.style.alignItems = "center";
                 buttonsDIV.style.flexWrap = "wrap"
-                addRealLineMenu.appendChild(buttonsDIV);
-
-                const buttonAdd = document.createElement("button");
-                buttonAdd.innerText = "add";
-                buttonsDIV.appendChild(buttonAdd);
-                this.lineInputs.buttonAdd = buttonAdd;
-
-                const buttonChange = document.createElement("button");
-                buttonChange.innerText = "change";
-                buttonsDIV.appendChild(buttonChange);
-                this.lineInputs.buttonChange = buttonChange;
+                this.addingLinesDIV.appendChild(buttonsDIV);
 
                 const buttonRemove = document.createElement("button");
                 buttonRemove.innerText = "remove";
                 buttonsDIV.appendChild(buttonRemove);
                 this.lineInputs.buttonRemove = buttonRemove;
 
-                this.hintForLinesInputs = document.createElement("div");
-                this.hintForLinesInputs.style.height = "15px";
-                this.hintForLinesInputs.style.width = "100%";
-                this.hintForLinesInputs.style.fontSize = "14px"
-                this.hintForLinesInputs.style.textAlign = "center";
-                this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
-                addRealLineMenu.appendChild(this.hintForLinesInputs);
+                const buttonChange = document.createElement("button");
+                buttonChange.innerText = "change";
+                buttonsDIV.appendChild(buttonChange);
+                this.lineInputs.buttonChange = buttonChange;
+
+                const buttonAdd = document.createElement("button");
+                buttonAdd.innerText = "add";
+                buttonsDIV.appendChild(buttonAdd);
+                this.lineInputs.buttonAdd = buttonAdd;
             }
         }
 
