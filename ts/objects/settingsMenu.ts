@@ -714,7 +714,38 @@ export class SettingsMenu
         const array = string.split(":");
         if (this.revTimeInput)
         {
+            if (array[0] == undefined || array[0] == "") throw new Error();
+            let h = 0;
+            let m = 0;
+            let s = 0;
+            if (array.length == 1)
+            {
+                s = parseInt(array[0]);
+                if (!this.isNumber(s)) throw new Error();
+            }
+            else if (array.length == 2)
+            {
+                m = parseInt(array[0]);
+                if (!this.isNumber(m)) throw new Error();
+                s = parseInt(array[1]);
+                if (!this.isNumber(s)) throw new Error();
+            }
+            else if (array.length == 3)
+            {
+                h = parseInt(array[0]);
+                if (!this.isNumber(h)) throw new Error();
+                m = parseInt(array[1]);
+                if (!this.isNumber(m)) throw new Error();
+                s = parseInt(array[2]);
+                if (!this.isNumber(s)) throw new Error();
+            }
+            else
+            {
 
+            }
+            const allTime = h * 60 * 60 + m * 60 + s;
+            // console.log(allTime);
+            return allTime;
         }
         else
         {
@@ -737,7 +768,8 @@ export class SettingsMenu
                 if (!this.isNumber(s)) throw new Error();
                 allTime += s;
             }
-            console.log(allTime);
+            // console.log(allTime);
+            return allTime;
         }
     }
     private addRealLine(functions: FunctionsForMenu)
