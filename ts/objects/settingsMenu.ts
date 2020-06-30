@@ -601,6 +601,11 @@ export class SettingsMenu
 
     private addLine(functions: FunctionsForMenu)
     {
+        this.UnmarkAndClear(this.lineInputs.interval);
+        this.UnmarkAndClear(this.lineInputs.duration.input);
+        this.UnmarkAndClear(this.lineInputs.start);
+        this.UnmarkAndClear(this.lineInputs.end);
+        
         const inputsData = {
             interval: this.lineInputs.interval.value,
             duration: this.lineInputs.duration.input.value,
@@ -617,7 +622,6 @@ export class SettingsMenu
             if (e == "MyError") return;
             else throw e;
         }
-        console.log("123");
 
         let inputsDataString;
         if (this.isNumber(inputsDataString.interval.h)) this.markAsCorrect(this.lineInputs.interval);
@@ -683,15 +687,19 @@ export class SettingsMenu
         let end;
         try { interval = this.turnStringToSeconds(rawData.interval); }
         catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
+        this.markAsCorrect(this.lineInputs.interval);
 
         try { duration = this.turnStringToSeconds(rawData.duration); }
         catch (e) { this.markAsUncorrect(this.lineInputs.duration.input); throw "MyError";};
+        this.markAsCorrect(this.lineInputs.duration.input);
 
         try { start = this.turnStringToSeconds(rawData.start); }
         catch (e) { this.markAsUncorrect(this.lineInputs.start); throw "MyError";};
+        this.markAsCorrect(this.lineInputs.start);
 
         try { end = this.turnStringToSeconds(rawData.end); }
         catch (e) { this.markAsUncorrect(this.lineInputs.end); throw "MyError";};
+        this.markAsCorrect(this.lineInputs.end);
 
         return {
             interval: interval,
@@ -804,14 +812,17 @@ export class SettingsMenu
     private markAsUncorrect(el: HTMLInputElement)
     {
         el.style.border = "1px solid red";
+        el.style.backgroundColor = "rgb(255, 180, 180)";
     }
     private markAsCorrect(el: HTMLInputElement)
     {
         el.style.border = "1px solid green";
+        el.style.backgroundColor = "lightgreen";
     }
     private UnmarkAndClear(el: HTMLInputElement)
     {
         el.style.border = `${this.addingLinesPrm.inputsBorder}`;
+        el.style.backgroundColor = this.addingLinesPrm.inputsBackground;
         // el.value = "";
     }
     private checkNumber(num: number, type: string)
