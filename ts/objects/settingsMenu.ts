@@ -566,10 +566,8 @@ export class SettingsMenu
         }
     }
 
-    private addSympleLine(functions: FunctionsForMenu)
     private toggleLineMenuRev()
     {
-        const inputsData = {
         this.revTimeInput = !this.revTimeInput;
         if (this.revTimeInput)
         {
@@ -601,67 +599,59 @@ export class SettingsMenu
         }
     }
 
-            interval: {
-                h: parseInt(this.sympleLineInputs.interval.h.value),
-                m: parseInt(this.sympleLineInputs.interval.m.value),
-                s: parseInt(this.sympleLineInputs.interval.s.value),
-            },
-            duration: {
-                h: parseInt(this.sympleLineInputs.duration.h.value),
-                m: parseInt(this.sympleLineInputs.duration.m.value),
-                s: parseInt(this.sympleLineInputs.duration.s.value),
-            },
-            start: {
-                h: parseInt(this.sympleLineInputs.start.h.value),
-                m: parseInt(this.sympleLineInputs.start.m.value),
-                s: parseInt(this.sympleLineInputs.start.s.value),
-            },
-            end: {
-                h: parseInt(this.sympleLineInputs.end.h.value),
-                m: parseInt(this.sympleLineInputs.end.m.value),
-                s: parseInt(this.sympleLineInputs.end.s.value),
-            },
+    private addLine(functions: FunctionsForMenu)
+    {
+        const inputsData = {
+            interval: this.lineInputs.interval.value,
+            duration: this.lineInputs.duration.input.value,
+            durations: this.lineInputs.duration.input.value,
+            start: this.lineInputs.start.value,
+            end: this.lineInputs.end.value,
         };
-        if (this.isNumber(inputsData.interval.h)) this.markAsCorrect(this.sympleLineInputs.interval.h);
-        else { this.markAsUncorrect(this.sympleLineInputs.interval.h); return; }
-        if (this.isNumber(inputsData.interval.m)) this.markAsCorrect(this.sympleLineInputs.interval.m);
-        else { this.markAsUncorrect(this.sympleLineInputs.interval.m); return; }
-        if (this.isNumber(inputsData.interval.s)) this.markAsCorrect(this.sympleLineInputs.interval.s);
-        else { this.markAsUncorrect(this.sympleLineInputs.interval.s); return; }
 
-        if (this.isNumber(inputsData.duration.h)) this.markAsCorrect(this.sympleLineInputs.duration.h);
-        else { this.markAsUncorrect(this.sympleLineInputs.duration.h); return; }
-        if (this.isNumber(inputsData.duration.m)) this.markAsCorrect(this.sympleLineInputs.duration.m);
-        else { this.markAsUncorrect(this.sympleLineInputs.duration.m); return; }
-        if (this.isNumber(inputsData.duration.s)) this.markAsCorrect(this.sympleLineInputs.duration.s);
-        else { this.markAsUncorrect(this.sympleLineInputs.duration.s); return; }
+        let lineData;
+        try {
+            lineData = this.createLineData(inputsData);
+        } catch (e)
+        {
+            if (e == "MyError") return;
+            else throw e;
+        }
+        console.log("123");
 
-        if (this.isNumber(inputsData.start.h)) this.markAsCorrect(this.sympleLineInputs.start.h);
-        else { this.markAsUncorrect(this.sympleLineInputs.start.h); return; }
-        if (this.isNumber(inputsData.start.m)) this.markAsCorrect(this.sympleLineInputs.start.m);
-        else { this.markAsUncorrect(this.sympleLineInputs.start.m); return; }
-        if (this.isNumber(inputsData.start.s)) this.markAsCorrect(this.sympleLineInputs.start.s);
-        else { this.markAsUncorrect(this.sympleLineInputs.start.s); return; }
+        let inputsDataString;
+        if (this.isNumber(inputsDataString.interval.h)) this.markAsCorrect(this.lineInputs.interval);
+        else { this.markAsUncorrect(this.lineInputs.interval); return; }
+        if (this.isNumber(inputsDataString.interval.m)) this.markAsCorrect(this.lineInputs.interval);
+        else { this.markAsUncorrect(this.lineInputs.interval); return; }
+        if (this.isNumber(inputsDataString.interval.s)) this.markAsCorrect(this.lineInputs.interval);
+        else { this.markAsUncorrect(this.lineInputs.interval); return; }
 
-        if (this.isNumber(inputsData.end.h)) this.markAsCorrect(this.sympleLineInputs.end.h);
-        else { this.markAsUncorrect(this.sympleLineInputs.end.h); return; }
-        if (this.isNumber(inputsData.end.m)) this.markAsCorrect(this.sympleLineInputs.end.m);
-        else { this.markAsUncorrect(this.sympleLineInputs.end.m); return; }
-        if (this.isNumber(inputsData.end.s)) this.markAsCorrect(this.sympleLineInputs.end.s);
-        else { this.markAsUncorrect(this.sympleLineInputs.end.s); return; }
+        if (this.isNumber(inputsDataString.duration.h)) this.markAsCorrect(this.lineInputs.duration.input);
+        else { this.markAsUncorrect(this.lineInputs.duration.input); return; }
+        if (this.isNumber(inputsDataString.duration.m)) this.markAsCorrect(this.lineInputs.duration.input);
+        else { this.markAsUncorrect(this.lineInputs.duration.input); return; }
+        if (this.isNumber(inputsDataString.duration.s)) this.markAsCorrect(this.lineInputs.duration.input);
+        else { this.markAsUncorrect(this.lineInputs.duration.input); return; }
 
-        this.UnmarkAndClear(this.sympleLineInputs.interval.h);
-        this.UnmarkAndClear(this.sympleLineInputs.interval.m);
-        this.UnmarkAndClear(this.sympleLineInputs.interval.s);
-        this.UnmarkAndClear(this.sympleLineInputs.duration.h);
-        this.UnmarkAndClear(this.sympleLineInputs.duration.m);
-        this.UnmarkAndClear(this.sympleLineInputs.duration.s);
-        this.UnmarkAndClear(this.sympleLineInputs.start.h);
-        this.UnmarkAndClear(this.sympleLineInputs.start.m);
-        this.UnmarkAndClear(this.sympleLineInputs.start.s);
-        this.UnmarkAndClear(this.sympleLineInputs.end.h);
-        this.UnmarkAndClear(this.sympleLineInputs.end.m);
-        this.UnmarkAndClear(this.sympleLineInputs.end.s);
+        if (this.isNumber(inputsDataString.start.h)) this.markAsCorrect(this.lineInputs.start);
+        else { this.markAsUncorrect(this.lineInputs.start); return; }
+        if (this.isNumber(inputsDataString.start.m)) this.markAsCorrect(this.lineInputs.start);
+        else { this.markAsUncorrect(this.lineInputs.start); return; }
+        if (this.isNumber(inputsDataString.start.s)) this.markAsCorrect(this.lineInputs.start);
+        else { this.markAsUncorrect(this.lineInputs.start); return; }
+
+        if (this.isNumber(inputsDataString.end.h)) this.markAsCorrect(this.lineInputs.end);
+        else { this.markAsUncorrect(this.lineInputs.end); return; }
+        if (this.isNumber(inputsDataString.end.m)) this.markAsCorrect(this.lineInputs.end);
+        else { this.markAsUncorrect(this.lineInputs.end); return; }
+        if (this.isNumber(inputsDataString.end.s)) this.markAsCorrect(this.lineInputs.end);
+        else { this.markAsUncorrect(this.lineInputs.end); return; }
+
+        this.UnmarkAndClear(this.lineInputs.interval);
+        this.UnmarkAndClear(this.lineInputs.duration.input);
+        this.UnmarkAndClear(this.lineInputs.start);
+        this.UnmarkAndClear(this.lineInputs.end);
 
         this.checkNumber(inputsData.interval.h, "h");
         this.checkNumber(inputsData.interval.m, "m");
@@ -684,6 +674,47 @@ export class SettingsMenu
         const end = inputsData.end.h * 60 * 60 + inputsData.end.m * 60 + inputsData.end.s;
         functions.addSympleLine(interval, duration, start, end);
         functions.recreate();
+    }
+    private createLineData(rawData: {interval: string, duration: string, durations: string, start: string, end: string})
+    {
+        let interval;
+        let duration;
+        let start;
+        let end;
+        try { interval = this.turnStringToSeconds(rawData.interval); }
+        catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
+
+        try { duration = this.turnStringToSeconds(rawData.duration); }
+        catch (e) { this.markAsUncorrect(this.lineInputs.duration.input); throw "MyError";};
+
+        try { start = this.turnStringToSeconds(rawData.start); }
+        catch (e) { this.markAsUncorrect(this.lineInputs.start); throw "MyError";};
+
+        try { end = this.turnStringToSeconds(rawData.end); }
+        catch (e) { this.markAsUncorrect(this.lineInputs.end); throw "MyError";};
+
+        return {
+            interval: interval,
+            duration: duration,
+            start: start,
+            end: end,
+            durations: 0,
+        };
+    }
+    private turnStringToSeconds(string: string)
+    {
+        const array = string.split(":");
+        if (this.revTimeInput)
+        {
+
+        }
+        else
+        {
+            const h = array[0];
+            const m = array[1];
+            const s = array[2];
+            if (h == undefined) throw new Error();
+        }
     }
     private addRealLine(functions: FunctionsForMenu)
     {
@@ -812,7 +843,7 @@ export class SettingsMenu
     {
         switch (button) {
             case "add":
-
+                this.addLine(functions);
                 break;
 
             case "change":
