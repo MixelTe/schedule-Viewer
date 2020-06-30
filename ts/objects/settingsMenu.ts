@@ -616,7 +616,7 @@ export class SettingsMenu
         const inputsData = {
             interval: this.lineInputs.interval.value,
             duration: this.lineInputs.duration.input.value,
-            durations: this.lineInputs.duration.input.value,
+            durations: this.lineInputs.durations.input.value,
             start: this.lineInputs.start.value,
             end: this.lineInputs.end.value,
         };
@@ -703,9 +703,27 @@ export class SettingsMenu
         catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
         this.markAsCorrect(this.lineInputs.interval);
 
-        try { duration = this.turnStringToSeconds(rawData.duration); }
-        catch (e) { this.markAsUncorrect(this.lineInputs.duration.input); throw "MyError";};
-        this.markAsCorrect(this.lineInputs.duration.input);
+        if (this.lineInputs.radioSimple.input.checked)
+        {
+            try { duration = this.turnStringToSeconds(rawData.duration); }
+            catch (e) { this.markAsUncorrect(this.lineInputs.duration.input); throw "MyError";};
+            this.markAsCorrect(this.lineInputs.duration.input);
+        }
+        else
+        {
+            duration = rawData.durations.split(',').map(num =>
+            {
+                const newNum = Number(num);
+                if ((newNum / newNum == 1 || newNum == 0) && num != "") return newNum;
+                else
+                {
+                    this.markAsUncorrect(this.lineInputs.durations.input);
+                    console.error(`unexpected value in durations: "${num}"`)
+                    throw "MyError";
+                };
+            });
+            this.markAsCorrect(this.lineInputs.durations.input);
+        }
 
         try { start = this.turnStringToSeconds(rawData.start); }
         catch (e) { this.markAsUncorrect(this.lineInputs.start); throw "MyError";};
