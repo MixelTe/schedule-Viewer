@@ -605,7 +605,7 @@ export class SettingsMenu
         this.UnmarkAndClear(this.lineInputs.duration.input);
         this.UnmarkAndClear(this.lineInputs.start);
         this.UnmarkAndClear(this.lineInputs.end);
-        
+
         const inputsData = {
             interval: this.lineInputs.interval.value,
             duration: this.lineInputs.duration.input.value,
@@ -718,10 +718,26 @@ export class SettingsMenu
         }
         else
         {
-            const h = array[0];
-            const m = array[1];
-            const s = array[2];
-            if (h == undefined) throw new Error();
+            const strH = array[0];
+            const strM = array[1];
+            const strS = array[2];
+            if (strH == undefined || strH == "") throw new Error();
+            const h = parseInt(strH);
+            const m = parseInt(strM);
+            const s = parseInt(strS);
+            if (!this.isNumber(h)) throw new Error();
+            let allTime = h * 60 * 60;
+            if (strM != undefined)
+            {
+                if (!this.isNumber(m)) throw new Error();
+                allTime += m * 60;
+            }
+            if (strS != undefined)
+            {
+                if (!this.isNumber(s)) throw new Error();
+                allTime += s;
+            }
+            console.log(allTime);
         }
     }
     private addRealLine(functions: FunctionsForMenu)
