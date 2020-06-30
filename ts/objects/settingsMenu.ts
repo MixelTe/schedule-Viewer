@@ -17,18 +17,17 @@ export class SettingsMenu
     private addingLinesDIV = document.createElement("div");
     private addingLinesPrm = { height: 200, inputsBorder: "1px solid grey" };
     private lineInputs = {
-        radioReal: <HTMLInputElement>{},
-        radioSimple: <HTMLInputElement>{},
+        radioReal: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
+        radioSimple: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         interval: <HTMLInputElement>{},
-        duration: <HTMLInputElement>{},
-        durations: <HTMLInputElement>{},
+        duration: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
+        durations: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         start: <HTMLInputElement> {},
         end: <HTMLInputElement>{},
         buttonAdd: <HTMLButtonElement>{},
         buttonChange: <HTMLButtonElement>{},
         buttonRemove: <HTMLButtonElement>{},
     };
-    private linesMenuState: "noSelect" | "simple" | "real";
 
     private loadFilesDIV = document.createElement("div");
     private loadFilesPrm = { height: 80 };
@@ -261,7 +260,8 @@ export class SettingsMenu
                             type.name = "scheduleViewer-SettingsMenu-type";
                             type.id = "scheduleViewer-SettingsMenu-realType";
                             DIV.appendChild(type);
-                            this.lineInputs.radioReal = type;
+                            this.lineInputs.radioReal.input = type;
+                            this.lineInputs.radioReal.div = DIV;
                         }
                         {
                             const DIV = document.createElement("div");
@@ -281,7 +281,8 @@ export class SettingsMenu
                             type.name = "scheduleViewer-SettingsMenu-type";
                             type.id = "scheduleViewer-SettingsMenu-sympleType";
                             DIV.appendChild(type);
-                            this.lineInputs.radioSimple = type;
+                            this.lineInputs.radioSimple.input = type;
+                            this.lineInputs.radioSimple.div = DIV;
                         }
                     }
                     {
@@ -306,7 +307,8 @@ export class SettingsMenu
                         durationInput.id = "scheduleViewer-SettingsMenu-realLineInputDuration";
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                         durationDIV.appendChild(durationInput);
-                        this.lineInputs.durations = durationInput;
+                        this.lineInputs.durations.input = durationInput;
+                        this.lineInputs.durations.div = durationDIV;
 
                         const durationLable2 = document.createElement("label");
                         durationLable2.style.height = "max-content";
@@ -341,7 +343,8 @@ export class SettingsMenu
                         durationInput.placeholder = inputplaceholder;
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                         durationDIV.appendChild(durationInput);
-                        this.lineInputs.duration = durationInput;
+                        this.lineInputs.duration.input = durationInput;
+                        this.lineInputs.duration.div = durationDIV;
                     }
                 }
 
@@ -510,12 +513,16 @@ export class SettingsMenu
         this.lineInputs.buttonAdd.addEventListener("click", () => this.addSympleLine(functions));
         this.lineInputs.buttonChange.addEventListener("click", () => this.sympleLineButtons("change", functions));
         this.lineInputs.buttonRemove.addEventListener("click", () => this.sympleLineButtons("remove", functions));
+        this.lineInputs.radioReal.input.addEventListener("click", () => this.lineTypeSelection("real"));
+        this.lineInputs.radioSimple.input.addEventListener("click", () => this.lineTypeSelection("simple"));
 
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
 
-        this.linesMenuState = "noSelect";
-        this.menuSystem();
+        this.lineInputs.radioReal.input.checked = true;
+        this.lineTypeSelection("real");
+
+        this.menuSystem("simple");
     }
 
     private toggleMenu()
@@ -765,21 +772,24 @@ export class SettingsMenu
 
                 break;
 
-            default:
-                break;
+            default: throw new Error();
         }
     }
 
-    private menuSystem()
+    private menuSystem(state: "noSelect" | "simple" | "real")
     {
-        switch (this.linesMenuState) {
+        switch (state) {
             case "noSelect":
                 this.lineInputs.buttonAdd.disabled = false;
                 this.lineInputs.buttonChange.disabled = true;
                 this.lineInputs.buttonRemove.disabled = true;
 
-                this.lineInputs.duration.disabled = false;
-                this.lineInputs.durations.disabled = false;
+                this.lineInputs.radioSimple.div.style.color = "black";
+                this.lineInputs.radioReal.div.style.color = "black";
+                this.lineInputs.radioSimple.input.disabled = false;
+                this.lineInputs.radioReal.input.disabled = false;
+
+                this.disableDuractionInput("none");
                 break;
 
             case "simple":
@@ -787,8 +797,13 @@ export class SettingsMenu
                 this.lineInputs.buttonChange.disabled = false;
                 this.lineInputs.buttonRemove.disabled = false;
 
-                this.lineInputs.duration.disabled = false;
-                this.lineInputs.durations.disabled = true;
+                this.lineInputs.radioSimple.div.style.color = "gray";
+                this.lineInputs.radioReal.div.style.color = "gray";
+                this.lineInputs.radioSimple.input.disabled = true;
+                this.lineInputs.radioReal.input.disabled = true;
+
+                this.lineInputs.radioSimple.input.checked = true;
+                this.disableDuractionInput("simple");
                 break;
 
             case "real":
@@ -796,27 +811,60 @@ export class SettingsMenu
                 this.lineInputs.buttonChange.disabled = true;
                 this.lineInputs.buttonRemove.disabled = true;
 
-                this.lineInputs.duration.disabled = true;
-                this.lineInputs.durations.disabled = false;
+                this.lineInputs.radioSimple.div.style.color = "gray";
+                this.lineInputs.radioReal.div.style.color = "gray";
+                this.lineInputs.radioSimple.input.disabled = true;
+                this.lineInputs.radioReal.input.disabled = true;
+
+                this.lineInputs.radioReal.input.checked = true;
+                this.disableDuractionInput("real");
+                break;
+
+            default: throw new Error();
+        }
+    }
+    private disableDuractionInput(type: "simple" | "real" | "none")
+    {
+        switch (type) {
+            case "none":
+                this.lineInputs.duration.input.disabled = false;
+                this.lineInputs.durations.input.disabled = false;
+
+                this.lineInputs.duration.div.style.color = "black";
+                this.lineInputs.durations.div.style.color = "black";
+                break;
+
+            case "simple":
+                this.lineInputs.duration.input.disabled = false;
+                this.lineInputs.durations.input.disabled = true;
+
+                this.lineInputs.duration.div.style.color = "black";
+                this.lineInputs.durations.div.style.color = "gray";
+                break;
+
+            case "real":
+                this.lineInputs.duration.input.disabled = true;
+                this.lineInputs.durations.input.disabled = false;
+
+                this.lineInputs.duration.div.style.color = "gray";
+                this.lineInputs.durations.div.style.color = "black";
                 break;
 
             default:
                 break;
         }
     }
-    private lineTypeSelection(type: "simple" | "real")
+    private lineTypeSelection(type: "simple" | "real" | "none")
     {
         switch (type) {
             case "simple":
-
-                break;
-
             case "real":
-
+            case "none":
+                this.selectedLineType = type;
+                this.disableDuractionInput(type);
                 break;
 
-            default:
-                break;
+            default: throw new Error();
         }
     }
 
