@@ -12,10 +12,12 @@ export class SettingsMenu
     private settingsDIV = document.createElement("div");
     private showSepLine = true;
     private toggleSepLineEl: HTMLInputElement;
+    private revTimeInputEl: HTMLInputElement;
+    private revTimeInput = false;
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = { height: 200, inputsBorder: "1px solid grey", inputsBackground: "white" };
+    private addingLinesPrm = { height: 200, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
     private lineInputs = {
         radioReal: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         radioSimple: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
@@ -28,6 +30,7 @@ export class SettingsMenu
         buttonChange: <HTMLButtonElement>{},
         buttonRemove: <HTMLButtonElement>{},
     };
+    private hintForLinesInputs: HTMLDivElement;
 
     private loadFilesDIV = document.createElement("div");
     private loadFilesPrm = { height: 80 };
@@ -120,6 +123,7 @@ export class SettingsMenu
             menu.style.display = "flex";
             menu.style.justifyContent = "space-around";
             menu.style.alignItems = "center";
+            menu.style.flexWrap = "wrap";
             this.settingsDIV.appendChild(menu);
 
             const sepLine = document.createElement("div");
@@ -142,22 +146,22 @@ export class SettingsMenu
 
 
 
-            // const showAfterEnd = document.createElement("div");
-            // showAfterEnd.style.height = "max-content";
-            // showAfterEnd.style.width = "max-content";
-            // menu.appendChild(showAfterEnd);
+            const revTime = document.createElement("div");
+            revTime.style.height = "max-content";
+            revTime.style.width = "max-content";
+            menu.appendChild(revTime);
 
-            // const showAfterEndInput = document.createElement("input");
-            // showAfterEndInput.type = "checkbox";
-            // showAfterEndInput.id = "scheduleViewer-SettingsMenu-showAfterEndInput";
-            // showAfterEnd.appendChild(showAfterEndInput);
+            this.revTimeInputEl = document.createElement("input");
+            this.revTimeInputEl.type = "checkbox";
+            this.revTimeInputEl.id = "scheduleViewer-SettingsMenu-showAfterEndInput";
+            revTime.appendChild(this.revTimeInputEl);
 
-            // const showAfterEndLable = document.createElement("label");
-            // showAfterEndLable.style.height = "max-content";
-            // showAfterEndLable.style.fontSize = "16px";
-            // showAfterEndLable.htmlFor = "scheduleViewer-SettingsMenu-showAfterEndInput"
-            // showAfterEndLable.innerText = "hide after end";
-            // showAfterEnd.appendChild(showAfterEndLable);
+            const revTimeLable = document.createElement("label");
+            revTimeLable.style.height = "max-content";
+            revTimeLable.style.fontSize = "16px";
+            revTimeLable.htmlFor = "scheduleViewer-SettingsMenu-showAfterEndInput"
+            revTimeLable.innerText = "reverse time input order";
+            revTime.appendChild(revTimeLable);
 
         }
 
@@ -174,8 +178,6 @@ export class SettingsMenu
 
             const inputWidth = 60;
             const inputHeight = 15;
-            const inputtitle = "time in format: hh or hh:mm or hh:mm:ss";
-            const inputplaceholder = "hh:mm:ss";
 
             {
                 const addRealLineMenu = document.createElement("div");
@@ -218,8 +220,8 @@ export class SettingsMenu
                     intervalInput.style.width = `${inputWidth}px`
                     intervalInput.style.height = `${inputHeight}px`
                     intervalInput.id = "scheduleViewer-SettingsMenu-realLineInputInterval";
-                    intervalInput.title = inputtitle;
-                    intervalInput.placeholder = inputplaceholder;
+                    intervalInput.title = this.addingLinesPrm.inputtitle;
+                    intervalInput.placeholder = this.addingLinesPrm.inputplaceholder;
                     intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                     intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                     intervalDiv.appendChild(intervalInput);
@@ -341,8 +343,8 @@ export class SettingsMenu
                         durationInput.style.width = `${inputWidth}px`
                         durationInput.style.height = `${inputHeight}px`
                         durationInput.id = "scheduleViewer-SettingsMenu-inputDuration";
-                        durationInput.title = inputtitle;
-                        durationInput.placeholder = inputplaceholder;
+                        durationInput.title = this.addingLinesPrm.inputtitle;
+                        durationInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                         durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         durationDIV.appendChild(durationInput);
@@ -372,8 +374,8 @@ export class SettingsMenu
                     startInput.style.width = `${inputWidth}px`
                     startInput.style.height = `${inputHeight}px`
                     startInput.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
-                    startInput.title = inputtitle;
-                    startInput.placeholder = inputplaceholder;
+                    startInput.title = this.addingLinesPrm.inputtitle;
+                    startInput.placeholder = this.addingLinesPrm.inputplaceholder;
                     startInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                     startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                     startDIV.appendChild(startInput);
@@ -401,8 +403,8 @@ export class SettingsMenu
                     endInput.style.width = `${inputWidth}px`
                     endInput.style.height = `${inputHeight}px`
                     endInput.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
-                    endInput.title = inputtitle;
-                    endInput.placeholder = inputplaceholder;
+                    endInput.title = this.addingLinesPrm.inputtitle;
+                    endInput.placeholder = this.addingLinesPrm.inputplaceholder;
                     endInput.style.border = `${this.addingLinesPrm.inputsBorder}`
                     endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                     endDIV.appendChild(endInput);
@@ -438,6 +440,13 @@ export class SettingsMenu
                 buttonsDIV.appendChild(buttonRemove);
                 this.lineInputs.buttonRemove = buttonRemove;
 
+                this.hintForLinesInputs = document.createElement("div");
+                this.hintForLinesInputs.style.height = "15px";
+                this.hintForLinesInputs.style.width = "100%";
+                this.hintForLinesInputs.style.fontSize = "14px"
+                this.hintForLinesInputs.style.textAlign = "center";
+                this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
+                addRealLineMenu.appendChild(this.hintForLinesInputs);
             }
         }
 
@@ -514,19 +523,21 @@ export class SettingsMenu
 
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
+        this.revTimeInputEl.addEventListener("change", () => this.toggleLineMenuRev());
 
-        this.lineInputs.buttonAdd.addEventListener("click", () => this.addSympleLine(functions));
-        this.lineInputs.buttonChange.addEventListener("click", () => this.sympleLineButtons("change", functions));
-        this.lineInputs.buttonRemove.addEventListener("click", () => this.sympleLineButtons("remove", functions));
+        this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
+        this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
+        this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
         this.lineInputs.radioReal.input.addEventListener("click", () => this.disableDuractionInput("real"));
         this.lineInputs.radioSimple.input.addEventListener("click", () => this.disableDuractionInput("simple"));
 
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
 
-        this.lineInputs.radioReal.input.checked = true;
-
         this.menuSystem("noSelect");
+
+        this.lineInputs.radioReal.input.checked = true;
+        this.disableDuractionInput("real");
     }
 
     private toggleMenu()
@@ -556,8 +567,40 @@ export class SettingsMenu
     }
 
     private addSympleLine(functions: FunctionsForMenu)
+    private toggleLineMenuRev()
     {
         const inputsData = {
+        this.revTimeInput = !this.revTimeInput;
+        if (this.revTimeInput)
+        {
+            const placeholder = "mm:ss";
+            const title = "time in format: ss or mm:ss or hh:mm:ss";
+            this.lineInputs.interval.placeholder = placeholder;
+            this.lineInputs.interval.title = title;
+            this.lineInputs.duration.input.placeholder = placeholder;
+            this.lineInputs.duration.input.title = title;
+            this.lineInputs.start.placeholder = placeholder;
+            this.lineInputs.start.title = title;
+            this.lineInputs.end.placeholder = placeholder;
+            this.lineInputs.end.title = title;
+
+            this.hintForLinesInputs.innerText = "time in format: ss or mm:ss or hh:mm:ss";
+        }
+        else
+        {
+            this.lineInputs.interval.placeholder = this.addingLinesPrm.inputplaceholder;
+            this.lineInputs.interval.title = this.addingLinesPrm.inputtitle;
+            this.lineInputs.duration.input.placeholder = this.addingLinesPrm.inputplaceholder;
+            this.lineInputs.duration.input.title = this.addingLinesPrm.inputtitle;
+            this.lineInputs.start.placeholder = this.addingLinesPrm.inputplaceholder;
+            this.lineInputs.start.title = this.addingLinesPrm.inputtitle;
+            this.lineInputs.end.placeholder = this.addingLinesPrm.inputplaceholder;
+            this.lineInputs.end.title = this.addingLinesPrm.inputtitle;
+
+            this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
+        }
+    }
+
             interval: {
                 h: parseInt(this.sympleLineInputs.interval.h.value),
                 m: parseInt(this.sympleLineInputs.interval.m.value),
@@ -765,9 +808,13 @@ export class SettingsMenu
         else throw new Error("value is too small");
     }
 
-    private sympleLineButtons(button: "change" | "remove", functions: FunctionsForMenu)
+    private lineMenuButtons(button: "change" | "remove" | "add", functions: FunctionsForMenu)
     {
         switch (button) {
+            case "add":
+
+                break;
+
             case "change":
 
                 break;
