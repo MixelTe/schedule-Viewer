@@ -15,7 +15,7 @@ export class SettingsMenu
     private settingsPrm = {height: 100};
 
     private addingLinesDIV = document.createElement("div");
-    private addingLinesPrm = { height: 200, inputsBorder: "1px solid grey" };
+    private addingLinesPrm = { height: 200, inputsBorder: "1px solid grey", inputsBackground: "white" };
     private lineInputs = {
         radioReal: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
         radioSimple: {input: <HTMLInputElement>{}, div: <HTMLDivElement>{}},
@@ -221,6 +221,7 @@ export class SettingsMenu
                     intervalInput.title = inputtitle;
                     intervalInput.placeholder = inputplaceholder;
                     intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                    intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                     intervalDiv.appendChild(intervalInput);
                     this.lineInputs.interval = intervalInput;
                 }
@@ -306,6 +307,7 @@ export class SettingsMenu
                         durationInput.style.height = `${16}px`
                         durationInput.id = "scheduleViewer-SettingsMenu-realLineInputDuration";
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         durationDIV.appendChild(durationInput);
                         this.lineInputs.durations.input = durationInput;
                         this.lineInputs.durations.div = durationDIV;
@@ -342,6 +344,7 @@ export class SettingsMenu
                         durationInput.title = inputtitle;
                         durationInput.placeholder = inputplaceholder;
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                        durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         durationDIV.appendChild(durationInput);
                         this.lineInputs.duration.input = durationInput;
                         this.lineInputs.duration.div = durationDIV;
@@ -372,6 +375,7 @@ export class SettingsMenu
                     startInput.title = inputtitle;
                     startInput.placeholder = inputplaceholder;
                     startInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                    startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                     startDIV.appendChild(startInput);
                     this.lineInputs.start = startInput;
                 }
@@ -400,6 +404,7 @@ export class SettingsMenu
                     endInput.title = inputtitle;
                     endInput.placeholder = inputplaceholder;
                     endInput.style.border = `${this.addingLinesPrm.inputsBorder}`
+                    endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                     endDIV.appendChild(endInput);
                     this.lineInputs.end = endInput;
                 }
@@ -860,7 +865,6 @@ export class SettingsMenu
             case "simple":
             case "real":
             case "none":
-                this.selectedLineType = type;
                 this.disableDuractionInput(type);
                 break;
 
