@@ -50,10 +50,12 @@ export class Lines {
         if (typeof el.dasharray[1] != "number")
             throw new Error("NaN");
         const duration = el.dasharray[1] * oneSecond;
-        for (let i = 0; i < axis.width / (interval + duration) && i < el.end * oneSecond; i++) {
+        for (let i = 0; i < axis.width / (interval + duration); i++) {
+            if (i * (interval + duration) > el.end * oneSecond)
+                break;
             path += `
-            h ${interval}
-            m ${duration} 0`;
+            h ${duration}
+            m ${interval} 0`;
         }
         line.setAttribute("d", path);
         return line;
