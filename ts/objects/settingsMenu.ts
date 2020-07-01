@@ -808,23 +808,23 @@ export class SettingsMenu
             let s = 0;
             if (array.length == 1)
             {
-                s = parseInt(array[0]);
+                s = parseInt(array[0], 10);
                 if (!this.isNumber(s)) throw new Error();
             }
             else if (array.length == 2)
             {
-                m = parseInt(array[0]);
+                m = parseInt(array[0], 10);
                 if (!this.isNumber(m)) throw new Error();
-                s = parseInt(array[1]);
+                s = parseInt(array[1], 10);
                 if (!this.isNumber(s)) throw new Error();
             }
             else if (array.length == 3)
             {
-                h = parseInt(array[0]);
+                h = parseInt(array[0], 10);
                 if (!this.isNumber(h)) throw new Error();
-                m = parseInt(array[1]);
+                m = parseInt(array[1], 10);
                 if (!this.isNumber(m)) throw new Error();
-                s = parseInt(array[2]);
+                s = parseInt(array[2], 10);
                 if (!this.isNumber(s)) throw new Error();
             }
             else
@@ -841,9 +841,9 @@ export class SettingsMenu
             const strM = array[1];
             const strS = array[2];
             if (strH == undefined || strH == "") throw new Error();
-            const h = parseInt(strH);
-            const m = parseInt(strM);
-            const s = parseInt(strS);
+            const h = parseInt(strH, 10);
+            const m = parseInt(strM, 10);
+            const s = parseInt(strS, 10);
             if (!this.isNumber(h)) throw new Error();
             let allTime = h * 60 * 60;
             if (strM != undefined)
