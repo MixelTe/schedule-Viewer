@@ -7,7 +7,7 @@ export class Lines
     private body: SVGGElement;
     private overBody: SVGGElement;
     private lines: LineF[];
-    private linesMap: Map<SVGLineElement, LineF> = new Map();
+    private linesMap: Map<SVGRectElement, LineF> = new Map();
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
     private functionsForLines: FunctionsForLines = <FunctionsForLines>{};
@@ -175,22 +175,21 @@ export class Lines
     private createOverPath(index: number, axis: Rect, spaces: number)
     {
         const el = this.lines[index];
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        if (this.overLineCustomColor) line.setAttribute("stroke", `${el.color}`);
-        else line.setAttribute("stroke", "Highlight");
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        if (this.overLineCustomColor) rect.setAttribute("fill", `${el.color}`);
+        else rect.setAttribute("fill", "Highlight");
         if (el.selected)
         {
-            line.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
-            line.id = "ScheduleViewer-Grafic-Lines-selected";
+            rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
+            rect.id = "ScheduleViewer-Grafic-Lines-selected";
         }
-        else line.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
-        line.setAttribute("stroke-width", `${spaces}`);
-        line.setAttribute("clip-path", "url(#graficLinesClip)");
-        line.setAttribute("x1", `${axis.x}`);
-        line.setAttribute("x2", `${axis.x + axis.width}`);
-        line.setAttribute("y1", `${axis.y + axis.height - spaces * index}`);
-        line.setAttribute("y2", `${axis.y + axis.height - spaces * index}`);
-        return line;
+        else rect.setAttribute("fill-opacity", `${this.overLineOpacity}`);
+        rect.setAttribute("clip-path", "url(#graficLinesClip)");
+        rect.setAttribute("x", `${axis.x}`);
+        rect.setAttribute("y", `${axis.y + axis.height - spaces * index - spaces/2}`);
+        rect.setAttribute("width", `${axis.width}`);
+        rect.setAttribute("height", `${spaces}`);
+        return rect;
     }
     public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
     {
@@ -226,15 +225,15 @@ export class Lines
     {
         const target = e.target;
         if (target == null) return;
-        if (!(target instanceof SVGLineElement)) return;
+        if (!(target instanceof SVGRectElement)) return;
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
         line.selected = true;
-        target.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
+        target.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
         const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
         for (let i = 0; i < selectedLines.length; i++) {
             const el = selectedLines[i];
-            el.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
+            el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
             el.classList.remove("ScheduleViewer-Grafic-Lines-selected");
         }
         target.classList.add("ScheduleViewer-Grafic-Lines-selected");
@@ -245,17 +244,17 @@ export class Lines
     {
         const target = e.target;
         if (target == null) return;
-        if (!(target instanceof SVGLineElement)) return;
+        if (!(target instanceof SVGRectElement)) return;
 
         if (!target.classList.contains("ScheduleViewer-Grafic-Lines-selected"))
         {
             switch (eType) {
                 case "over":
-                    target.setAttribute("stroke-opacity", `${this.overLineOpacityMouseOver}`);
+                    target.setAttribute("fill-opacity", `${this.overLineOpacityMouseOver}`);
                     break;
 
                 case "out":
-                    target.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
+                    target.setAttribute("fill-opacity", `${this.overLineOpacity}`);
                     break;
 
                 default: throw new Error();
