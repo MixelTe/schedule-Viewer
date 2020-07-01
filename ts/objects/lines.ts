@@ -183,16 +183,8 @@ export class Lines
     {
         const el = this.lines[index];
         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        if (this.overLineCustomColor)
-        {
-            rect.setAttribute("fill", `${el.color}`);
-            rect.setAttribute("stroke", `${el.color}`)
-            rect.setAttribute("stroke-width", "0px")
-        }
-        else
-        {
-            rect.setAttribute("fill", "Highlight");
-        }
+        if (this.overLineCustomColor) rect.setAttribute("fill", `${el.color}`);
+        else rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
         if (el.selected)
         {
             rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
@@ -244,16 +236,13 @@ export class Lines
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
         line.selected = true;
-        target.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
         const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
         for (let i = 0; i < selectedLines.length; i++) {
             const el = selectedLines[i];
             el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
-            if (this.overLineCustomColor) el.setAttribute("fill", `${el.getAttribute("stroke")}`);
-            else el.setAttribute("fill", "HighLight");
             el.classList.remove("ScheduleViewer-Grafic-Lines-selected");
         }
-        target.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
+        target.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
         target.classList.add("ScheduleViewer-Grafic-Lines-selected");
 
         this.functionsForLines.selectLine(line);
