@@ -582,8 +582,8 @@ export class SettingsMenu
         this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
         this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
         this.lineInputs.buttonCancel.addEventListener("click", () => this.lineMenuButtons("cancel", functions));
-        this.lineInputs.radioOnce.addEventListener("click", () => this.disableDuractionInput("once"));
-        this.lineInputs.radioRepeating.addEventListener("click", () => this.disableDuractionInput("repeating"));
+        this.lineInputs.radioOnce.addEventListener("click", () => this.disableInputs("once"));
+        this.lineInputs.radioRepeating.addEventListener("click", () => this.disableInputs("repeating"));
         this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
         this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
 
@@ -596,7 +596,7 @@ export class SettingsMenu
         this.menuSystem("noSelect");
 
         this.lineInputs.radioOnce.checked = true;
-        this.disableDuractionInput("once");
+        this.disableInputs("once");
         this.colorInputing("toggleAuto");
     }
 
@@ -900,7 +900,7 @@ export class SettingsMenu
                 this.menuSystem("noSelect");
 
                 this.lineInputs.radioOnce.checked = true;
-                this.disableDuractionInput("once");
+                this.disableInputs("once");
 
                 this.lineInputs.checkBoxColor.checked = true;
                 this.colorInputing("toggleAuto");
@@ -948,7 +948,7 @@ export class SettingsMenu
                 this.lineInputs.radioRepeating.disabled = false;
                 this.lineInputs.radioOnce.disabled = false;
 
-                this.disableDuractionInput("none");
+                this.disableInputs("none");
                 break;
 
             case "once":
@@ -961,7 +961,7 @@ export class SettingsMenu
                 this.lineInputs.radioOnce.disabled = true;
 
                 this.lineInputs.radioOnce.checked = true;
-                this.disableDuractionInput("once");
+                this.disableInputs("once");
                 break;
 
             case "repeating":
@@ -974,7 +974,7 @@ export class SettingsMenu
                 this.lineInputs.radioOnce.disabled = true;
 
                 this.lineInputs.radioRepeating.checked = true;
-                this.disableDuractionInput("repeating");
+                this.disableInputs("repeating");
                 break;
 
             default: throw new Error();
@@ -984,7 +984,7 @@ export class SettingsMenu
         this.lineInputs.start.style.border = this.addingLinesPrm.inputsBorder;
         this.lineInputs.duration.style.border = this.addingLinesPrm.inputsBorder;
     }
-    private disableDuractionInput(type: "once" | "repeating" | "none")
+    private disableInputs(type: "once" | "repeating" | "none")
     {
         switch (type) {
             case "none":
