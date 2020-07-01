@@ -1020,9 +1020,9 @@ export class SettingsMenu
 
     public setInputsData(data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void)
     {
-        console.log("input");
-        this.lineInputs.start.value = `${data.start}`;
-        this.lineInputs.duration.value = `${data.duration}`;
+        this.lineInputs.start.value = this.turnSecondsToTime(data.start);
+        if (typeof data.duration == "number") this.lineInputs.duration.value = this.turnSecondsToTime(data.duration);
+        else this.lineInputs.duration.value = `${data.duration}`;
         this.lineInputs.interval.value = "";
         this.lineInputs.end.value = "";
 
@@ -1033,8 +1033,8 @@ export class SettingsMenu
         else
         {
             this.menuSystem("repeating");
-            this.lineInputs.interval.value = `${data.interval}`;
-            this.lineInputs.end.value = `${data.end}`;
+            this.lineInputs.interval.value = this.turnSecondsToTime(data.interval);
+            this.lineInputs.end.value = this.turnSecondsToTime(data.end);
         }
 
         this.lineInputs.color = data.color;
@@ -1042,6 +1042,15 @@ export class SettingsMenu
         this.colorInputing("toggleAuto");
 
         changeLine(data, key);
+    }
+    private turnSecondsToTime(secondsHMS: number)
+    {
+        const h = Math.floor(secondsHMS / 3600);
+        const secondsMS = secondsHMS - h * 3600;
+        const m = Math.floor(secondsMS / 60);
+        const s = secondsMS - m * 60;
+
+        return `${h}:${m}:${s}`;
     }
 
 
