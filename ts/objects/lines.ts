@@ -181,17 +181,15 @@ export class Lines
     }
     public changeLine(data: DataToLineChange, key: SVGPathElement)
     {
-        console.log("change");
         let line = this.linesMap.get(key);
         if (line == undefined) throw new Error(`line not found: ${key}`);
 
         line.dasharray[0] = data.interval;
-        line.dasharray[1] = data.duration;
+        if (!line.real) line.dasharray[1] = data.duration;
         line.start = data.start;
         line.end = data.end;
         line.color = data.color;
         line.autoColor = data.autoColor;
-        line.real = data.real;
     }
 
     public changeClip(axis: Rect, scroll: number)

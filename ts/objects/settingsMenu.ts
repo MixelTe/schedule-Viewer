@@ -34,7 +34,7 @@ export class SettingsMenu
         colorDiv: <HTMLDivElement>{},
         color: "lightgreen",
     };
-    private lineToChangeKey: SVGPathElement | undefined;
+    private lineToChange: {key: SVGPathElement, real: boolean} | undefined;
     private hintForLinesInputs: HTMLDivElement;
 
     private loadFilesDIV = document.createElement("div");
@@ -863,7 +863,7 @@ export class SettingsMenu
                 break;
 
             case "change":
-                if (this.lineToChangeKey == undefined) throw new Error();
+                if (this.lineToChange == undefined) throw new Error();
                 let lineData;
                 try {
                     lineData = this.getLineData();
@@ -881,9 +881,9 @@ export class SettingsMenu
                     end: lineData.end,
                     color: this.lineInputs.color,
                     autoColor: this.lineInputs.checkBoxColor.checked,
-                    real: false
+                    real: this.lineToChange.real
                 }
-                functions.changeLine(newData, this.lineToChangeKey);
+                functions.changeLine(newData, this.lineToChange.key);
                 functions.recreate();
                 this.lineMenuButtons("cancel", functions);
                 break;
@@ -984,14 +984,16 @@ export class SettingsMenu
         this.lineInputs.start.style.border = this.addingLinesPrm.inputsBorder;
         this.lineInputs.duration.style.border = this.addingLinesPrm.inputsBorder;
     }
-    private disableInputs(type: "once" | "repeating" | "none")
+    private disableInputs(type: "once" | "repeating" | "none" | "duration")
     {
         switch (type) {
             case "none":
                 this.lineInputs.interval.disabled = false;
                 this.lineInputs.end.disabled = false;
+                this.lineInputs.duration.disabled = false;
                 this.lineInputs.interval.style.backgroundColor = this.addingLinesPrm.inputsBackground;
                 this.lineInputs.end.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.duration.style.backgroundColor = this.addingLinesPrm.inputsBackground;
                 break;
 
             case "once":
@@ -1007,6 +1009,12 @@ export class SettingsMenu
                 this.lineInputs.interval.style.backgroundColor = this.addingLinesPrm.inputsBackground;
                 this.lineInputs.end.style.backgroundColor = this.addingLinesPrm.inputsBackground;
                 break;
+
+            case "duration":
+                this.lineInputs.duration.disabled = true;
+                this.lineInputs.duration.style.backgroundColor = "lightgray";
+                break;
+
             default: throw new Error();
         }
         this.lineInputs.interval.style.border = this.addingLinesPrm.inputsBorder;
@@ -1089,11 +1097,13 @@ export class SettingsMenu
             this.lineInputs.end.value = this.turnSecondsToTime(data.end);
         }
 
+        if (data.real) this.disableInputs("duration");
+
         this.lineInputs.color = data.color;
         this.lineInputs.checkBoxColor.checked = data.autoColor;
         this.colorInputing("toggleAuto");
 
-        this.lineToChangeKey = key;
+        this.lineToChange = { key, real: data.real };
     }
     private turnSecondsToTime(secondsHMS: number)
     {
