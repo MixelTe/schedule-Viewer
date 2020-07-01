@@ -1021,6 +1021,25 @@ export class SettingsMenu
     public setInputsData(data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void)
     {
         console.log("input");
+        this.lineInputs.start.value = `${data.start}`;
+        this.lineInputs.duration.value = `${data.duration}`;
+        this.lineInputs.interval.value = "";
+        this.lineInputs.end.value = "";
+
+        if (data.interval == 0 && data.end == 0)
+        {
+            this.menuSystem("once");
+        }
+        else
+        {
+            this.menuSystem("repeating");
+            this.lineInputs.interval.value = `${data.interval}`;
+            this.lineInputs.end.value = `${data.end}`;
+        }
+
+        this.lineInputs.color = data.color;
+        this.lineInputs.checkBoxColor.checked = data.autoColor;
+        this.colorInputing("toggleAuto");
 
         changeLine(data, key);
     }
