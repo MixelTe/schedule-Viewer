@@ -19,7 +19,18 @@ interface FunctionsForMenu
 
 interface FunctionsForLines
 {
-    selectLine: (data: {interval: number, duration: number | number[], start: number, end: number, color: string, autoColor: boolean, real: boolean}, key: SVGPathElement) => void
+    selectLine: (data: DataToLineChange, key: SVGPathElement) => void
+}
+
+interface DataToLineChange
+{
+    interval: number,
+    duration: number | number[],
+    start: number,
+    end: number,
+    color: string,
+    autoColor: boolean,
+    real: boolean
 }
 
 interface Schedule
