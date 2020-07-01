@@ -63,13 +63,13 @@ export class Lines
             }
             else
             {
-                line = this.createPath(i, axis, spaces, zoom);
+                line = this.createSimplePath(i, axis, spaces, zoom);
             }
             this.linesMap.set(line, el)
             this.body.appendChild(line);
         };
     }
-    private createPath(index: number, axis: Rect, spaces: number, zoom: number)
+    private createSimplePath(index: number, axis: Rect, spaces: number, zoom: number)
     {
         const el = this.lines[index];
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -82,12 +82,18 @@ export class Lines
         const interval = el.dasharray[0] * oneSecond;
         if (typeof el.dasharray[1] != "number") throw new Error("NaN");
         const duration = el.dasharray[1] * oneSecond;
-        for (let i = 0; i < axis.width / (interval + duration); i++)
+
+        for (let i = 0, x = 1; i < axis.width / interval; i++, x++)
         {
-            if (i * (interval + duration) > el.end * oneSecond) break;
+            if (el.dasharray[1] / el.dasharray[0] > 1)
+            {
+                x = x + Math.floor(el.dasharray[1] / el.dasharray[0]);
+            }
+            const nextX = axis.x + interval * x + el.start * oneSecond;
+            if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
             path += `
             h ${duration}
-            m ${interval} 0`
+            M ${nextX} ${axis.y + axis.height - spaces * index}`
         }
         line.setAttribute("d", path);
 
