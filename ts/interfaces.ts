@@ -10,7 +10,7 @@ interface FunctionsForMenu
 {
     toggleSepLine: () => void,
     SepLineIsActive: () => boolean,
-    addSympleLine: (interval: number, duration: number, start: number, end: number) => void,
+    addSympleLine: (interval: number, duration: number, start: number, end: number, color?: string | undefined) => void,
     addRealLine: (interval: number, durations: number[], start: number, end: number) => void,
     recreate: () => void,
     resetLines: () => void,
@@ -46,5 +46,6 @@ interface LineF
     dasharray: number[] | [number, number[]],
     real: boolean,
     start: number,
-    end: number
+    end: number,
+    autoColor: boolean
 }

@@ -25,7 +25,7 @@ export class Lines
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
 
-        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0  }];
+        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true  }];
         this.recreateLines(axis, 0, zoom);
     }
 
@@ -122,9 +122,9 @@ export class Lines
 
         return line;
     }
-    public createLine(interval: number, duration: number, start: number, end: number)
+    public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
     {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, duration], real: false, start, end });
+        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined });
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++)
@@ -133,14 +133,15 @@ export class Lines
         }
         for (let i = 1; i < this.lines.length; i++)
         {
+            const line = this.lines[i];
             const colorIndex = Math.floor(this.getRnd(1, colors.length));
-            this.lines[i].color = colors[colorIndex];
+            if (line.autoColor) line.color = colors[colorIndex];
             colors.splice(colorIndex, 1);
         }
     }
     public createRealLine(interval: number, durations: number[], start: number, end: number)
     {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end  });
+        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: true });
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++)
@@ -149,8 +150,9 @@ export class Lines
         }
         for (let i = 1; i < this.lines.length; i++)
         {
+            const line = this.lines[i];
             const colorIndex = Math.floor(this.getRnd(1, colors.length));
-            this.lines[i].color = colors[colorIndex];
+            if (line.autoColor) line.color = colors[colorIndex];
             colors.splice(colorIndex, 1);
         }
     }
@@ -167,7 +169,7 @@ export class Lines
     }
     public resetLines()
     {
-        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0  }];
+        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
     }
     public getLines()
     {
