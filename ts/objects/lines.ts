@@ -14,9 +14,10 @@ export class Lines
     private drawEmptyLines = false;
     private showLineAfterEnd = false;
 
-    private overLineOpacity = 0.1;
-    private overLineOpacityMouseOver = 0.3;
+    private overLineOpacity = 0;
+    private overLineOpacityMouseOver = 0.2;
     private overLineOpacitySelected = 0.4;
+    private overLineCustomColor = false;
 
     constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
@@ -153,7 +154,8 @@ export class Lines
     {
         const el = this.lines[index];
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("stroke", `${el.color}`);
+        if (this.overLineCustomColor) line.setAttribute("stroke", `${el.color}`);
+        else line.setAttribute("stroke", "Highlight");
         if (el.selected)
         {
             line.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
