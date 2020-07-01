@@ -645,22 +645,17 @@ export class SettingsMenu
 
     private addLine(functions: FunctionsForMenu)
     {
-        this.UnmarkAndClear(this.lineInputs.interval);
-        if (this.lineInputs.radioRepeating.input.checked)
-        {
-            this.UnmarkAndClear(this.lineInputs.duration.input);
-        }
-        else
-        {
-            this.UnmarkAndClear(this.lineInputs.durations.input);
-        }
         this.UnmarkAndClear(this.lineInputs.start);
-        this.UnmarkAndClear(this.lineInputs.end);
+        this.UnmarkAndClear(this.lineInputs.duration);
+        if (this.lineInputs.radioRepeating.checked)
+        {
+            this.UnmarkAndClear(this.lineInputs.interval);
+            this.UnmarkAndClear(this.lineInputs.end);
+        }
 
         const inputsData = {
             interval: this.lineInputs.interval.value,
-            duration: this.lineInputs.duration.input.value,
-            durations: this.lineInputs.durations.input.value,
+            duration: this.lineInputs.duration.value,
             start: this.lineInputs.start.value,
             end: this.lineInputs.end.value,
         };
@@ -674,70 +669,52 @@ export class SettingsMenu
             else throw e;
         }
 
-        this.UnmarkAndClear(this.lineInputs.interval);
-        if (this.lineInputs.radioRepeating.input.checked)
-        {
-            this.UnmarkAndClear(this.lineInputs.duration.input);
-        }
-        else
-        {
-            this.UnmarkAndClear(this.lineInputs.durations.input);
-        }
         this.UnmarkAndClear(this.lineInputs.start);
-        this.UnmarkAndClear(this.lineInputs.end);
+        this.UnmarkAndClear(this.lineInputs.duration);
+        if (this.lineInputs.radioRepeating.checked)
+        {
+            this.UnmarkAndClear(this.lineInputs.interval);
+            this.UnmarkAndClear(this.lineInputs.end);
+        }
 
 
         // console.log("Yee!!!");
 
-        if (typeof lineData.duration == "number")
+        if (lineData.interval != undefined && lineData.end != undefined)
         {
             functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
         }
         else
         {
-            functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
+            functions.addSympleLine(0, lineData.duration, lineData.start, 0);
         }
         functions.recreate();
     }
-    private createLineData(rawData: {interval: string, duration: string, durations: string, start: string, end: string})
+    private createLineData(rawData: {interval: string, duration: string, start: string, end: string})
     {
         let interval;
         let duration;
         let start;
         let end;
-        try { interval = this.turnStringToSeconds(rawData.interval); }
-        catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
-        this.markAsCorrect(this.lineInputs.interval);
-
-        if (this.lineInputs.radioRepeating.input.checked)
-        {
-            try { duration = this.turnStringToSeconds(rawData.duration); }
-            catch (e) { this.markAsUncorrect(this.lineInputs.duration.input); throw "MyError";};
-            this.markAsCorrect(this.lineInputs.duration.input);
-        }
-        else
-        {
-            duration = rawData.durations.split(',').map(num =>
-            {
-                const newNum = Number(num);
-                if ((newNum / newNum == 1 || newNum == 0) && num != "") return newNum;
-                else
-                {
-                    this.markAsUncorrect(this.lineInputs.durations.input);
-                    console.error(`unexpected value in durations: "${num}"`)
-                    throw "MyError";
-                };
-            });
-            this.markAsCorrect(this.lineInputs.durations.input);
-        }
 
         try { start = this.turnStringToSeconds(rawData.start); }
         catch (e) { this.markAsUncorrect(this.lineInputs.start); throw "MyError";};
         this.markAsCorrect(this.lineInputs.start);
 
-        try { end = this.turnStringToSeconds(rawData.end); }
-        catch (e) { this.markAsUncorrect(this.lineInputs.end); throw "MyError";};
-        this.markAsCorrect(this.lineInputs.end);
+        try { duration = this.turnStringToSeconds(rawData.duration); }
+        catch (e) { this.markAsUncorrect(this.lineInputs.duration); throw "MyError";};
+        this.markAsCorrect(this.lineInputs.duration);
+
+        if (this.lineInputs.radioRepeating.checked)
+        {
+            try { interval = this.turnStringToSeconds(rawData.interval); }
+            catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
+            this.markAsCorrect(this.lineInputs.interval);
+
+            try { end = this.turnStringToSeconds(rawData.end); }
+            catch (e) { this.markAsUncorrect(this.lineInputs.end); throw "MyError";};
+            this.markAsCorrect(this.lineInputs.end);
+        }
 
         return {
             interval: interval,
