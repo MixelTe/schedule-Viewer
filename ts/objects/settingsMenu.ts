@@ -716,7 +716,7 @@ export class SettingsMenu
         }
         else
         {
-            functions.addSympleLine(0, lineData.duration, lineData.start, 0, color);
+            functions.addSympleLine(1, lineData.duration, lineData.start, 0, color);
         }
         functions.recreate();
     }

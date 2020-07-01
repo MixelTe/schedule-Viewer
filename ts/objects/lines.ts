@@ -90,10 +90,10 @@ export class Lines
                 x = x + Math.floor(el.dasharray[1] / el.dasharray[0]);
             }
             const nextX = axis.x + interval * x + el.start * oneSecond;
-            if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
             path += `
             h ${duration}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
+            if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
         }
         line.setAttribute("d", path);
 
@@ -128,10 +128,10 @@ export class Lines
                 x = x + Math.floor(duration / el.dasharray[0])
             }
             const nextX = axis.x + interval * x + el.start * oneSecond;
-            if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
             path += `
             ${dx}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
+            if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
         }
         line.setAttribute("d", path);
 
