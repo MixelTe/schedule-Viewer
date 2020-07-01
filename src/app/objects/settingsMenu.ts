@@ -1,4 +1,4 @@
-import { ColorPicker } from "../scripts/colorPicker.js";
+import { ColorPicker } from "../../lib/colorPicker.js";
 
 export class SettingsMenu
 {
