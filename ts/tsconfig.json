@@ -6,5 +6,6 @@
         "outDir": "../wwwroot/out",
         // "module": "amd",
         // "outFile": "../wwwroot/out.js"
+        "allowJs": true
     }
 }

@@ -1,3 +1,5 @@
+import { ColorPicker } from "../scripts/colorPicker.js";
+
 export class SettingsMenu
 {
     private body: HTMLDivElement
@@ -36,6 +38,7 @@ export class SettingsMenu
     };
     private lineToChange: {key: SVGPathElement, real: boolean} | undefined;
     private hintForLinesInputs: HTMLDivElement;
+    private colorPicker = new ColorPicker();
 
     private loadFilesDIV = document.createElement("div");
     private loadFilesPrm = { height: 80 };
@@ -912,13 +915,17 @@ export class SettingsMenu
             default: throw new Error();
         }
     }
-    private colorInputing(action: "toggleAuto" | "open")
+    private async colorInputing(action: "toggleAuto" | "open")
     {
         switch (action) {
             case "open":
                 if (!this.lineInputs.checkBoxColor.checked)
                 {
-                    this.lineInputs.color = ["blue", "red", "yellow", "green"][Math.floor(Math.random() * 4)];
+                    const rect = this.lineInputs.colorDiv.getBoundingClientRect();
+                    rect.x  += window.pageXOffset;
+                    rect.y += window.pageYOffset;
+                    const newColor = await this.colorPicker.pick(rect, "up", "center");
+                    if (newColor != undefined) this.lineInputs.color = newColor.colorHSL;
                     this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
                 }
                 break;
