@@ -20,22 +20,22 @@ export class SettingsMenu
 
     private addingLinesDIV = document.createElement("div");
     private addingLinesPrm = { height: 300, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
-    private lineInputs = {
-        radioOnce: <HTMLInputElement>{},
-        radioRepeating: <HTMLInputElement>{},
-        freqenceRow: <HTMLTableRowElement>{},
-        interval: <HTMLInputElement>{},
-        duration: <HTMLInputElement>{},
-        start: <HTMLInputElement> {},
-        end: <HTMLInputElement>{},
-        buttonAdd: <HTMLButtonElement>{},
-        buttonChange: <HTMLButtonElement>{},
-        buttonRemove: <HTMLButtonElement>{},
-        buttonCancel: <HTMLButtonElement>{},
-        checkBoxColor: <HTMLInputElement>{},
-        colorDiv: <HTMLDivElement>{},
-        color: "lightgreen",
-    };
+    private lineInputs: {
+        radioOnce: HTMLInputElement,
+        radioRepeating: HTMLInputElement,
+        freqenceRow: HTMLTableRowElement,
+        interval: HTMLInputElement,
+        duration: HTMLInputElement,
+        start: HTMLInputElement ,
+        end: HTMLInputElement,
+        buttonAdd: HTMLButtonElement,
+        buttonChange: HTMLButtonElement,
+        buttonRemove: HTMLButtonElement,
+        buttonCancel: HTMLButtonElement,
+        checkBoxColor: HTMLInputElement,
+        colorDiv: HTMLDivElement,
+        color: string,
+    }
     private lineToChange: {key: SVGPathElement, real: boolean} | undefined;
     private hintForLinesInputs: HTMLDivElement;
     private colorPicker = new ColorPicker();
@@ -69,6 +69,22 @@ export class SettingsMenu
         if (!open) this.toggleMenu();
         this.body.style.transition = "width 1s";
 
+        const lineInputs: {
+            radioOnce?: HTMLInputElement,
+            radioRepeating?: HTMLInputElement,
+            freqenceRow?: HTMLTableRowElement,
+            interval?: HTMLInputElement,
+            duration?: HTMLInputElement,
+            start?: HTMLInputElement,
+            end?: HTMLInputElement,
+            buttonAdd?: HTMLButtonElement,
+            buttonChange?: HTMLButtonElement,
+            buttonRemove?: HTMLButtonElement,
+            buttonCancel?: HTMLButtonElement,
+            checkBoxColor?: HTMLInputElement,
+            colorDiv?: HTMLDivElement,
+            color: string,
+        } = { color: "lightgreen" };
         {
             const toggleMenuDiv = document.createElement("div");
             toggleMenuDiv.style.height = `${40}px`
@@ -237,7 +253,7 @@ export class SettingsMenu
                         startInput.style.borderRadius = `${inputRadius}px`
                         startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(startInput);
-                        this.lineInputs.start = startInput;
+                        lineInputs.start = startInput;
                     }
 
                 }
@@ -276,8 +292,8 @@ export class SettingsMenu
                         durationInput.style.borderRadius = `${inputRadius}px`
                         durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(durationInput);
-                        this.lineInputs.duration = durationInput;
-                        // this.lineInputs.duration.div = durationDIV;
+                        lineInputs.duration = durationInput;
+                        // lineInputs.duration.div = durationDIV;
                     }
 
                 }
@@ -285,7 +301,7 @@ export class SettingsMenu
                 {
                     const tableRow = document.createElement("tr");
                     linesMenuTable.appendChild(tableRow);
-                    this.lineInputs.freqenceRow = tableRow;
+                    lineInputs.freqenceRow = tableRow;
 
                     {
                         const tableCell = document.createElement("td");
@@ -303,7 +319,7 @@ export class SettingsMenu
                         typeO.name = "scheduleViewer-SettingsMenu-type";
                         typeO.id = "scheduleViewer-SettingsMenu-realType";
                         tableCell.appendChild(typeO);
-                        this.lineInputs.radioOnce = typeO;
+                        lineInputs.radioOnce = typeO;
 
                         const typeLableO = document.createElement("label");
                         typeLableO.style.height = "max-content";
@@ -317,7 +333,7 @@ export class SettingsMenu
                         typeR.name = "scheduleViewer-SettingsMenu-type";
                         typeR.id = "scheduleViewer-SettingsMenu-sympleType";
                         tableCell.appendChild(typeR);
-                        this.lineInputs.radioRepeating = typeR;
+                        lineInputs.radioRepeating = typeR;
 
                         const typeLableR = document.createElement("label");
                         typeLableR.style.height = "max-content";
@@ -362,7 +378,7 @@ export class SettingsMenu
                         intervalInput.style.borderRadius = `${inputRadius}px`
                         intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(intervalInput);
-                        this.lineInputs.interval = intervalInput;
+                        lineInputs.interval = intervalInput;
                     }
                 }
 
@@ -400,7 +416,7 @@ export class SettingsMenu
                         endInput.style.borderRadius = `${inputRadius}px`
                         endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
                         tableCell.appendChild(endInput);
-                        this.lineInputs.end = endInput;
+                        lineInputs.end = endInput;
                     }
                 }
 
@@ -434,14 +450,14 @@ export class SettingsMenu
                         colorDiv.style.backgroundColor = "lightgreen";
                         colorDiv.style.border = "1px solid gray";
                         tableCell.appendChild(colorDiv);
-                        this.lineInputs.colorDiv = colorDiv;
+                        lineInputs.colorDiv = colorDiv;
 
                         const checkBox = document.createElement("input");
                         checkBox.type = "checkBox";
                         checkBox.checked = true;
                         checkBox.id = "scheduleViewer-SettingsMenu-colorAuto";
                         tableCell.appendChild(checkBox);
-                        this.lineInputs.checkBoxColor = checkBox;
+                        lineInputs.checkBoxColor = checkBox;
 
                         const radioLable = document.createElement("label");
                         radioLable.style.height = "max-content";
@@ -484,22 +500,22 @@ export class SettingsMenu
                 const buttonRemove = document.createElement("button");
                 buttonRemove.innerText = "remove";
                 buttonsDIV.appendChild(buttonRemove);
-                this.lineInputs.buttonRemove = buttonRemove;
+                lineInputs.buttonRemove = buttonRemove;
 
                 const buttonChange = document.createElement("button");
                 buttonChange.innerText = "change";
                 buttonsDIV.appendChild(buttonChange);
-                this.lineInputs.buttonChange = buttonChange;
+                lineInputs.buttonChange = buttonChange;
 
                 const buttonCancel = document.createElement("button");
                 buttonCancel.innerText = "cancel";
                 buttonsDIV.appendChild(buttonCancel);
-                this.lineInputs.buttonCancel = buttonCancel;
+                lineInputs.buttonCancel = buttonCancel;
 
                 const buttonAdd = document.createElement("button");
                 buttonAdd.innerText = "add";
                 buttonsDIV.appendChild(buttonAdd);
-                this.lineInputs.buttonAdd = buttonAdd;
+                lineInputs.buttonAdd = buttonAdd;
             }
         }
 
@@ -576,6 +592,23 @@ export class SettingsMenu
             this.overDiv.appendChild(this.overDivText);
         }
 
+
+        this.lineInputs = {
+            color: "lightgreen",
+            radioOnce: lineInputs.radioOnce,
+            radioRepeating: lineInputs.radioRepeating,
+            freqenceRow: lineInputs.freqenceRow,
+            interval: lineInputs.interval,
+            duration: lineInputs.duration,
+            start: lineInputs.start,
+            end: lineInputs.end,
+            buttonAdd: lineInputs.buttonAdd,
+            buttonChange: lineInputs.buttonChange,
+            buttonRemove: lineInputs.buttonRemove,
+            buttonCancel: lineInputs.buttonCancel,
+            checkBoxColor: lineInputs.checkBoxColor,
+            colorDiv: lineInputs.colorDiv,
+        }
 
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
