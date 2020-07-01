@@ -889,7 +889,10 @@ export class SettingsMenu
                 break;
 
             case "remove":
-
+                if (this.lineToChange == undefined) throw new Error();
+                functions.removeLine(this.lineToChange.key)
+                functions.recreate();
+                this.lineMenuButtons("cancel", functions);
                 break;
 
             case "cancel":

@@ -16,6 +16,7 @@ interface FunctionsForMenu
     resetLines: () => void,
     getLines: () => LineF[],
     changeLine: (data: DataToLineChange, key: SVGPathElement) => void,
+    removeLine: (key: SVGPathElement) => void,
 }
 
 interface FunctionsForLines

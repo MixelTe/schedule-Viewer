@@ -191,6 +191,13 @@ export class Lines
         line.color = data.color;
         line.autoColor = data.autoColor;
     }
+    public removeLine(key: SVGPathElement)
+    {
+        let line = this.linesMap.get(key);
+        if (line == undefined) throw new Error(`line not found: ${key}`);
+        const lineIndex = this.lines.indexOf(line);
+        this.lines.splice(lineIndex, 1);
+    }
 
     public changeClip(axis: Rect, scroll: number)
     {

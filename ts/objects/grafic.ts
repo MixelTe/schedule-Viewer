@@ -194,6 +194,7 @@ export class Grafic
             resetLines: this.lines.resetLines.bind(this.lines),
             getLines: this.lines.getLines.bind(this.lines),
             changeLine: this.lines.changeLine.bind(this.lines),
+            removeLine: this.lines.removeLine.bind(this.lines),
         }
     }
     public setFunctionsForLines(functions: FunctionsForLines)
