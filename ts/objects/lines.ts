@@ -125,23 +125,15 @@ export class Lines
     public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
     {
         this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined });
-        const colorStep = 360 / this.lines.length;
-        const colors = [""];
-        for (let i = 1; i < this.lines.length; i++)
-        {
-            colors.push(`hsl(${this.getRnd(colorStep * (i - 1), colorStep * i)}, ${100}%, ${Math.floor(this.getRnd(40, 60))}%)`);
-        }
-        for (let i = 1; i < this.lines.length; i++)
-        {
-            const line = this.lines[i];
-            const colorIndex = Math.floor(this.getRnd(1, colors.length));
-            if (line.autoColor) line.color = colors[colorIndex];
-            colors.splice(colorIndex, 1);
-        }
+        this.colorizeLines();
     }
     public createRealLine(interval: number, durations: number[], start: number, end: number)
     {
         this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: true });
+        this.colorizeLines();
+    }
+    private colorizeLines()
+    {
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++)
