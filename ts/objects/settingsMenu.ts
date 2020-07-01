@@ -29,6 +29,7 @@ export class SettingsMenu
         buttonAdd: <HTMLButtonElement>{},
         buttonChange: <HTMLButtonElement>{},
         buttonRemove: <HTMLButtonElement>{},
+        buttonCancel: <HTMLButtonElement>{},
         checkBoxColor: <HTMLInputElement>{},
         colorDiv: <HTMLDivElement>{},
         color: "lightgreen",
@@ -487,6 +488,11 @@ export class SettingsMenu
                 buttonsDIV.appendChild(buttonChange);
                 this.lineInputs.buttonChange = buttonChange;
 
+                const buttonCancel = document.createElement("button");
+                buttonCancel.innerText = "cancel";
+                buttonsDIV.appendChild(buttonCancel);
+                this.lineInputs.buttonCancel = buttonCancel;
+
                 const buttonAdd = document.createElement("button");
                 buttonAdd.innerText = "add";
                 buttonsDIV.appendChild(buttonAdd);
@@ -575,6 +581,7 @@ export class SettingsMenu
         this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
         this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
         this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
+        this.lineInputs.buttonCancel.addEventListener("click", () => this.lineMenuButtons("cancel", functions));
         this.lineInputs.radioOnce.addEventListener("click", () => this.disableDuractionInput("once"));
         this.lineInputs.radioRepeating.addEventListener("click", () => this.disableDuractionInput("repeating"));
         this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
@@ -843,7 +850,7 @@ export class SettingsMenu
         else throw new Error("value is too small");
     }
 
-    private lineMenuButtons(button: "change" | "remove" | "add", functions: FunctionsForMenu)
+    private lineMenuButtons(button: "change" | "remove" | "add" | "cancel", functions: FunctionsForMenu)
     {
         switch (button) {
             case "add":
@@ -856,6 +863,20 @@ export class SettingsMenu
 
             case "remove":
 
+                break;
+
+            case "cancel":
+                this.lineInputs.start.value = "";
+                this.lineInputs.duration.value = "";
+                this.lineInputs.interval.value = "";
+                this.lineInputs.end.value = "";
+                this.menuSystem("noSelect");
+
+                this.lineInputs.radioOnce.checked = true;
+                this.disableDuractionInput("once");
+                
+                this.lineInputs.checkBoxColor.checked = true;
+                this.colorInputing("toggleAuto");
                 break;
 
             default: throw new Error();
