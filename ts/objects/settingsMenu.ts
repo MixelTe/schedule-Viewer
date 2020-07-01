@@ -1130,30 +1130,34 @@ export class SettingsMenu
     private saveSchedule(functions: FunctionsForMenu)
     {
         const scheduleRaw = functions.getLines();
-        const scheduleSave = <Schedule><unknown>{ simpleLines: [], realLines: [] };
+        const simpleLines = []
+        const realLines = []
         for (let i = 1; i < scheduleRaw.length; i++) {
             const el = scheduleRaw[i];
             if (el.real)
             {
+                if (typeof el.dasharray[1] == "number") throw new Error()
                 const newEl = {
                     interval: el.dasharray[0],
-                    durations: <number[]>el.dasharray[1],
+                    durations: el.dasharray[1],
                     start: el.start,
                     end: el.end,
                 };
-                scheduleSave.realLines.push(newEl);
+                realLines.push(newEl);
             }
             else
             {
+                if (typeof el.dasharray[1] != "number") throw new Error()
                 const newEl = {
                     interval: el.dasharray[0],
-                    duration: <number>el.dasharray[1],
+                    duration: el.dasharray[1],
                     start: el.start,
                     end: el.end,
                 };
-                scheduleSave.simpleLines.push(newEl);
+                simpleLines.push(newEl);
             }
         }
+        const scheduleSave = <Schedule>{ simpleLines, realLines };
         const scheduleText = JSON.stringify(scheduleSave, undefined, "  ");
         // console.log(scheduleRaw);
         // console.log(scheduleSave);
