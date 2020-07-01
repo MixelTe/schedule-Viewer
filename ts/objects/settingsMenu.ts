@@ -34,7 +34,7 @@ export class SettingsMenu
         colorDiv: <HTMLDivElement>{},
         color: "lightgreen",
     };
-    private lineToChange: LineF | undefined;
+    private lineToChangeKey: SVGPathElement | undefined;
     private hintForLinesInputs: HTMLDivElement;
 
     private loadFilesDIV = document.createElement("div");
@@ -863,7 +863,29 @@ export class SettingsMenu
                 break;
 
             case "change":
-
+                if (this.lineToChangeKey == undefined) throw new Error();
+                let lineData;
+                try {
+                    lineData = this.getLineData();
+                } catch (e)
+                {
+                    if (e == "MyError") return;
+                    else throw e;
+                }
+                if (lineData.interval == undefined) lineData.interval = 0;
+                if (lineData.end == undefined) lineData.end = 0;
+                const newData = {
+                    interval: lineData.interval,
+                    duration: lineData.duration,
+                    start: lineData.start,
+                    end: lineData.end,
+                    color: this.lineInputs.color,
+                    autoColor: this.lineInputs.checkBoxColor.checked,
+                    real: false
+                }
+                functions.changeLine(newData, this.lineToChangeKey);
+                functions.recreate();
+                this.lineMenuButtons("cancel", functions);
                 break;
 
             case "remove":
@@ -1070,6 +1092,8 @@ export class SettingsMenu
         this.lineInputs.color = data.color;
         this.lineInputs.checkBoxColor.checked = data.autoColor;
         this.colorInputing("toggleAuto");
+
+        this.lineToChangeKey = key;
     }
     private turnSecondsToTime(secondsHMS: number)
     {
