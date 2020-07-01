@@ -1018,10 +1018,13 @@ export class SettingsMenu
         functions.recreate();
     }
 
-    public setInputsData(data: DataToLineChange, key: SVGPathElement)
+    public setInputsData(data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void)
     {
+        console.log("input");
         console.log(data);
         console.log(key);
+
+        changeLine(data, key);
     }
 
 

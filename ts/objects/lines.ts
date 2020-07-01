@@ -177,7 +177,13 @@ export class Lines
             autoColor: line.autoColor,
             real: line.real,
         }
-        this.functionsForLines.selectLine(lineData, target);
+        this.functionsForLines.selectLine(lineData, target, this.changeLine.bind(this));
+    }
+    public changeLine(data: DataToLineChange, key: SVGPathElement)
+    {
+        console.log("change");
+        let line = this.linesMap.get(key);
+        console.log(line);
     }
 
     public changeClip(axis: Rect, scroll: number)

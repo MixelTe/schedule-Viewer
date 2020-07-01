@@ -19,7 +19,7 @@ interface FunctionsForMenu
 
 interface FunctionsForLines
 {
-    selectLine: (data: DataToLineChange, key: SVGPathElement) => void
+    selectLine: (data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void) => void
 }
 
 interface DataToLineChange
