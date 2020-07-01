@@ -65,5 +65,6 @@ interface LineF
     real: boolean,
     start: number,
     end: number,
-    autoColor: boolean
+    autoColor: boolean,
+    selected: boolean
 }

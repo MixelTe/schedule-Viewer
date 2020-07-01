@@ -29,7 +29,7 @@ export class Lines
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
 
-        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
         this.recreateLines(axis, 0, zoom);
 
         this.overBody.addEventListener("click", (e) => this.overBodyClick(e));
@@ -150,7 +150,12 @@ export class Lines
         const el = this.lines[index];
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("stroke", `${el.color}`);
-        line.setAttribute("stroke-opacity", "0.1");
+        if (el.selected)
+        {
+            line.setAttribute("stroke-opacity", "0.4");
+            line.id = "ScheduleViewer-Grafic-Lines-selected";
+        }
+        else line.setAttribute("stroke-opacity", "0.1");
         line.setAttribute("stroke-width", `${spaces}`);
         line.setAttribute("clip-path", "url(#graficLinesClip)");
         line.setAttribute("x1", `${axis.x}`);
@@ -161,12 +166,12 @@ export class Lines
     }
     public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
     {
-        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined });;
+        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined, selected: false  });;
         this.colorizeLines();
     }
     public createRealLine(interval: number, durations: number[], start: number, end: number)
     {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: true });
+        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: true, selected: false  });
         this.colorizeLines();
     }
     private colorizeLines()
@@ -198,6 +203,7 @@ export class Lines
         target.id = "ScheduleViewer-Grafic-Lines-selected"
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
+        line.selected = true;
 
         this.functionsForLines.selectLine(line);
     }
@@ -222,6 +228,7 @@ export class Lines
     public changeLine(data: DataToLineChange, line: LineF)
     {
         if (line == undefined) throw new Error(`line not found: ${line}`);
+        line.selected = false;
 
         line.dasharray[0] = data.interval;
         if (!line.real) line.dasharray[1] = data.duration;
@@ -246,7 +253,7 @@ export class Lines
     }
     public resetLines()
     {
-        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false  }];
     }
     public getLines()
     {
