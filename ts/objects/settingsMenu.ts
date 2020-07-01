@@ -875,7 +875,7 @@ export class SettingsMenu
                     if (e == "MyError") return;
                     else throw e;
                 }
-                if (lineData.interval == undefined) lineData.interval = 0;
+                if (lineData.interval == undefined) lineData.interval = 1;
                 if (lineData.end == undefined) lineData.end = 0;
                 const newData = {
                     interval: lineData.interval,
