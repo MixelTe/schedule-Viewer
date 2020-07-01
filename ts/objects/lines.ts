@@ -194,6 +194,8 @@ export class Lines
         const target = e.target;
         if (target == null) return;
         if (!(target instanceof SVGLineElement)) return;
+        target.setAttribute("stroke-opacity", "0.4");
+        target.id = "ScheduleViewer-Grafic-Lines-selected"
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
         const lineData = {
@@ -215,11 +217,11 @@ export class Lines
 
         switch (eType) {
             case "over":
-                target.setAttribute("stroke-opacity", "0.3");
+                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", "0.3");
                 break;
 
             case "out":
-                target.setAttribute("stroke-opacity", "0.1");
+                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", "0.1");
                 break;
 
             default: throw new Error();
