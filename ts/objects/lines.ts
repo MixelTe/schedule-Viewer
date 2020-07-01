@@ -16,8 +16,8 @@ export class Lines
 
     private overLineOpacity = 0;
     private overLineOpacityMouseOver = 0.2;
-    private overLineOpacitySelected = 0.4;
-    private overLineCustomColor = true;
+    private overLineOpacitySelected = 0.5;
+    private overLineCustomColor = false;
 
     constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
@@ -34,26 +34,28 @@ export class Lines
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
 
-        const gradientEl = function (this: Lines)
+        defs.appendChild(function (this: Lines)
         {
             const linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
             linearGradient.id = "ScheduleViewer-Grafic-Coordinates-linearGradient_Select";
+            linearGradient.setAttribute("gradientTransform", "rotate(90)")
 
-            const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-            stop1.setAttribute("offset", "0%");
-            stop1.style.stopColor = "Highlight";
-            stop1.style.stopOpacity = `${this.overLineOpacitySelected}`;
-            linearGradient.appendChild(stop1);
+            const createStop = function (pos: number, opacity: number)
+            {
+                const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop.setAttribute("offset", `${pos}%`);
+                stop.setAttribute("stop-color", "Highlight");
+                stop.setAttribute("stop-opacity", `${opacity}`);
+                return stop;
+            }
 
-            const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-            stop2.setAttribute("offset", "100%");
-            stop2.style.stopColor = "Highlight";
-            stop2.style.stopOpacity = `${this.overLineOpacity}`;
-            linearGradient.appendChild(stop2);
+            linearGradient.appendChild(createStop(0, 0));
+            linearGradient.appendChild(createStop(10, 100));
+            linearGradient.appendChild(createStop(80, 100));
+            linearGradient.appendChild(createStop(100, 0));
 
             return linearGradient;
-        }.bind(this)()
-        defs.appendChild(gradientEl);
+        }.bind(this)())
 
         if (this.overLineCustomColor)
         {
