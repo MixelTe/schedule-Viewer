@@ -8,7 +8,7 @@ export class Coordinates
         hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
         minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
         seconds: { els: <any>[], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
-        separateLine: {x: 200, visible: false, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false, active: true},
+        separateLine: {x: 200, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false, active: true},
         zoomFixPoint: {second: 0, color: "red", radius: 4},
     }
     private minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -31,8 +31,6 @@ export class Coordinates
         this.axis.height = this.height - 65;
 
         this.recreateScale(zoom, translate);
-        body.addEventListener("mouseover", (e) => this.showSeparateLine(e, false))
-        body.addEventListener("click", (e) => this.showSeparateLine(e))
     }
     private createAxis(translate = 0)
     {
@@ -167,9 +165,10 @@ export class Coordinates
         separateLine.setAttribute("stroke", `${this.scale.separateLine.color}`);
         separateLine.setAttribute("stroke-width", `${this.scale.separateLine.width}`);
         separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
+        separateLine.setAttribute("display", `none`);
         this.scale.separateLine.el = separateLine;
+        this.scale.separateLine.lock = false;
         this.body.appendChild(separateLine);
-        if (!this.scale.separateLine.visible) this.scale.separateLine.el.setAttribute("display", `none`);
     }
 
     private createLine(x: number, y: number, parametrs: {height: number, width: number, color: number[]}, changeParametrs = {})
@@ -203,32 +202,39 @@ export class Coordinates
         this.scale.zoomFixPoint.second = second;
     }
 
-    private showSeparateLine(e: MouseEvent, lock = true)
+    public svgBodyMouse(e: MouseEvent, type: "click" | "move" | "leave")
     {
-        const el = e.target;
-        if (el != null && this.scale.separateLine.active)
+        if (this.scale.separateLine.active)
         {
-            if (!lock && !this.scale.separateLine.lock || lock)
-            {
-                if (el instanceof SVGLineElement)
-                {
-                    const x = e.offsetX;
-                    this.scale.separateLine.x = x;
-                    this.scale.separateLine.visible = true;
-                    if (lock) this.scale.separateLine.lock = true;
+            switch (type) {
+                case "click":
+                    this.moveSeparateLine(e);
+                    this.scale.separateLine.lock = !this.scale.separateLine.lock;
+                    break;
 
-                    this.scale.separateLine.el.setAttribute("x1", `${x}`);
-                    this.scale.separateLine.el.setAttribute("x2", `${x}`);
-                    this.scale.separateLine.el.setAttribute("display", `inline`);
-                }
-                else
-                {
-                    this.scale.separateLine.visible = false;
-                    if (lock) this.scale.separateLine.lock = false;
-                    this.scale.separateLine.el.setAttribute("display", `none`);
-                }
+                case "move":
+                    if (!this.scale.separateLine.lock) this.moveSeparateLine(e);
+                    break;
+
+                case "leave":
+                    if (!this.scale.separateLine.lock)
+                    {
+                        this.scale.separateLine.el.setAttribute("display", `none`);
+                    }
+                    break;
+
+                default: throw new Error();
             }
         }
+    }
+    private moveSeparateLine(e: MouseEvent)
+    {
+        const x = e.offsetX;
+        this.scale.separateLine.x = x;
+
+        this.scale.separateLine.el.setAttribute("x1", `${x}`);
+        this.scale.separateLine.el.setAttribute("x2", `${x}`);
+        this.scale.separateLine.el.setAttribute("display", `inline`);
     }
 
     public changeHeightAndRecreate(newHeight: number, translate: number, zoom: number)

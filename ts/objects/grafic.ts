@@ -72,6 +72,9 @@ export class Grafic
         this.body.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Control") this.zoomActive = false; });
+        this.body.addEventListener("mousemove", (e) => this.coordinates.svgBodyMouse(e, "move"));
+        this.body.addEventListener("mouseleave", (e) => this.coordinates.svgBodyMouse(e, "leave"));
+        this.body.addEventListener("click", (e) => this.coordinates.svgBodyMouse(e, "click"));
         this.body.scrollTop = parseInt(this.svg.style.height);
     }
 
