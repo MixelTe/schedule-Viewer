@@ -34,6 +34,28 @@ export class Lines
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
 
+        const gradientEl = function (this: Lines)
+        {
+            const linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+            linearGradient.id = "ScheduleViewer-Grafic-Coordinates-linearGradient_Select";
+
+            const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+            stop1.setAttribute("offset", "0%");
+            stop1.style.stopColor = "Highlight";
+            stop1.style.stopOpacity = `${this.overLineOpacitySelected}`;
+            linearGradient.appendChild(stop1);
+
+            const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+            stop2.setAttribute("offset", "100%");
+            stop2.style.stopColor = "Highlight";
+            stop2.style.stopOpacity = `${this.overLineOpacity}`;
+            linearGradient.appendChild(stop2);
+
+            return linearGradient;
+        }.bind(this)()
+        defs.appendChild(gradientEl);
+
+
         this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
         this.recreateLines(axis, 0, zoom);
 
