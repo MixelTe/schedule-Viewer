@@ -752,7 +752,7 @@ export class SettingsMenu
         let isError = false;
         try
         {
-            start = this.getSecondsFromString(this.lineInputs.start);
+            start = this.getSecondsFromString(this.lineInputs.start, true);
         }
         catch (e) { if (e == "MyError") isError = true; else throw e };
         try
@@ -788,12 +788,12 @@ export class SettingsMenu
             end: end,
         };
     }
-    private getSecondsFromString(field: HTMLInputElement)
+    private getSecondsFromString(field: HTMLInputElement, allowZero = false)
     {
         let seconds;
         try { seconds = this.turnStringToSeconds(field.value); }
         catch (e) { this.markAsUncorrect(field); throw "MyError"; };
-        if (!this.checkNumber(seconds)) { this.markAsUncorrect(field); throw "MyError"; };
+        if (!this.checkNumber(seconds, allowZero)) { this.markAsUncorrect(field); throw "MyError"; };
         this.markAsCorrect(field);
         return seconds;
     }
@@ -860,9 +860,16 @@ export class SettingsMenu
             return allTime;
         }
     }
-    private checkNumber(num: number)
+    private checkNumber(num: number, allowZero: boolean)
     {
-        return (0 < num && num <= 60 * 60 * 24);
+        if (allowZero)
+        {
+            return (0 <= num && num <= 60 * 60 * 24);
+        }
+        else
+        {
+            return (0 < num && num <= 60 * 60 * 24);
+        }
     }
     private isNumber(num: any)
     {
