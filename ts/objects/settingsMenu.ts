@@ -957,6 +957,10 @@ export class SettingsMenu
 
             default: throw new Error();
         }
+        this.lineInputs.start.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+        this.lineInputs.duration.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+        this.lineInputs.start.style.border = this.addingLinesPrm.inputsBorder;
+        this.lineInputs.duration.style.border = this.addingLinesPrm.inputsBorder;
     }
     private disableDuractionInput(type: "once" | "repeating" | "none")
     {
