@@ -661,6 +661,31 @@ export class SettingsMenu
 
     private addLine(functions: FunctionsForMenu)
     {
+        let lineData;
+        try {
+            lineData = this.getLineData();
+        } catch (e)
+        {
+            if (e == "MyError") return;
+            else throw e;
+        }
+
+        // console.log("Yee!!!");
+        let color = undefined;
+        if (!this.lineInputs.checkBoxColor.checked) color = this.lineInputs.color;
+
+        if (lineData.interval != undefined && lineData.end != undefined)
+        {
+            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, color);
+        }
+        else
+        {
+            functions.addSympleLine(0, lineData.duration, lineData.start, 0, color);
+        }
+        functions.recreate();
+    }
+    private getLineData()
+    {
         this.UnmarkAndClear(this.lineInputs.start);
         this.UnmarkAndClear(this.lineInputs.duration);
         if (this.lineInputs.radioRepeating.checked)
@@ -676,14 +701,7 @@ export class SettingsMenu
             end: this.lineInputs.end.value,
         };
 
-        let lineData;
-        try {
-            lineData = this.createLineData(inputsData);
-        } catch (e)
-        {
-            if (e == "MyError") return;
-            else throw e;
-        }
+        let lineData = this.createLineData(inputsData);
 
         this.UnmarkAndClear(this.lineInputs.start);
         this.UnmarkAndClear(this.lineInputs.duration);
@@ -693,20 +711,7 @@ export class SettingsMenu
             this.UnmarkAndClear(this.lineInputs.end);
         }
 
-
-        // console.log("Yee!!!");
-        let color = undefined;
-        if (!this.lineInputs.checkBoxColor.checked) color = this.lineInputs.color;
-
-        if (lineData.interval != undefined && lineData.end != undefined)
-        {
-            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, color);
-        }
-        else
-        {
-            functions.addSympleLine(0, lineData.duration, lineData.start, 0, color);
-        }
-        functions.recreate();
+        return lineData;
     }
     private createLineData(rawData: {interval: string, duration: string, start: string, end: string})
     {
