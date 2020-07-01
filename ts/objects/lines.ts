@@ -32,7 +32,7 @@ export class Lines
         this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
         this.recreateLines(axis, 0, zoom);
 
-        this.overBody.addEventListener("click", (e) => this.bodyClick(e));
+        this.overBody.addEventListener("click", (e) => this.overBodyClick(e));
     }
 
     public recreateLines(axis: Rect, scroll: number, zoom: number)
@@ -186,7 +186,7 @@ export class Lines
         return Math.random() * (max - min) + min;
     }
 
-    private bodyClick(e: MouseEvent)
+    private overBodyClick(e: MouseEvent)
     {
         const target = e.target;
         if (target == null) return;
