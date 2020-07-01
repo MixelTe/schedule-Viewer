@@ -83,8 +83,7 @@ export class SettingsMenu
             buttonCancel?: HTMLButtonElement,
             checkBoxColor?: HTMLInputElement,
             colorDiv?: HTMLDivElement,
-            color: string,
-        } = { color: "lightgreen" };
+        } = {};
         {
             const toggleMenuDiv = document.createElement("div");
             toggleMenuDiv.style.height = `${40}px`
@@ -594,7 +593,7 @@ export class SettingsMenu
 
 
         this.lineInputs = {
-            color: "lightgreen",
+            color: "hsl(120, 73%, 75%)",
             radioOnce: lineInputs.radioOnce,
             radioRepeating: lineInputs.radioRepeating,
             freqenceRow: lineInputs.freqenceRow,
@@ -959,6 +958,11 @@ export class SettingsMenu
                     const rect = this.lineInputs.colorDiv.getBoundingClientRect();
                     rect.x  += window.pageXOffset;
                     rect.y += window.pageYOffset;
+                    const color = this.lineInputs.color;
+                    const h = parseInt(color.slice(color.indexOf("(") + 1, color.indexOf(",")));
+                    const s = parseInt(color.slice(color.indexOf(",") + 2, color.indexOf("%")));
+                    const l = parseInt(color.slice(color.lastIndexOf(",") + 2, color.lastIndexOf("%")));
+                    this.colorPicker.setColorHSL(h, s, l);
                     const newColor = await this.colorPicker.pick(rect, "up", "center");
                     if (newColor != undefined) this.lineInputs.color = newColor.colorHSL;
                     this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
