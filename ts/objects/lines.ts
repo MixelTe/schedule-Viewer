@@ -203,11 +203,17 @@ export class Lines
         const target = e.target;
         if (target == null) return;
         if (!(target instanceof SVGLineElement)) return;
-        target.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
-        target.id = "ScheduleViewer-Grafic-Lines-selected"
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
         line.selected = true;
+        target.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
+        const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
+        for (let i = 0; i < selectedLines.length; i++) {
+            const el = selectedLines[i];
+            el.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
+            el.classList.remove("ScheduleViewer-Grafic-Lines-selected");
+        }
+        target.classList.add("ScheduleViewer-Grafic-Lines-selected");
 
         this.functionsForLines.selectLine(line);
     }
@@ -217,16 +223,19 @@ export class Lines
         if (target == null) return;
         if (!(target instanceof SVGLineElement)) return;
 
-        switch (eType) {
-            case "over":
-                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", `${this.overLineOpacityMouseOver}`);
-                break;
+        if (!target.classList.contains("ScheduleViewer-Grafic-Lines-selected"))
+        {
+            switch (eType) {
+                case "over":
+                    target.setAttribute("stroke-opacity", `${this.overLineOpacityMouseOver}`);
+                    break;
 
-            case "out":
-                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
-                break;
+                case "out":
+                    target.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
+                    break;
 
-            default: throw new Error();
+                default: throw new Error();
+            }
         }
     }
     public changeLine(data: DataToLineChange, line: LineF)
