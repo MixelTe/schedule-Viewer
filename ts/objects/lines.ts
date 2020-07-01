@@ -33,6 +33,8 @@ export class Lines
         this.recreateLines(axis, 0, zoom);
 
         this.overBody.addEventListener("click", (e) => this.overBodyClick(e));
+        this.overBody.addEventListener("mouseover", (e) => this.overBodyMouse(e, "over"));
+        this.overBody.addEventListener("mouseout", (e) => this.overBodyMouse(e, "out"));
     }
 
     public recreateLines(axis: Rect, scroll: number, zoom: number)
@@ -203,6 +205,24 @@ export class Lines
             real: line.real,
         }
         this.functionsForLines.selectLine(lineData, target);
+    }
+    private overBodyMouse(e: MouseEvent, eType: "over" | "out")
+    {
+        const target = e.target;
+        if (target == null) return;
+        if (!(target instanceof SVGLineElement)) return;
+
+        switch (eType) {
+            case "over":
+                target.setAttribute("stroke-opacity", "0.3");
+                break;
+
+            case "out":
+                target.setAttribute("stroke-opacity", "0.1");
+                break;
+
+            default: throw new Error();
+        }
     }
     public changeLine(data: DataToLineChange, key: SVGLineElement)
     {
