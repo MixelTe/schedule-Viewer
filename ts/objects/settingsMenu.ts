@@ -36,7 +36,7 @@ export class SettingsMenu
         colorDiv: HTMLDivElement,
         color: string,
     }
-    private lineToChange: {key: SVGPathElement, real: boolean} | undefined;
+    private lineToChange: {key: SVGLineElement, real: boolean} | undefined;
     private hintForLinesInputs: HTMLDivElement;
     private colorPicker = new ColorPicker();
 
@@ -1124,7 +1124,7 @@ export class SettingsMenu
         functions.recreate();
     }
 
-    public setInputsData(data: DataToLineChange, key: SVGPathElement)
+    public setInputsData(data: DataToLineChange, key: SVGLineElement)
     {
         this.lineInputs.start.value = this.turnSecondsToTime(data.start);
         if (typeof data.duration == "number") this.lineInputs.duration.value = this.turnSecondsToTime(data.duration);

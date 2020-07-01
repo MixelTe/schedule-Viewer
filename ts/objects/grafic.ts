@@ -11,6 +11,7 @@ export class Grafic
     private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private lines: Lines;
     private linesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    private linesOverBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
     private oneHour = 60;
     private zoom = 2;
     private zoomMin = 0.6;
@@ -47,7 +48,8 @@ export class Grafic
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this));
 
             this.svg.appendChild(this.linesBody);
-            this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
+            this.svg.appendChild(this.linesOverBody);
+            this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
 
             for (let i = 0; i < 4; i++)
             {

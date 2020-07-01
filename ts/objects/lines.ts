@@ -5,17 +5,19 @@ export class Lines
 
     private oneHour: number;
     private body: SVGGElement;
+    private overBody: SVGGElement;
     private lines: LineF[];
-    private linesMap: Map<SVGPathElement, LineF> = new Map();
+    private linesMap: Map<SVGLineElement, LineF> = new Map();
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
     private functionsForLines: FunctionsForLines = <FunctionsForLines>{};
     private drawEmptyLines = false;
     private showLineAfterEnd = false;
 
-    constructor(body: SVGGElement, bodyPrm: Rect, defs:SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
+    constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
         this.body = body;
+        this.overBody = overBody;
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
         this.height = bodyPrm.height;
@@ -30,7 +32,7 @@ export class Lines
         this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
         this.recreateLines(axis, 0, zoom);
 
-        this.body.addEventListener("click", (e) => this.bodyClick(e));
+        this.overBody.addEventListener("click", (e) => this.bodyClick(e));
     }
 
     public recreateLines(axis: Rect, scroll: number, zoom: number)
@@ -57,6 +59,7 @@ export class Lines
         {
             const el = this.lines[i];
             let line;
+            let overline;
             if (el.real)
             {
                 line = this.createRealPath(i, axis, spaces, zoom);
@@ -65,8 +68,10 @@ export class Lines
             {
                 line = this.createSimplePath(i, axis, spaces, zoom);
             }
-            this.linesMap.set(line, el)
+            overline = this.createOverPath(i, axis, spaces);
+            this.linesMap.set(overline, el)
             this.body.appendChild(line);
+            this.overBody.appendChild(overline);
         };
     }
     private createSimplePath(index: number, axis: Rect, spaces: number, zoom: number)
@@ -137,6 +142,20 @@ export class Lines
 
         return line;
     }
+    private createOverPath(index: number, axis: Rect, spaces: number)
+    {
+        const el = this.lines[index];
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("stroke", `${el.color}`);
+        line.setAttribute("stroke-opacity", "0.1");
+        line.setAttribute("stroke-width", `${spaces}`);
+        line.setAttribute("clip-path", "url(#graficLinesClip)");
+        line.setAttribute("x1", `${axis.x}`);
+        line.setAttribute("x2", `${axis.x + axis.width}`);
+        line.setAttribute("y1", `${axis.y + axis.height - spaces * index}`);
+        line.setAttribute("y2", `${axis.y + axis.height - spaces * index}`);
+        return line;
+    }
     public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
     {
         this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined });;
@@ -171,7 +190,7 @@ export class Lines
     {
         const target = e.target;
         if (target == null) return;
-        if (!(target instanceof SVGPathElement)) return;
+        if (!(target instanceof SVGLineElement)) return;
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
         const lineData = {
@@ -185,7 +204,7 @@ export class Lines
         }
         this.functionsForLines.selectLine(lineData, target);
     }
-    public changeLine(data: DataToLineChange, key: SVGPathElement)
+    public changeLine(data: DataToLineChange, key: SVGLineElement)
     {
         let line = this.linesMap.get(key);
         if (line == undefined) throw new Error(`line not found: ${key}`);
@@ -197,7 +216,7 @@ export class Lines
         line.color = data.color;
         line.autoColor = data.autoColor;
     }
-    public removeLine(key: SVGPathElement)
+    public removeLine(key: SVGLineElement)
     {
         let line = this.linesMap.get(key);
         if (line == undefined) throw new Error(`line not found: ${key}`);
