@@ -15,11 +15,12 @@ interface FunctionsForMenu
     recreate: () => void,
     resetLines: () => void,
     getLines: () => LineF[],
+    changeLine: (data: DataToLineChange, key: SVGPathElement) => void,
 }
 
 interface FunctionsForLines
 {
-    selectLine: (data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void) => void
+    selectLine: (data: DataToLineChange, key: SVGPathElement) => void
 }
 
 interface DataToLineChange

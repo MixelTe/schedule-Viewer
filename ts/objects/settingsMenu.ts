@@ -874,7 +874,7 @@ export class SettingsMenu
 
                 this.lineInputs.radioOnce.checked = true;
                 this.disableDuractionInput("once");
-                
+
                 this.lineInputs.checkBoxColor.checked = true;
                 this.colorInputing("toggleAuto");
                 break;
@@ -1039,7 +1039,7 @@ export class SettingsMenu
         functions.recreate();
     }
 
-    public setInputsData(data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void)
+    public setInputsData(data: DataToLineChange, key: SVGPathElement)
     {
         this.lineInputs.start.value = this.turnSecondsToTime(data.start);
         if (typeof data.duration == "number") this.lineInputs.duration.value = this.turnSecondsToTime(data.duration);
@@ -1061,8 +1061,6 @@ export class SettingsMenu
         this.lineInputs.color = data.color;
         this.lineInputs.checkBoxColor.checked = data.autoColor;
         this.colorInputing("toggleAuto");
-
-        changeLine(data, key);
     }
     private turnSecondsToTime(secondsHMS: number)
     {

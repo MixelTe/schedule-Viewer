@@ -193,6 +193,7 @@ export class Grafic
             recreate: this.recreate.bind(this),
             resetLines: this.lines.resetLines.bind(this.lines),
             getLines: this.lines.getLines.bind(this.lines),
+            changeLine: this.lines.changeLine.bind(this.lines),
         }
     }
     public setFunctionsForLines(functions: FunctionsForLines)

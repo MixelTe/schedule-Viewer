@@ -177,7 +177,7 @@ export class Lines
             autoColor: line.autoColor,
             real: line.real,
         }
-        this.functionsForLines.selectLine(lineData, target, this.changeLine.bind(this));
+        this.functionsForLines.selectLine(lineData, target);
     }
     public changeLine(data: DataToLineChange, key: SVGPathElement)
     {
