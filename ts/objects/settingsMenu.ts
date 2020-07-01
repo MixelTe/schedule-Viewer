@@ -1021,8 +1021,6 @@ export class SettingsMenu
     public setInputsData(data: DataToLineChange, key: SVGPathElement, changeLine: (data: DataToLineChange, key: SVGPathElement) => void)
     {
         console.log("input");
-        console.log(data);
-        console.log(key);
 
         changeLine(data, key);
     }
