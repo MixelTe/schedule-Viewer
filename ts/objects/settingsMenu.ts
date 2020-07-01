@@ -730,14 +730,7 @@ export class SettingsMenu
             this.UnmarkAndClear(this.lineInputs.end);
         }
 
-        const inputsData = {
-            interval: this.lineInputs.interval.value,
-            duration: this.lineInputs.duration.value,
-            start: this.lineInputs.start.value,
-            end: this.lineInputs.end.value,
-        };
-
-        let lineData = this.createLineData(inputsData);
+        let lineData = this.createLineData();
 
         this.UnmarkAndClear(this.lineInputs.start);
         this.UnmarkAndClear(this.lineInputs.duration);
@@ -749,31 +742,44 @@ export class SettingsMenu
 
         return lineData;
     }
-    private createLineData(rawData: {interval: string, duration: string, start: string, end: string})
+    private createLineData()
     {
         let interval;
         let duration;
         let start;
         let end;
 
-        try { start = this.turnStringToSeconds(rawData.start); }
-        catch (e) { this.markAsUncorrect(this.lineInputs.start); throw "MyError";};
-        this.markAsCorrect(this.lineInputs.start);
-
-        try { duration = this.turnStringToSeconds(rawData.duration); }
-        catch (e) { this.markAsUncorrect(this.lineInputs.duration); throw "MyError";};
-        this.markAsCorrect(this.lineInputs.duration);
+        let isError = false;
+        try
+        {
+            start = this.getSecondsFromString(this.lineInputs.start);
+        }
+        catch (e) { if (e == "MyError") isError = true; else throw e };
+        try
+        {
+            duration = this.getSecondsFromString(this.lineInputs.duration);
+        }
+        catch (e) { if (e == "MyError") isError = true; else throw e};
 
         if (this.lineInputs.radioRepeating.checked)
         {
-            try { interval = this.turnStringToSeconds(rawData.interval); }
-            catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
-            this.markAsCorrect(this.lineInputs.interval);
-
-            try { end = this.turnStringToSeconds(rawData.end); }
-            catch (e) { this.markAsUncorrect(this.lineInputs.end); throw "MyError";};
-            this.markAsCorrect(this.lineInputs.end);
+            try
+            {
+                interval = this.getSecondsFromString(this.lineInputs.interval);
+            }
+            catch (e) { if (e == "MyError") isError = true; else throw e};
+            try
+            {
+                end = this.getSecondsFromString(this.lineInputs.end);
+            }
+            catch (e) { if (e == "MyError") isError = true; else throw e};
         }
+        if (isError) throw "MyError";
+
+        if (typeof interval != "number") throw new Error("NaN");
+        if (typeof duration != "number") throw new Error("NaN");
+        if (typeof start != "number") throw new Error("NaN");
+        if (typeof end != "number") throw new Error("NaN");
 
         return {
             interval: interval,
@@ -781,6 +787,15 @@ export class SettingsMenu
             start: start,
             end: end,
         };
+    }
+    private getSecondsFromString(field: HTMLInputElement)
+    {
+        let seconds;
+        try { seconds = this.turnStringToSeconds(field.value); }
+        catch (e) { this.markAsUncorrect(field); throw "MyError"; };
+        if (!this.checkNumber(seconds)) { this.markAsUncorrect(field); throw "MyError"; };
+        this.markAsCorrect(field);
+        return seconds;
     }
     private turnStringToSeconds(string: string)
     {
@@ -845,6 +860,10 @@ export class SettingsMenu
             return allTime;
         }
     }
+    private checkNumber(num: number)
+    {
+        return (0 < num && num <= 60 * 60 * 24);
+    }
     private isNumber(num: any)
     {
         if (typeof num == "number" && (num / num == 1 || num == 0)) return true;
@@ -865,30 +884,6 @@ export class SettingsMenu
         el.style.border = `${this.addingLinesPrm.inputsBorder}`;
         el.style.backgroundColor = this.addingLinesPrm.inputsBackground;
         // el.value = "";
-    }
-    private checkNumber(num: number, type: string)
-    {
-        if (num >= 0)
-        {
-            switch (type)
-            {
-                case "h":
-                    if (num > 24) throw new Error("value is too large")
-                    break;
-
-                case "m":
-                    if (num > 60) throw new Error("value is too large")
-                    break;
-
-                case "s":
-                    if (num > 60) throw new Error("value is too large")
-                    break;
-
-                default:
-                    break;
-            }
-        }
-        else throw new Error("value is too small");
     }
 
     private lineMenuButtons(button: "change" | "remove" | "add" | "cancel", functions: FunctionsForMenu)
