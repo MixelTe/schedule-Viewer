@@ -198,16 +198,8 @@ export class Lines
         target.id = "ScheduleViewer-Grafic-Lines-selected"
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
-        const lineData = {
-            interval: line.dasharray[0],
-            duration: line.dasharray[1],
-            start: line.start,
-            end: line.end,
-            color: line.color,
-            autoColor: line.autoColor,
-            real: line.real,
-        }
-        this.functionsForLines.selectLine(lineData, target);
+
+        this.functionsForLines.selectLine(line);
     }
     private overBodyMouse(e: MouseEvent, eType: "over" | "out")
     {
@@ -227,10 +219,9 @@ export class Lines
             default: throw new Error();
         }
     }
-    public changeLine(data: DataToLineChange, key: SVGLineElement)
+    public changeLine(data: DataToLineChange, line: LineF)
     {
-        let line = this.linesMap.get(key);
-        if (line == undefined) throw new Error(`line not found: ${key}`);
+        if (line == undefined) throw new Error(`line not found: ${line}`);
 
         line.dasharray[0] = data.interval;
         if (!line.real) line.dasharray[1] = data.duration;
@@ -239,10 +230,9 @@ export class Lines
         line.color = data.color;
         line.autoColor = data.autoColor;
     }
-    public removeLine(key: SVGLineElement)
+    public removeLine(line: LineF)
     {
-        let line = this.linesMap.get(key);
-        if (line == undefined) throw new Error(`line not found: ${key}`);
+        if (line == undefined) throw new Error(`line not found: ${line}`);
         const lineIndex = this.lines.indexOf(line);
         this.lines.splice(lineIndex, 1);
     }

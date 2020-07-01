@@ -36,7 +36,7 @@ export class SettingsMenu
         colorDiv: HTMLDivElement,
         color: string,
     }
-    private lineToChange: {key: SVGLineElement, real: boolean} | undefined;
+    private lineToChange: LineF | undefined;
     private hintForLinesInputs: HTMLDivElement;
     private colorPicker = new ColorPicker();
 
@@ -921,14 +921,14 @@ export class SettingsMenu
                     autoColor: this.lineInputs.checkBoxColor.checked,
                     real: this.lineToChange.real
                 }
-                functions.changeLine(newData, this.lineToChange.key);
+                functions.changeLine(newData, this.lineToChange);
                 functions.recreate();
                 this.lineMenuButtons("cancel", functions);
                 break;
 
             case "remove":
                 if (this.lineToChange == undefined) throw new Error();
-                functions.removeLine(this.lineToChange.key)
+                functions.removeLine(this.lineToChange)
                 functions.recreate();
                 this.lineMenuButtons("cancel", functions);
                 break;
@@ -1124,8 +1124,17 @@ export class SettingsMenu
         functions.recreate();
     }
 
-    public setInputsData(data: DataToLineChange, key: SVGLineElement)
+    public setInputsData(line: LineF)
     {
+        const data = {
+            interval: line.dasharray[0],
+            duration: line.dasharray[1],
+            start: line.start,
+            end: line.end,
+            color: line.color,
+            autoColor: line.autoColor,
+            real: line.real,
+        }
         this.lineInputs.start.value = this.turnSecondsToTime(data.start);
         if (typeof data.duration == "number") this.lineInputs.duration.value = this.turnSecondsToTime(data.duration);
         else this.lineInputs.duration.value = `${data.duration}`;
@@ -1149,7 +1158,7 @@ export class SettingsMenu
         this.lineInputs.checkBoxColor.checked = data.autoColor;
         this.colorInputing("toggleAuto");
 
-        this.lineToChange = { key, real: data.real };
+        this.lineToChange = line;
     }
     private turnSecondsToTime(secondsHMS: number)
     {
