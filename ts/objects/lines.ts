@@ -6,6 +6,7 @@ export class Lines
     private oneHour: number;
     private body: SVGGElement;
     private lines: LineF[];
+    private linesMap: Map<SVGPathElement, LineF> = new Map();
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
     private drawEmptyLines = false;
@@ -25,12 +26,15 @@ export class Lines
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
 
-        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true  }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
         this.recreateLines(axis, 0, zoom);
+
+        this.body.addEventListener("click", (e) => this.bodyClick(e));
     }
 
     public recreateLines(axis: Rect, scroll: number, zoom: number)
     {
+        this.linesMap.clear();
         this.body.innerHTML = "";
 
         let spaces = Math.floor((axis.height) / (Math.max(this.lines.length, 2)));
@@ -50,14 +54,18 @@ export class Lines
 
         for (let i = 1; i < this.lines.length; i++)
         {
-            if (this.lines[i].real)
+            const el = this.lines[i];
+            let line;
+            if (el.real)
             {
-                this.body.appendChild(this.createRealPath(i, axis, spaces, zoom));
+                line = this.createRealPath(i, axis, spaces, zoom);
             }
             else
             {
-                this.body.appendChild(this.createPath(i, axis, spaces, zoom));
+                line = this.createPath(i, axis, spaces, zoom);
             }
+            this.linesMap.set(line, el)
+            this.body.appendChild(line);
         };
     }
     private createPath(index: number, axis: Rect, spaces: number, zoom: number)
@@ -124,7 +132,7 @@ export class Lines
     }
     public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
     {
-        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined });
+        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined });;
         this.colorizeLines();
     }
     public createRealLine(interval: number, durations: number[], start: number, end: number)
@@ -152,6 +160,15 @@ export class Lines
         return Math.random() * (max - min) + min;
     }
 
+    private bodyClick(e: MouseEvent)
+    {
+        const target = e.target;
+        if (target == null) return;
+        if (!(target instanceof SVGPathElement)) return;
+        const line = this.linesMap.get(target);
+        console.log(line);
+    }
+
     public changeClip(axis: Rect, scroll: number)
     {
         this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
@@ -161,7 +178,7 @@ export class Lines
     }
     public resetLines()
     {
-        this.lines = [{color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true }];
     }
     public getLines()
     {

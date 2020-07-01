@@ -31,8 +31,9 @@ export class SettingsMenu
         buttonRemove: <HTMLButtonElement>{},
         checkBoxColor: <HTMLInputElement>{},
         colorDiv: <HTMLDivElement>{},
-        color: "",
+        color: "lightgreen",
     };
+    private lineToChange: LineF | undefined;
     private hintForLinesInputs: HTMLDivElement;
 
     private loadFilesDIV = document.createElement("div");
