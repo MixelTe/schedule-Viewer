@@ -17,6 +17,11 @@ interface FunctionsForMenu
     getLines: () => LineF[],
 }
 
+interface FunctionsForLines
+{
+    selectLine: (data: {interval: number, duration: number | number[], start: number, end: number, color: string, autoColor: boolean, real: boolean}, key: SVGPathElement) => void
+}
+
 interface Schedule
 {
     simpleLines:

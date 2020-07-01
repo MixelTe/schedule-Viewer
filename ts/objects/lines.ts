@@ -9,6 +9,7 @@ export class Lines
     private linesMap: Map<SVGPathElement, LineF> = new Map();
     private clipRect: SVGRectElement;
     private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
+    private functionsForLines: FunctionsForLines = <FunctionsForLines>{};
     private drawEmptyLines = false;
     private showLineAfterEnd = false;
 
@@ -166,7 +167,17 @@ export class Lines
         if (target == null) return;
         if (!(target instanceof SVGPathElement)) return;
         const line = this.linesMap.get(target);
-        console.log(line);
+        if (line == undefined) throw new Error(`line not found: ${target}`);
+        const lineData = {
+            interval: line.dasharray[0],
+            duration: line.dasharray[1],
+            start: line.start,
+            end: line.end,
+            color: line.color,
+            autoColor: line.autoColor,
+            real: line.real,
+        }
+        this.functionsForLines.selectLine(lineData, target);
     }
 
     public changeClip(axis: Rect, scroll: number)
@@ -183,5 +194,9 @@ export class Lines
     public getLines()
     {
         return this.lines;
+    }
+    public setFunctionsForLines(functions: FunctionsForLines)
+    {
+        this.functionsForLines = functions;
     }
 }

@@ -195,4 +195,8 @@ export class Grafic
             getLines: this.lines.getLines.bind(this.lines),
         }
     }
+    public setFunctionsForLines(functions: FunctionsForLines)
+    {
+        this.lines.setFunctionsForLines(functions);
+    }
 }

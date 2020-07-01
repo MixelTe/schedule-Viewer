@@ -1018,6 +1018,12 @@ export class SettingsMenu
         functions.recreate();
     }
 
+    public setInputsData(data: {interval: number, duration: number | number[], start: number, end: number, color: string, autoColor: boolean, real: boolean}, key: SVGPathElement)
+    {
+        console.log(data);
+        console.log(key);
+    }
+
 
     private saveSchedule(functions: FunctionsForMenu)
     {
