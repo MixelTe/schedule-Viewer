@@ -14,6 +14,10 @@ export class Lines
     private drawEmptyLines = false;
     private showLineAfterEnd = false;
 
+    private overLineOpacity = 0.1;
+    private overLineOpacityMouseOver = 0.3;
+    private overLineOpacitySelected = 0.4;
+
     constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
         this.body = body;
@@ -152,10 +156,10 @@ export class Lines
         line.setAttribute("stroke", `${el.color}`);
         if (el.selected)
         {
-            line.setAttribute("stroke-opacity", "0.4");
+            line.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
             line.id = "ScheduleViewer-Grafic-Lines-selected";
         }
-        else line.setAttribute("stroke-opacity", "0.1");
+        else line.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
         line.setAttribute("stroke-width", `${spaces}`);
         line.setAttribute("clip-path", "url(#graficLinesClip)");
         line.setAttribute("x1", `${axis.x}`);
@@ -199,7 +203,7 @@ export class Lines
         const target = e.target;
         if (target == null) return;
         if (!(target instanceof SVGLineElement)) return;
-        target.setAttribute("stroke-opacity", "0.4");
+        target.setAttribute("stroke-opacity", `${this.overLineOpacitySelected}`);
         target.id = "ScheduleViewer-Grafic-Lines-selected"
         const line = this.linesMap.get(target);
         if (line == undefined) throw new Error(`line not found: ${target}`);
@@ -215,11 +219,11 @@ export class Lines
 
         switch (eType) {
             case "over":
-                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", "0.3");
+                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", `${this.overLineOpacityMouseOver}`);
                 break;
 
             case "out":
-                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", "0.1");
+                if (target.id != "ScheduleViewer-Grafic-Lines-selected") target.setAttribute("stroke-opacity", `${this.overLineOpacity}`);
                 break;
 
             default: throw new Error();
