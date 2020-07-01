@@ -41,6 +41,7 @@ export class Lines
     {
         this.linesMap.clear();
         this.body.innerHTML = "";
+        this.overBody.innerHTML = "";
 
         let spaces = Math.floor((axis.height) / (Math.max(this.lines.length, 2)));
         if (spaces < 20)
