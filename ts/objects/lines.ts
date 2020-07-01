@@ -17,7 +17,7 @@ export class Lines
     private overLineOpacity = 0;
     private overLineOpacityMouseOver = 0.2;
     private overLineOpacitySelected = 0.4;
-    private overLineCustomColor = false;
+    private overLineCustomColor = true;
 
     constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
     {
@@ -55,6 +55,11 @@ export class Lines
         }.bind(this)()
         defs.appendChild(gradientEl);
 
+        if (this.overLineCustomColor)
+        {
+            this.overLineOpacity = 0.1;
+            this.overLineOpacityMouseOver = 0.3;
+        }
 
         this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
         this.recreateLines(axis, 0, zoom);
@@ -176,8 +181,16 @@ export class Lines
     {
         const el = this.lines[index];
         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        if (this.overLineCustomColor) rect.setAttribute("fill", `${el.color}`);
-        else rect.setAttribute("fill", "Highlight");
+        if (this.overLineCustomColor)
+        {
+            rect.setAttribute("fill", `${el.color}`);
+            rect.setAttribute("stroke", `${el.color}`)
+            rect.setAttribute("stroke-width", "0px")
+        }
+        else
+        {
+            rect.setAttribute("fill", "Highlight");
+        }
         if (el.selected)
         {
             rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
@@ -234,8 +247,11 @@ export class Lines
         for (let i = 0; i < selectedLines.length; i++) {
             const el = selectedLines[i];
             el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
+            if (this.overLineCustomColor) el.setAttribute("fill", `${el.getAttribute("stroke")}`);
+            else el.setAttribute("fill", "HighLight");
             el.classList.remove("ScheduleViewer-Grafic-Lines-selected");
         }
+        target.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
         target.classList.add("ScheduleViewer-Grafic-Lines-selected");
 
         this.functionsForLines.selectLine(line);
