@@ -19,8 +19,8 @@ export class SettingsMenu
     private addingLinesDIV = document.createElement("div");
     private addingLinesPrm = { height: 300, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
     private lineInputs = {
-        radioReal: <HTMLInputElement>{},
-        radioSimple: <HTMLInputElement>{},
+        radioOnce: <HTMLInputElement>{},
+        radioRepeating: <HTMLInputElement>{},
         freqenceRow: <HTMLTableRowElement>{},
         interval: <HTMLInputElement>{},
         duration: <HTMLInputElement>{},
@@ -295,7 +295,7 @@ export class SettingsMenu
                         typeO.name = "scheduleViewer-SettingsMenu-type";
                         typeO.id = "scheduleViewer-SettingsMenu-realType";
                         tableCell.appendChild(typeO);
-                        this.lineInputs.radioReal = typeO;
+                        this.lineInputs.radioOnce = typeO;
 
                         const typeLableO = document.createElement("label");
                         typeLableO.style.height = "max-content";
@@ -309,7 +309,7 @@ export class SettingsMenu
                         typeR.name = "scheduleViewer-SettingsMenu-type";
                         typeR.id = "scheduleViewer-SettingsMenu-sympleType";
                         tableCell.appendChild(typeR);
-                        this.lineInputs.radioSimple = typeR;
+                        this.lineInputs.radioRepeating = typeR;
 
                         const typeLableR = document.createElement("label");
                         typeLableR.style.height = "max-content";
@@ -569,8 +569,8 @@ export class SettingsMenu
         this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
         this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
         this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
-        this.lineInputs.radioReal.addEventListener("click", () => this.disableDuractionInput("repeating"));
-        this.lineInputs.radioSimple.addEventListener("click", () => this.disableDuractionInput("once"));
+        this.lineInputs.radioOnce.addEventListener("click", () => this.disableDuractionInput("once"));
+        this.lineInputs.radioRepeating.addEventListener("click", () => this.disableDuractionInput("repeating"));
 
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
@@ -580,8 +580,8 @@ export class SettingsMenu
 
         this.menuSystem("noSelect");
 
-        this.lineInputs.radioReal.checked = true;
-        this.disableDuractionInput("repeating");
+        this.lineInputs.radioOnce.checked = true;
+        this.disableDuractionInput("once");
     }
 
     private toggleMenu()
@@ -646,7 +646,7 @@ export class SettingsMenu
     private addLine(functions: FunctionsForMenu)
     {
         this.UnmarkAndClear(this.lineInputs.interval);
-        if (this.lineInputs.radioSimple.input.checked)
+        if (this.lineInputs.radioRepeating.input.checked)
         {
             this.UnmarkAndClear(this.lineInputs.duration.input);
         }
@@ -675,7 +675,7 @@ export class SettingsMenu
         }
 
         this.UnmarkAndClear(this.lineInputs.interval);
-        if (this.lineInputs.radioSimple.input.checked)
+        if (this.lineInputs.radioRepeating.input.checked)
         {
             this.UnmarkAndClear(this.lineInputs.duration.input);
         }
@@ -709,7 +709,7 @@ export class SettingsMenu
         catch (e) { this.markAsUncorrect(this.lineInputs.interval); throw "MyError";};
         this.markAsCorrect(this.lineInputs.interval);
 
-        if (this.lineInputs.radioSimple.input.checked)
+        if (this.lineInputs.radioRepeating.input.checked)
         {
             try { duration = this.turnStringToSeconds(rawData.duration); }
             catch (e) { this.markAsUncorrect(this.lineInputs.duration.input); throw "MyError";};
@@ -883,8 +883,8 @@ export class SettingsMenu
                 this.lineInputs.buttonRemove.disabled = true;
 
                 this.lineInputs.freqenceRow.style.color = "black";
-                this.lineInputs.radioSimple.disabled = false;
-                this.lineInputs.radioReal.disabled = false;
+                this.lineInputs.radioRepeating.disabled = false;
+                this.lineInputs.radioOnce.disabled = false;
 
                 this.disableDuractionInput("none");
                 break;
@@ -895,10 +895,10 @@ export class SettingsMenu
                 this.lineInputs.buttonRemove.disabled = false;
 
                 this.lineInputs.freqenceRow.style.color = "gray";
-                this.lineInputs.radioSimple.disabled = true;
-                this.lineInputs.radioReal.disabled = true;
+                this.lineInputs.radioRepeating.disabled = true;
+                this.lineInputs.radioOnce.disabled = true;
 
-                this.lineInputs.radioSimple.checked = true;
+                this.lineInputs.radioOnce.checked = true;
                 this.disableDuractionInput("once");
                 break;
 
@@ -908,10 +908,10 @@ export class SettingsMenu
                 this.lineInputs.buttonRemove.disabled = true;
 
                 this.lineInputs.freqenceRow.style.color = "gray";
-                this.lineInputs.radioSimple.disabled = true;
-                this.lineInputs.radioReal.disabled = true;
+                this.lineInputs.radioRepeating.disabled = true;
+                this.lineInputs.radioOnce.disabled = true;
 
-                this.lineInputs.radioReal.checked = true;
+                this.lineInputs.radioRepeating.checked = true;
                 this.disableDuractionInput("repeating");
                 break;
 
@@ -931,17 +931,15 @@ export class SettingsMenu
             case "once":
                 this.lineInputs.interval.disabled = true;
                 this.lineInputs.end.disabled = true;
-                this.lineInputs.duration.disabled = false;
-                this.lineInputs.interval.style.backgroundColor = this.addingLinesPrm.inputsBackground;
-                this.lineInputs.end.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.interval.style.backgroundColor = "lightgray";
+                this.lineInputs.end.style.backgroundColor = "lightgray";
                 break;
 
             case "repeating":
                 this.lineInputs.interval.disabled = false;
                 this.lineInputs.end.disabled = false;
-                this.lineInputs.duration.disabled = true;
-                this.lineInputs.interval.style.backgroundColor = "lightgray";
-                this.lineInputs.end.style.backgroundColor = "lightgray";
+                this.lineInputs.interval.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.end.style.backgroundColor = this.addingLinesPrm.inputsBackground;
                 break;
             default: throw new Error();
         }
