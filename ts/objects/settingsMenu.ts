@@ -928,6 +928,7 @@ export class SettingsMenu
                 else
                 {
                     this.lineInputs.colorDiv.style.backgroundImage = "";
+                    this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
                 }
                 break;
 
