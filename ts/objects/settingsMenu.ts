@@ -918,8 +918,8 @@ export class SettingsMenu
 
             case "repeating":
                 this.lineInputs.buttonAdd.disabled = true;
-                this.lineInputs.buttonChange.disabled = true;
-                this.lineInputs.buttonRemove.disabled = true;
+                this.lineInputs.buttonChange.disabled = false;
+                this.lineInputs.buttonRemove.disabled = false;
 
                 this.lineInputs.freqenceRow.style.color = "gray";
                 this.lineInputs.radioRepeating.disabled = true;
