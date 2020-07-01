@@ -29,6 +29,9 @@ export class SettingsMenu
         buttonAdd: <HTMLButtonElement>{},
         buttonChange: <HTMLButtonElement>{},
         buttonRemove: <HTMLButtonElement>{},
+        checkBoxColor: <HTMLInputElement>{},
+        colorDiv: <HTMLDivElement>{},
+        color: "",
     };
     private hintForLinesInputs: HTMLDivElement;
 
@@ -426,12 +429,14 @@ export class SettingsMenu
                         colorDiv.style.backgroundColor = "lightgreen";
                         colorDiv.style.border = "1px solid gray";
                         tableCell.appendChild(colorDiv);
+                        this.lineInputs.colorDiv = colorDiv;
 
-                        const radio = document.createElement("input");
-                        radio.type = "checkBox";
-                        radio.checked = true;
-                        radio.id = "scheduleViewer-SettingsMenu-colorAuto";
-                        tableCell.appendChild(radio);
+                        const checkBox = document.createElement("input");
+                        checkBox.type = "checkBox";
+                        checkBox.checked = true;
+                        checkBox.id = "scheduleViewer-SettingsMenu-colorAuto";
+                        tableCell.appendChild(checkBox);
+                        this.lineInputs.checkBoxColor = checkBox;
 
                         const radioLable = document.createElement("label");
                         radioLable.style.height = "max-content";
@@ -571,6 +576,8 @@ export class SettingsMenu
         this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
         this.lineInputs.radioOnce.addEventListener("click", () => this.disableDuractionInput("once"));
         this.lineInputs.radioRepeating.addEventListener("click", () => this.disableDuractionInput("repeating"));
+        this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
+        this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
 
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
@@ -582,6 +589,7 @@ export class SettingsMenu
 
         this.lineInputs.radioOnce.checked = true;
         this.disableDuractionInput("once");
+        this.colorInputing("toggleAuto");
     }
 
     private toggleMenu()
@@ -679,14 +687,16 @@ export class SettingsMenu
 
 
         // console.log("Yee!!!");
+        let color = undefined;
+        if (!this.lineInputs.checkBoxColor.checked) color = this.lineInputs.color;
 
         if (lineData.interval != undefined && lineData.end != undefined)
         {
-            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
+            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, color);
         }
         else
         {
-            functions.addSympleLine(0, lineData.duration, lineData.start, 0);
+            functions.addSympleLine(0, lineData.duration, lineData.start, 0, color);
         }
         functions.recreate();
     }
@@ -849,6 +859,32 @@ export class SettingsMenu
 
             default: throw new Error();
         }
+    }
+    private colorInputing(action: "toggleAuto" | "open")
+    {
+        switch (action) {
+            case "open":
+                if (!this.lineInputs.checkBoxColor.checked)
+                {
+                    this.lineInputs.color = ["blue", "red", "yellow", "green"][Math.floor(Math.random() * 4)];
+                    this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
+                }
+                break;
+
+            case "toggleAuto":
+                if (this.lineInputs.checkBoxColor.checked)
+                {
+                    this.lineInputs.colorDiv.style.backgroundImage = "linear-gradient(to right, red, violet, blue, lime, yellow, red)";
+                }
+                else
+                {
+                    this.lineInputs.colorDiv.style.backgroundImage = "";
+                }
+                break;
+
+            default: throw new Error();
+        }
+
     }
 
     private menuSystem(state: "noSelect" | "once" | "repeating")
