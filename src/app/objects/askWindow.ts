@@ -3,7 +3,6 @@ export class AskWindow
 	private body: HTMLDivElement
 	private parent: HTMLElement
 	private resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
-	private firstClick = true;
 
 	constructor(parent: HTMLElement, text: string)
 	{
