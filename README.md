@@ -11,7 +11,9 @@ to add simple lines:
             "interval": "number",
             "duration": "number",
             "start": "number",
-            "end": "number"
+            "end": "number",
+            "autoColor": "bolean",
+            "color": "hsl(number, number%, number%)" //needed if autoColor is true
         }
     ]
 }
@@ -26,7 +28,9 @@ to add real lines:
             "interval": "number",
             "durations": ["number"],
             "start": "number",
-            "end": "number"
+            "end": "number",
+            "autoColor": "bolean",
+            "color": "hsl(number, number%, number%)" //needed if autoColor is true
         }
     ]
 }
@@ -42,13 +46,16 @@ to add real lines:
             "interval": 30,
             "duration": 15,
             "start": 0,
-            "end": 84000
+            "end": 84000,
+            "autoColor": true,
+            "color": "hsl(165, 100%, 50%)"
         },
         {
             "interval": 60,
             "duration": 20,
             "start": 3000,
-            "end": 80000
+            "end": 80000,
+            "autoColor": false
         }
     ],
 
