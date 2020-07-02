@@ -712,7 +712,7 @@ export class SettingsMenu
 		else
 		{
 			if (lineData.duration == undefined) throw new Error();
-			functions.addSympleLine(1, 0, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+			functions.addSympleLine(1, lineData.duration, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 		}
 		functions.recreate();
 	}
