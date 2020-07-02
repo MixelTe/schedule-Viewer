@@ -2,7 +2,7 @@ export class AskWindow
 {
 	private mainWindow: HTMLDivElement
 	private resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
-	private listeners: {el: HTMLElement, event: string, function: () => any}[]
+	private listeners: { el: HTMLElement, event: string, function: () => any }[]
 
 	constructor(x: number, y: number, text: string)
 	{
@@ -71,7 +71,6 @@ export class AskWindow
 					button.innerText = text;
 					const listener = {el: button, event: "click", function: this.userAnswer.bind(this, answer)}
 					this.listeners.push(listener);
-					listener.el.addEventListener(listener.event, listener.function);
 					cell.appendChild(button);
 					return cell;
 				};
@@ -83,6 +82,11 @@ export class AskWindow
 
 			return table;
 		}.bind(this)(text));
+
+		this.listeners.forEach(listener =>
+		{
+			listener.el.addEventListener(listener.event, listener.function);
+		});
 	}
 	public getAnswer()
 	{
