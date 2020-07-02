@@ -3,7 +3,7 @@
 crete json file
 
 to add simple lines:
-``` json
+``` json5
 {
     "simpleLines":
     [
@@ -20,7 +20,7 @@ to add simple lines:
 ```
 
 to add real lines:
-``` json
+``` json5
 {
     "realLines":
     [
