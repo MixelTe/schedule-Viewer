@@ -30,29 +30,6 @@ export class AskWindow
 		table.style.width = "100%";
 		table.style.height = "100%";
 
-		const createTextRow = (text: string, rowStyle?: { property: string, value: string }[]) =>
-		{
-			const row = document.createElement("tr");
-			row.style.textAlign = "center";
-			row.appendChild(function ()
-			{
-				const cell = document.createElement("td");
-				cell.setAttribute("colspan", "2");
-				cell.innerText = text;
-				return cell;
-			}());
-
-			if (rowStyle != undefined)
-			{
-				rowStyle.forEach(el =>
-				{
-					row.style.setProperty(el.property, el.value);
-				});
-			}
-
-			return row;
-		}
-
 		table.appendChild(createTextRow("Your action:"));
 		table.appendChild(createTextRow(text, [{ property: "background-color", value: "#ffc823" }]));
 		table.appendChild(createTextRow("Are you sure?"));
@@ -128,4 +105,27 @@ export class AskWindow
 		}
 		else throw Error();
 	}
+}
+
+function createTextRow (text: string, rowStyle?: { property: string, value: string }[])
+{
+	const row = document.createElement("tr");
+	row.style.textAlign = "center";
+	row.appendChild(function ()
+	{
+		const cell = document.createElement("td");
+		cell.setAttribute("colspan", "2");
+		cell.innerText = text;
+		return cell;
+	}());
+
+	if (rowStyle != undefined)
+	{
+		rowStyle.forEach(el =>
+		{
+			row.style.setProperty(el.property, el.value);
+		});
+	}
+
+	return row;
 }
