@@ -643,10 +643,10 @@ export class SettingsMenu
 		}
 
 		this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
-		this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
-		this.revTimeInputEl.addEventListener("change", () => this.toggleLineMenuRev());
-		this.colorizeLineSelectionEl.addEventListener("change", functions.toggleCustomSelectionColor);
-		this.compactLinePlacingEl.addEventListener("change", () => this.toggleCompactLinePlacing(functions));
+		this.toggleSepLineEl.addEventListener("change", () => { functions.toggleSepLine(); this.toggleSepLineEl.checked = functions.SepLineIsActive(); });
+		this.revTimeInputEl.addEventListener("change", () => { this.toggleLineMenuRev(); this.revTimeInputEl.checked = this.revTimeInput; });
+		this.colorizeLineSelectionEl.addEventListener("change", () => { functions.toggleCustomSelectionColor(); this.toggleSepLineEl.checked = functions.CustomSelectionColorIsActive(); });
+		this.compactLinePlacingEl.addEventListener("change",  () => { this.toggleCompactLinePlacing(functions); this.compactLinePlacingEl.checked = functions.compactLinePlacingIsActive(); });
 
 		this.lineInputs.buttonAdd.addEventListener("click", (e) => this.lineMenuButtons(e, "add", functions));
 		this.lineInputs.buttonChange.addEventListener("click", (e) => this.lineMenuButtons(e, "change", functions));
