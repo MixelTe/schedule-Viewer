@@ -981,10 +981,13 @@ export class SettingsMenu
 				break;
 
 			case "remove":
-				if (this.lineToChange == undefined) throw new Error();
-				functions.removeLine(this.lineToChange)
-				functions.recreate();
-				this.lineMenuButtons(e, "cancel", functions);
+				if (await new AskWindow(x, y, "remove line").getAnswer())
+				{
+					if (this.lineToChange == undefined) throw new Error();
+					functions.removeLine(this.lineToChange)
+					functions.recreate();
+					this.lineMenuButtons(e, "cancel", functions);
+				}
 				break;
 
 			case "cancel":
@@ -1013,20 +1016,23 @@ export class SettingsMenu
 				break;
 
 			case "example":
-				functions.resetLines();
-				for (let i = 0; i < 4; i++)
+				if (await new AskWindow(x, y, "remove all and show example").getAnswer())
 				{
-					functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-					// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-
-					const duractions = []
-					for (let i = 0; i < this.getRndInteger(600, 900); i++)
+					functions.resetLines();
+					for (let i = 0; i < 4; i++)
 					{
-						duractions.push(this.getRndInteger(40, 160));
+						functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+						// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+
+						const duractions = []
+						for (let i = 0; i < this.getRndInteger(600, 900); i++)
+						{
+							duractions.push(this.getRndInteger(40, 160));
+						}
+						functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 					}
-					functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+					functions.recreate();
 				}
-				functions.recreate();
 				break;
 
 			default: throw new Error();
