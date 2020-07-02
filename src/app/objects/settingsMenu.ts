@@ -1116,12 +1116,12 @@ export class SettingsMenu
 		for (let i = 0; i < newSchedule.simpleLines.length; i++)
 		{
 			const el = newSchedule.simpleLines[i];
-			functions.addSympleLine(el.interval, el.duration, el.start, el.end);
+			functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
 		}
 		for (let i = 0; i < newSchedule.realLines.length; i++)
 		{
 			const el = newSchedule.realLines[i];
-			functions.addRealLine(el.interval, el.durations, el.start, el.end);
+			functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
 		}
 		functions.recreate();
 	}
@@ -1193,6 +1193,8 @@ export class SettingsMenu
 					durations: el.dasharray[1],
 					start: el.start,
 					end: el.end,
+					color: el.color,
+					autoColor: el.autoColor,
 				};
 				realLines.push(newEl);
 			}
@@ -1204,6 +1206,8 @@ export class SettingsMenu
 					duration: el.dasharray[1],
 					start: el.start,
 					end: el.end,
+					color: el.color,
+					autoColor: el.autoColor,
 				};
 				simpleLines.push(newEl);
 			}

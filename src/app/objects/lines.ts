@@ -201,14 +201,14 @@ export class Lines
 		rect.setAttribute("height", `${spaces}`);
 		return rect;
 	}
-	public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined)
+	public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined, autoColor = true)
 	{
-		this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: color == undefined, selected: false });;
+		this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: autoColor, selected: false });;
 		this.colorizeLines();
 	}
-	public createRealLine(interval: number, durations: number[], start: number, end: number)
+	public createRealLine(interval: number, durations: number[], start: number, end: number, color?: string | undefined, autoColor = true)
 	{
-		this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: true, selected: false });
+		this.lines.push({ color: color || "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: autoColor, selected: false });
 		this.colorizeLines();
 	}
 	private colorizeLines()

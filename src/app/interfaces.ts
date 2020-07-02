@@ -10,8 +10,8 @@ interface FunctionsForMenu
 {
 	toggleSepLine: () => void,
 	SepLineIsActive: () => boolean,
-	addSympleLine: (interval: number, duration: number, start: number, end: number, color?: string | undefined) => void,
-	addRealLine: (interval: number, durations: number[], start: number, end: number) => void,
+	addSympleLine: (interval: number, duration: number, start: number, end: number, color?: string | undefined, autoColor?: boolean) => void,
+	addRealLine: (interval: number, durations: number[], start: number, end: number, color?: string | undefined, autoColor?: boolean) => void,
 	recreate: () => void,
 	resetLines: () => void,
 	getLines: () => LineF[],
@@ -46,7 +46,9 @@ interface Schedule
 			interval: number,
 			duration: number,
 			start: number,
-			end: number
+			end: number,
+			color: string,
+			autoColor: boolean,
 		}
 	]
 	realLines:
@@ -55,7 +57,9 @@ interface Schedule
 			interval: number,
 			durations: number[],
 			start: number,
-			end: number
+			end: number,
+			color: string,
+			autoColor: boolean,
 		}
 	]
 }
