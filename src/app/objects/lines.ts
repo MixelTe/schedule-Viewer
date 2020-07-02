@@ -11,7 +11,6 @@ export class Lines
 	private clipRect: SVGRectElement;
 	private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
 	private functionsForLines: FunctionsForLines = <FunctionsForLines>{};
-	private drawEmptyLines = false;
 	private showLineAfterEnd = false;
 
 	private overLineOpacity = 0;
@@ -138,7 +137,7 @@ export class Lines
 			path += `
             h ${duration}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
-			if (!this.showLineAfterEnd && nextX > el.end * oneSecond + axis.x) break;
+			if (nextX > el.end * oneSecond + axis.x) break;
 		}
 		line.setAttribute("d", path);
 
@@ -165,7 +164,7 @@ export class Lines
 			let dx = `h ${duration * oneSecond}`;
 			if (typeof duration != "number" || duration / duration != 1)
 			{
-				if (this.drawEmptyLines || duration == 0) dx = "v1"
+				if (duration == 0) dx = "v1"
 				else break;
 			}
 			if (duration / el.dasharray[0] > 1)
