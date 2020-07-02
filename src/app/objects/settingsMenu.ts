@@ -655,6 +655,9 @@ export class SettingsMenu
 		this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
 		this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
 
+		this.lineInputs.buttonRemoveAll.addEventListener("click", () => this.lineMenuButtons("removeAll", functions));
+		this.lineInputs.buttonExample.addEventListener("click", () => this.lineMenuButtons("example", functions));
+
 		this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
 		this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
 
@@ -934,7 +937,7 @@ export class SettingsMenu
 		// el.value = "";
 	}
 
-	private lineMenuButtons(button: "change" | "remove" | "add" | "cancel", functions: FunctionsForMenu)
+	private lineMenuButtons(button: "change" | "remove" | "add" | "cancel" | "removeAll" | "example", functions: FunctionsForMenu)
 	{
 		switch (button)
 		{
@@ -996,6 +999,14 @@ export class SettingsMenu
 				if (this.lineToChange != undefined) functions.unselectLine(this.lineToChange);
 				functions.recreate();
 				this.lineToChange = undefined;
+				break;
+
+			case "removeAll":
+				functions.resetLines();
+				functions.recreate();
+				break;
+
+			case "example":
 				break;
 
 			default: throw new Error();
