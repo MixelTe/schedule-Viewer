@@ -984,7 +984,7 @@ export class SettingsMenu
 
 	}
 
-	private menuSystem(state: "noSelect" | "once" | "repeating")
+	private menuSystem(state: "noSelect" | "selected")
 	{
 		switch (state)
 		{
@@ -993,37 +993,13 @@ export class SettingsMenu
 				this.lineInputs.buttonChange.disabled = true;
 				this.lineInputs.buttonRemove.disabled = true;
 
-				this.lineInputs.freqenceRow.style.color = "black";
-				this.lineInputs.radioRepeating.disabled = false;
-				this.lineInputs.radioOnce.disabled = false;
-
 				this.disableInputs("none");
 				break;
 
-			case "once":
+			case "selected":
 				this.lineInputs.buttonAdd.disabled = true;
 				this.lineInputs.buttonChange.disabled = false;
 				this.lineInputs.buttonRemove.disabled = false;
-
-				this.lineInputs.freqenceRow.style.color = "gray";
-				this.lineInputs.radioRepeating.disabled = true;
-				this.lineInputs.radioOnce.disabled = true;
-
-				this.lineInputs.radioOnce.checked = true;
-				this.disableInputs("once");
-				break;
-
-			case "repeating":
-				this.lineInputs.buttonAdd.disabled = true;
-				this.lineInputs.buttonChange.disabled = false;
-				this.lineInputs.buttonRemove.disabled = false;
-
-				this.lineInputs.freqenceRow.style.color = "gray";
-				this.lineInputs.radioRepeating.disabled = true;
-				this.lineInputs.radioOnce.disabled = true;
-
-				this.lineInputs.radioRepeating.checked = true;
-				this.disableInputs("repeating");
 				break;
 
 			default: throw new Error();
@@ -1147,16 +1123,21 @@ export class SettingsMenu
 		this.lineInputs.interval.value = "";
 		this.lineInputs.end.value = "";
 
-		if (data.interval == 0 && data.end == 0)
+		if (data.interval == 1 && data.end == 0)
 		{
-			this.menuSystem("once");
+			this.disableInputs("once");
+			this.lineInputs.radioOnce.checked = true;
+			this.lineInputs.interval.value = this.turnSecondsToTime(1);
+			this.lineInputs.end.value = this.turnSecondsToTime(0);
 		}
 		else
 		{
-			this.menuSystem("repeating");
+			this.disableInputs("repeating");
+			this.lineInputs.radioRepeating.checked = true;
 			this.lineInputs.interval.value = this.turnSecondsToTime(data.interval);
 			this.lineInputs.end.value = this.turnSecondsToTime(data.end);
 		}
+		this.menuSystem("selected");
 
 		if (data.real) this.disableInputs("duration");
 
