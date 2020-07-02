@@ -480,6 +480,14 @@ export class SettingsMenu
 			this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
 			this.addingLinesDIV.appendChild(this.hintForLinesInputs);
 
+			const createButton = (text: string, parent: HTMLElement) =>
+			{
+				const button = document.createElement("button");
+				button.innerText = text;
+				parent.appendChild(button);
+				return button;
+			}
+
 			{
 				const buttonsDIV = document.createElement("div");
 				buttonsDIV.style.height = "25px";
@@ -490,25 +498,10 @@ export class SettingsMenu
 				buttonsDIV.style.flexWrap = "wrap"
 				this.addingLinesDIV.appendChild(buttonsDIV);
 
-				const buttonRemove = document.createElement("button");
-				buttonRemove.innerText = "remove";
-				buttonsDIV.appendChild(buttonRemove);
-				lineInputs.buttonRemove = buttonRemove;
-
-				const buttonChange = document.createElement("button");
-				buttonChange.innerText = "change";
-				buttonsDIV.appendChild(buttonChange);
-				lineInputs.buttonChange = buttonChange;
-
-				const buttonCancel = document.createElement("button");
-				buttonCancel.innerText = "cancel";
-				buttonsDIV.appendChild(buttonCancel);
-				lineInputs.buttonCancel = buttonCancel;
-
-				const buttonAdd = document.createElement("button");
-				buttonAdd.innerText = "add";
-				buttonsDIV.appendChild(buttonAdd);
-				lineInputs.buttonAdd = buttonAdd;
+				lineInputs.buttonRemove = createButton("remove", buttonsDIV);
+				lineInputs.buttonChange = createButton("change", buttonsDIV);
+				lineInputs.buttonCancel = createButton("cancel", buttonsDIV);
+				lineInputs.buttonAdd = createButton("add", buttonsDIV);
 			}
 
 			this.addingLinesDIV.appendChild( function ()
@@ -542,10 +535,7 @@ export class SettingsMenu
 				buttonsDIV.style.flexWrap = "wrap"
 				this.addingLinesDIV.appendChild(buttonsDIV);
 
-				const buttonRemove = document.createElement("button");
-				buttonRemove.innerText = "remove All";
-				buttonsDIV.appendChild(buttonRemove);
-				lineInputs.buttonRemoveAll = buttonRemove;
+				lineInputs.buttonRemoveAll = createButton("remove All", buttonsDIV);
 			}
 		}
 
