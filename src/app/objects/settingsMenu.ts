@@ -43,6 +43,7 @@ export class SettingsMenu
 	private lineToChange: LineF | undefined;
 	private hintForLinesInputs: HTMLDivElement;
 	private colorPicker = new ColorPicker();
+	private linesChanged = false;
 
 	private loadFilesDIV = document.createElement("div");
 	private loadFilesPrm = { height: 80 };
@@ -947,6 +948,7 @@ export class SettingsMenu
 		{
 			case "add":
 				this.addLine(functions);
+				this.linesChanged = true;
 				break;
 
 			case "change":
@@ -978,6 +980,7 @@ export class SettingsMenu
 				}
 				functions.changeLine(newData, this.lineToChange);
 				functions.recreate();
+				this.linesChanged = true;
 				break;
 
 			case "remove":
@@ -987,6 +990,7 @@ export class SettingsMenu
 					functions.removeLine(this.lineToChange)
 					functions.recreate();
 					this.lineMenuButtons(e, "cancel", functions);
+					this.linesChanged = true;
 				}
 				break;
 
@@ -1008,30 +1012,42 @@ export class SettingsMenu
 				break;
 
 			case "removeAll":
-				if (await new AskWindow(this.body, "remove all").getAnswer())
 				{
-					functions.resetLines();
-					functions.recreate();
+					let continueChange = false;
+					if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+					else continueChange = true;
+					if (continueChange)
+					{
+						functions.resetLines();
+						functions.recreate();
+						this.linesChanged = false;
+					}
 				}
 				break;
 
 			case "example":
-				if (await new AskWindow(this.body, "remove all and show example").getAnswer())
 				{
-					functions.resetLines();
-					for (let i = 0; i < 4; i++)
+					let continueChange = false;
+					if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+					else continueChange = true;
+					if (continueChange)
 					{
-						functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-						// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-
-						const duractions = []
-						for (let i = 0; i < this.getRndInteger(600, 900); i++)
+						functions.resetLines();
+						for (let i = 0; i < 4; i++)
 						{
-							duractions.push(this.getRndInteger(40, 160));
+							functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+							// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+
+							const duractions = []
+							for (let i = 0; i < this.getRndInteger(600, 900); i++)
+							{
+								duractions.push(this.getRndInteger(40, 160));
+							}
+							functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 						}
-						functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+						functions.recreate();
+						this.linesChanged = false;
 					}
-					functions.recreate();
 				}
 				break;
 
