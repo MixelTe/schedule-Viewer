@@ -1209,10 +1209,15 @@ export class SettingsMenu
 		const fileText = await filesList[0].text();
 		this.addLinesFromFile(fileText, functions);
 	}
-	private addLinesFromFile(fileText: string, functions: FunctionsForMenu)
+	private async addLinesFromFile(fileText: string, functions: FunctionsForMenu)
 	{
 		const newSchedule = <Schedule>JSON.parse(fileText);
 		// console.log(newSchedule);
+		let continueChange = false;
+		if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and load file").getAnswer();
+		else continueChange = true;
+		if (!continueChange) return
+
 		functions.resetLines();
 
 		for (let i = 0; i < newSchedule.simpleLines.length; i++)
