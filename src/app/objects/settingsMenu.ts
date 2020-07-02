@@ -701,20 +701,21 @@ export class SettingsMenu
 		let color = undefined;
 		if (!this.lineInputs.checkBoxColor.checked) color = this.lineInputs.color;
 
-		if (lineData.interval != undefined && lineData.end != undefined)
+		if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined)
 		{
 			functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, color);
 		}
 		else
 		{
-			functions.addSympleLine(1, lineData.duration, lineData.start, 0, color);
+			if (lineData.duration == undefined) throw new Error();
+			functions.addSympleLine(1, 0, lineData.start, 0, color);
 		}
 		functions.recreate();
 	}
 	private getLineData()
 	{
 		this.UnmarkAndClear(this.lineInputs.start);
-		this.UnmarkAndClear(this.lineInputs.duration);
+		if (!this.lineToChange?.real) this.UnmarkAndClear(this.lineInputs.duration);
 		if (this.lineInputs.radioRepeating.checked)
 		{
 			this.UnmarkAndClear(this.lineInputs.interval);
@@ -724,7 +725,7 @@ export class SettingsMenu
 		let lineData = this.createLineData();
 
 		this.UnmarkAndClear(this.lineInputs.start);
-		this.UnmarkAndClear(this.lineInputs.duration);
+		if (!this.lineToChange?.real) this.UnmarkAndClear(this.lineInputs.duration);
 		if (this.lineInputs.radioRepeating.checked)
 		{
 			this.UnmarkAndClear(this.lineInputs.interval);
@@ -746,11 +747,14 @@ export class SettingsMenu
 			start = this.getSecondsFromString(this.lineInputs.start, true);
 		}
 		catch (e) { if (e == "MyError") isError = true; else throw e };
-		try
+		if (!this.lineToChange?.real)
 		{
-			duration = this.getSecondsFromString(this.lineInputs.duration);
+			try
+			{
+				duration = this.getSecondsFromString(this.lineInputs.duration);
+			}
+			catch (e) { if (e == "MyError") isError = true; else throw e };
 		}
-		catch (e) { if (e == "MyError") isError = true; else throw e };
 
 		if (this.lineInputs.radioRepeating.checked)
 		{
@@ -768,7 +772,7 @@ export class SettingsMenu
 		if (isError) throw "MyError";
 
 		if (typeof start != "number") throw new Error("NaN");
-		if (typeof duration != "number") throw new Error("NaN");
+		if (!this.lineToChange?.real && typeof duration != "number") throw new Error("NaN");
 		if (this.lineInputs.radioRepeating.checked)
 		{
 			if (typeof interval != "number") throw new Error("NaN");
@@ -908,6 +912,11 @@ export class SettingsMenu
 				}
 				if (lineData.interval == undefined) lineData.interval = 1;
 				if (lineData.end == undefined) lineData.end = 0;
+				if (lineData.duration == undefined)
+				{
+					if (this.lineToChange.real) lineData.duration = 0;
+					else throw new Error();
+				}
 				const newData = {
 					interval: lineData.interval,
 					duration: lineData.duration,
