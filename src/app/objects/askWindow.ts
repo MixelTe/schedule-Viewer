@@ -7,7 +7,6 @@ export class AskWindow
 
 	constructor(x: number, y: number, text: string)
 	{
-		const height = 100;
 		this.mainWindow = document.createElement("div");
 		this.mainWindow.style.position = "absolute";
 		this.mainWindow.style.width = "max-content";
@@ -60,26 +59,24 @@ export class AskWindow
 			table.appendChild(createTextRow(text, [{ property: "background-color", value: "#ffc823" }]));
 			table.appendChild(createTextRow("Are you sure?"));
 
-			table.appendChild(function (this: AskWindow)
+			const row = document.createElement("tr");
+			row.style.textAlign = "center";
+
+			const createButtonCell = (text: string, answer: boolean) =>
 			{
-				const row = document.createElement("tr");
-				row.style.textAlign = "center";
+				const cell = document.createElement("td");
+				const button = document.createElement("button");
+				button.innerText = text;
+				const listener = { el: button, event: "click", function: this.userAnswer.bind(this, answer) }
+				this.listeners.push(listener);
+				cell.appendChild(button);
+				return cell;
+			};
+			row.appendChild(createButtonCell.bind(this)("Yes", true));
+			row.appendChild(createButtonCell.bind(this)("No", false));
 
-				const createButtonCell = function (this: AskWindow, text: string, answer: boolean)
-				{
-					const cell = document.createElement("td");
-					const button = document.createElement("button");
-					button.innerText = text;
-					const listener = {el: button, event: "click", function: this.userAnswer.bind(this, answer)}
-					this.listeners.push(listener);
-					cell.appendChild(button);
-					return cell;
-				};
-				row.appendChild(createButtonCell.bind(this)("Yes", true));
-				row.appendChild(createButtonCell.bind(this)("No", false));
+			table.appendChild(row);
 
-				return row;
-			}.bind(this)())
 
 			return table;
 		}.bind(this)(text));
