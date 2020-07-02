@@ -17,7 +17,8 @@ export class Lines
 	private overLineOpacity = 0;
 	private overLineOpacityMouseOver = 0.2;
 	private overLineOpacitySelected = 0.5;
-	private overLineCustomColor = false;
+	private overLineCustomColor = true;
+	private overLineLinearGradient: SVGStopElement[] | undefined;
 
 	constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
 	{
@@ -49,19 +50,19 @@ export class Lines
 				return stop;
 			}
 
-			linearGradient.appendChild(createStop(0, 0));
-			linearGradient.appendChild(createStop(10, 100));
-			linearGradient.appendChild(createStop(80, 100));
-			linearGradient.appendChild(createStop(100, 0));
+			this.overLineLinearGradient = [
+				createStop(0, 0),
+				createStop(10, 100),
+				createStop(80, 100),
+				createStop(100, 0)];
+			linearGradient.appendChild(this.overLineLinearGradient[0]);
+			linearGradient.appendChild(this.overLineLinearGradient[1]);
+			linearGradient.appendChild(this.overLineLinearGradient[2]);
+			linearGradient.appendChild(this.overLineLinearGradient[3]);
 
 			return linearGradient;
 		}.bind(this)())
 
-		if (this.overLineCustomColor)
-		{
-			this.overLineOpacity = 0.1;
-			this.overLineOpacityMouseOver = 0.3;
-		}
 
 		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
 		this.recreateLines(axis, 0, zoom);
@@ -183,8 +184,12 @@ export class Lines
 	{
 		const el = this.lines[index];
 		const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-		if (this.overLineCustomColor) rect.setAttribute("fill", `${el.color}`);
-		else rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
+		if (this.overLineCustomColor)
+		{
+			rect.setAttribute("stroke", `${el.color}`);
+			rect.setAttribute("stroke-width", "0px");
+		}
+		rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
 		if (el.selected)
 		{
 			rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
@@ -255,6 +260,13 @@ export class Lines
 		if (target == null) return;
 		if (!(target instanceof SVGRectElement)) return;
 
+		if (this.overLineCustomColor && this.overLineLinearGradient != undefined)
+		{
+			this.overLineLinearGradient.forEach(el =>
+			{
+				el.setAttribute("stop-color", target.getAttribute("stroke") || "HighLight");
+			});
+		}
 		if (!target.classList.contains("ScheduleViewer-Grafic-Lines-selected"))
 		{
 			switch (eType)
