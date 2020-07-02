@@ -947,8 +947,7 @@ export class SettingsMenu
 
 				this.lineInputs.checkBoxColor.checked = true;
 				this.colorInputing("toggleAuto");
-				if (this.lineToChange == undefined) throw new Error();
-				functions.unselectLine(this.lineToChange);
+				if (this.lineToChange != undefined) functions.unselectLine(this.lineToChange);
 				functions.recreate();
 				this.lineToChange = undefined;
 				break;
