@@ -1211,8 +1211,17 @@ export class SettingsMenu
 	}
 	private async addLinesFromFile(fileText: string, functions: FunctionsForMenu)
 	{
-		const newSchedule = <Schedule>JSON.parse(fileText);
-		// console.log(newSchedule);
+		let newSchedule;
+		try {
+			newSchedule = <Schedule>JSON.parse(fileText);
+		} catch (er)
+		{
+			this.filesInput.value = "";
+			console.log("Uncorrect File");
+			return;
+		}
+		console.log(newSchedule);
+
 		let continueChange = false;
 		if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and load file").getAnswer();
 		else continueChange = true;
@@ -1220,16 +1229,25 @@ export class SettingsMenu
 
 		functions.resetLines();
 
-		for (let i = 0; i < newSchedule.simpleLines.length; i++)
+		if (newSchedule.simpleLines != undefined)
 		{
-			const el = newSchedule.simpleLines[i];
-			functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
+			for (let i = 0; i < newSchedule.simpleLines.length; i++)
+			{
+				const el = newSchedule.simpleLines[i];
+				functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
+			}
 		}
-		for (let i = 0; i < newSchedule.realLines.length; i++)
+		else console.log("simpleLines not found");
+		if (newSchedule.realLines != undefined)
 		{
-			const el = newSchedule.realLines[i];
-			functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
+			for (let i = 0; i < newSchedule.realLines.length; i++)
+			{
+				const el = newSchedule.realLines[i];
+				functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
+			}
 		}
+		else console.log("realLines not found");
+
 		functions.recreate();
 	}
 
