@@ -25,8 +25,8 @@ export class AskWindow
 
 		const tableDiv = document.createElement("div");
 		tableDiv.style.width = "max-content";
-		tableDiv.style.minWidth = "120px";
-		tableDiv.style.height = "100px";
+		tableDiv.style.minWidth = "150px";
+		tableDiv.style.height = "120px";
 		tableDiv.style.backgroundColor = "lightgreen";
 		tableDiv.style.borderRadius = "12px";
 		tableDiv.style.border = "3px solid black";
