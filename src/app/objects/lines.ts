@@ -138,7 +138,7 @@ export class Lines
 			path += `
             h ${duration}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
-			if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
+			if (!this.showLineAfterEnd && nextX > el.end * oneSecond + axis.x) break;
 		}
 		line.setAttribute("d", path);
 
@@ -176,7 +176,7 @@ export class Lines
 			path += `
             ${dx}
             M ${nextX} ${axis.y + axis.height - spaces * index}`
-			if (!this.showLineAfterEnd && nextX > el.end * oneSecond) break;
+			if (!this.showLineAfterEnd && nextX > el.end * oneSecond + axis.x) break;
 		}
 		line.setAttribute("d", path);
 

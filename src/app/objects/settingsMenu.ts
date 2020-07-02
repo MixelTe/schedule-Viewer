@@ -769,10 +769,13 @@ export class SettingsMenu
 		}
 		if (isError) throw "MyError";
 
-		if (typeof interval != "number") throw new Error("NaN");
-		if (typeof duration != "number") throw new Error("NaN");
 		if (typeof start != "number") throw new Error("NaN");
-		if (typeof end != "number") throw new Error("NaN");
+		if (typeof duration != "number") throw new Error("NaN");
+		if (this.lineInputs.radioRepeating.checked)
+		{
+			if (typeof interval != "number") throw new Error("NaN");
+			if (typeof end != "number") throw new Error("NaN");
+		}
 
 		return {
 			interval: interval,
