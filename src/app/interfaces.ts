@@ -17,6 +17,7 @@ interface FunctionsForMenu
 	getLines: () => LineF[],
 	changeLine: (data: DataToLineChange, line: LineF) => void,
 	removeLine: (line: LineF) => void,
+	unselectLine: (line: LineF) => void,
 	toggleCustomSelectionColor: () => void,
 	CustomSelectionColorIsActive: () => boolean,
 }

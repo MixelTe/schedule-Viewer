@@ -314,6 +314,10 @@ export class Lines
 		const lineIndex = this.lines.indexOf(line);
 		this.lines.splice(lineIndex, 1);
 	}
+	public unselectLine(line: LineF)
+	{
+		line.selected = false;
+	}
 
 	public changeClip(axis: Rect, scroll: number)
 	{
