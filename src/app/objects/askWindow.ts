@@ -26,60 +26,57 @@ export class AskWindow
 		this.mainWindow.style.left = `${x}px`;
 
 		this.listeners = [{el: document.body, event: "click", function: <() => any>this.clickOnPage.bind(this)}];
-		this.mainWindow.appendChild(function (this: AskWindow, text: string)
+		const table = document.createElement("table");
+		table.style.width = "100%";
+		table.style.height = "100%";
+
+		const createTextRow = (text: string, rowStyle?: { property: string, value: string }[]) =>
 		{
-			const table = document.createElement("table");
-			table.style.width = "100%";
-			table.style.height = "100%";
-
-			const createTextRow = (text: string, rowStyle?: {property: string, value: string}[]) =>
-			{
-				const row = document.createElement("tr");
-				row.style.textAlign = "center";
-				row.appendChild(function ()
-				{
-					const cell = document.createElement("td");
-					cell.setAttribute("colspan", "2");
-					cell.innerText = text;
-					return cell;
-				}());
-
-				if (rowStyle != undefined)
-				{
-					rowStyle.forEach(el =>
-					{
-						row.style.setProperty(el.property, el.value);
-					});
-				}
-
-				return row;
-			}
-
-			table.appendChild(createTextRow("Your action:"));
-			table.appendChild(createTextRow(text, [{ property: "background-color", value: "#ffc823" }]));
-			table.appendChild(createTextRow("Are you sure?"));
-
 			const row = document.createElement("tr");
 			row.style.textAlign = "center";
-
-			const createButtonCell = (text: string, answer: boolean) =>
+			row.appendChild(function ()
 			{
 				const cell = document.createElement("td");
-				const button = document.createElement("button");
-				button.innerText = text;
-				const listener = { el: button, event: "click", function: this.userAnswer.bind(this, answer) }
-				this.listeners.push(listener);
-				cell.appendChild(button);
+				cell.setAttribute("colspan", "2");
+				cell.innerText = text;
 				return cell;
-			};
-			row.appendChild(createButtonCell.bind(this)("Yes", true));
-			row.appendChild(createButtonCell.bind(this)("No", false));
+			}());
 
-			table.appendChild(row);
+			if (rowStyle != undefined)
+			{
+				rowStyle.forEach(el =>
+				{
+					row.style.setProperty(el.property, el.value);
+				});
+			}
+
+			return row;
+		}
+
+		table.appendChild(createTextRow("Your action:"));
+		table.appendChild(createTextRow(text, [{ property: "background-color", value: "#ffc823" }]));
+		table.appendChild(createTextRow("Are you sure?"));
+
+		const row = document.createElement("tr");
+		row.style.textAlign = "center";
+
+		const createButtonCell = (text: string, answer: boolean) =>
+		{
+			const cell = document.createElement("td");
+			const button = document.createElement("button");
+			button.innerText = text;
+			const listener = { el: button, event: "click", function: this.userAnswer.bind(this, answer) }
+			this.listeners.push(listener);
+			cell.appendChild(button);
+			return cell;
+		};
+		row.appendChild(createButtonCell.bind(this)("Yes", true));
+		row.appendChild(createButtonCell.bind(this)("No", false));
+
+		table.appendChild(row);
 
 
-			return table;
-		}.bind(this)(text));
+		this.mainWindow.appendChild(table);
 
 		this.listeners.forEach(listener =>
 		{
