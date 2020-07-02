@@ -64,7 +64,7 @@ export class Lines
 		}.bind(this);
 		this.overLineLinearGradient = {over: {array: []}, select: {array: []}};
 		defs.appendChild(createGradient(this.overLineLinearGradient.select, "ScheduleViewer-Grafic-Coordinates-linearGradient_Select"))
-		defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"))
+		if (this.overLineCustomColor) defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"))
 
 		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
 		this.recreateLines(axis, 0, zoom);
@@ -190,8 +190,9 @@ export class Lines
 		{
 			rect.setAttribute("stroke", `${el.color}`);
 			rect.setAttribute("stroke-width", "0px");
+			rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Over)");
 		}
-		rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
+		else rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
 		if (el.selected)
 		{
 			rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
@@ -250,6 +251,15 @@ export class Lines
 			const el = selectedLines[i];
 			el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
 			el.classList.remove("ScheduleViewer-Grafic-Lines-selected");
+			if (this.overLineCustomColor) el.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Over)");
+		}
+		if (this.overLineCustomColor && this.overLineLinearGradient != undefined)
+		{
+			this.overLineLinearGradient.select.array.forEach(el =>
+			{
+				el.setAttribute("stop-color", target.getAttribute("stroke") || "HighLight");
+			});
+			target.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
 		}
 		target.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
 		target.classList.add("ScheduleViewer-Grafic-Lines-selected");
@@ -264,7 +274,7 @@ export class Lines
 
 		if (this.overLineCustomColor && this.overLineLinearGradient != undefined)
 		{
-			this.overLineLinearGradient.select.array.forEach(el =>
+			this.overLineLinearGradient.over.array.forEach(el =>
 			{
 				el.setAttribute("stop-color", target.getAttribute("stroke") || "HighLight");
 			});
