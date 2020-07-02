@@ -1220,7 +1220,7 @@ export class SettingsMenu
 			console.log("Uncorrect File");
 			return;
 		}
-		console.log(newSchedule);
+		// console.log(newSchedule);
 
 		let continueChange = false;
 		if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and load file").getAnswer();
