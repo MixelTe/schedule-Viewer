@@ -149,42 +149,31 @@ export class SettingsMenu
 			menu.style.flexWrap = "wrap";
 			this.settingsDIV.appendChild(menu);
 
-			const sepLine = document.createElement("div");
-			sepLine.style.height = "max-content";
-			sepLine.style.width = "max-content";
-			menu.appendChild(sepLine);
+			const createSetting = (text: string, id: string, checked: boolean) =>
+			{
+				const div = document.createElement("div");
+				div.style.height = "max-content";
+				div.style.width = "max-content";
+				menu.appendChild(div);
 
-			this.toggleSepLineEl = document.createElement("input");
-			this.toggleSepLineEl.type = "checkbox";
-			this.toggleSepLineEl.checked = functions.SepLineIsActive();
-			this.toggleSepLineEl.id = "scheduleViewer-SettingsMenu-sepLineInput";
-			sepLine.appendChild(this.toggleSepLineEl);
+				const input = document.createElement("input");
+				input.type = "checkbox";
+				input.checked = checked;
+				input.id = id;
+				div.appendChild(input);
 
-			const sepLineLable = document.createElement("label");
-			sepLineLable.style.height = "max-content";
-			sepLineLable.style.fontSize = "16px";
-			sepLineLable.htmlFor = "scheduleViewer-SettingsMenu-sepLineInput"
-			sepLineLable.innerText = "show separate line";
-			sepLine.appendChild(sepLineLable);
+				const lable = document.createElement("label");
+				lable.style.height = "max-content";
+				lable.style.fontSize = "16px";
+				lable.htmlFor = id;
+				lable.innerText = text;
+				div.appendChild(lable);
 
+				return input;
+			}
 
-
-			const revTime = document.createElement("div");
-			revTime.style.height = "max-content";
-			revTime.style.width = "max-content";
-			menu.appendChild(revTime);
-
-			this.revTimeInputEl = document.createElement("input");
-			this.revTimeInputEl.type = "checkbox";
-			this.revTimeInputEl.id = "scheduleViewer-SettingsMenu-showAfterEndInput";
-			revTime.appendChild(this.revTimeInputEl);
-
-			const revTimeLable = document.createElement("label");
-			revTimeLable.style.height = "max-content";
-			revTimeLable.style.fontSize = "16px";
-			revTimeLable.htmlFor = "scheduleViewer-SettingsMenu-showAfterEndInput"
-			revTimeLable.innerText = "reverse time input order";
-			revTime.appendChild(revTimeLable);
+			this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
+			this.revTimeInputEl = createSetting("reverse time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", false);
 
 		}
 
