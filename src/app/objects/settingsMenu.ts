@@ -950,6 +950,7 @@ export class SettingsMenu
 				if (this.lineToChange == undefined) throw new Error();
 				functions.unselectLine(this.lineToChange);
 				functions.recreate();
+				this.lineToChange = undefined;
 				break;
 
 			default: throw new Error();

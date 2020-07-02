@@ -309,8 +309,8 @@ export class Lines
 	}
 	public removeLine(line: LineF)
 	{
-		if (line == undefined) throw new Error(`line not found: ${line}`);
 		const lineIndex = this.lines.indexOf(line);
+		if (lineIndex == -1) throw new Error(`line not found: ${line}`);
 		this.lines.splice(lineIndex, 1);
 	}
 	public unselectLine(line: LineF)
