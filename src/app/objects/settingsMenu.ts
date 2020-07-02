@@ -544,6 +544,7 @@ export class SettingsMenu
 				const link = document.createElement("a");
 				link.href = "https://github.com/MixelTe/schedule-Viewer#readme";
 				link.innerText = "Help";
+				link.target = "_blank";
 				buttonsDIV.appendChild(link);
 			}
 		}
