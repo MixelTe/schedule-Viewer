@@ -2,7 +2,6 @@ export class AskWindow
 {
 	private mainWindow: HTMLDivElement
 	private resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
-	private globalListeners: { event: string, function: () => any }[]
 	private firstClick = true;
 
 	constructor(x: number, y: number, text: string)
@@ -25,7 +24,6 @@ export class AskWindow
 		this.mainWindow.style.top = `${y}px`;
 		this.mainWindow.style.left = `${x}px`;
 
-		this.globalListeners = [{event: "click", function: <() => any>this.clickOnPage.bind(this)}];
 		const table = document.createElement("table");
 		table.style.width = "100%";
 		table.style.height = "100%";
@@ -53,11 +51,6 @@ export class AskWindow
 
 
 		this.mainWindow.appendChild(table);
-
-		this.globalListeners.forEach(listener =>
-		{
-			document.addEventListener(listener.event, listener.function);
-		});
 	}
 	public getAnswer()
 	{
@@ -66,35 +59,8 @@ export class AskWindow
             this.resolve = resolve;
         });
 	}
-	private clickOnPage(e: MouseEvent)
-	{
-		if (this.firstClick) this.firstClick = false;
-        else
-        {
-            const y = e.pageY;
-            const x = e.pageX;
-            if (!this.clickIntersect(x, y))
-			{
-				this.userAnswer(false);
-            }
-        }
-	}
-	private clickIntersect(x: number, y: number)
-    {
-		const windowBCR = this.mainWindow.getBoundingClientRect();
-        return (
-            x > windowBCR.x &&
-            x < windowBCR.x + windowBCR.width &&
-            y > windowBCR.y &&
-            y < windowBCR.y + windowBCR.height
-        );
-    }
 	private userAnswer(answer: boolean)
 	{
-		this.globalListeners.forEach(listener =>
-		{
-			document.removeEventListener(listener.event, listener.function);
-		});
 		document.body.removeChild(this.mainWindow);
 
 		if (this.resolve != undefined)
