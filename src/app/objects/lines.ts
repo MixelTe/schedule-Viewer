@@ -240,7 +240,6 @@ export class Lines
 		if (!(target instanceof SVGRectElement)) return;
 		const line = this.linesMap.get(target);
 		if (line == undefined) throw new Error(`line not found: ${target}`);
-		line.selected = true;
 		const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
 		for (let i = 0; i < selectedLines.length; i++)
 		{
@@ -257,6 +256,10 @@ export class Lines
 				else el.setAttribute("stop-color", "HighLight");
 			});
 		}
+		this.lines.forEach(el => {
+			el.selected = false;
+		});
+		line.selected = true;
 		target.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
 		target.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
 		target.classList.add("ScheduleViewer-Grafic-Lines-selected");
