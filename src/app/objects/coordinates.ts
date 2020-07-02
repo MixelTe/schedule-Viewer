@@ -8,7 +8,7 @@ export class Coordinates
 		hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
 		minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
 		seconds: { els: <any>[], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
-		separateLine: { x: 200, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, lock: false, active: true },
+		separateLine: { x: 200, color: "orange", width: 1, dasharray: "10, 8", el: <SVGLineElement>{}, active: true },
 		zoomFixPoint: { second: 0, color: "red", radius: 4 },
 	}
 	private minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -167,7 +167,6 @@ export class Coordinates
 		separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
 		separateLine.setAttribute("display", `none`);
 		this.scale.separateLine.el = separateLine;
-		this.scale.separateLine.lock = false;
 		this.body.appendChild(separateLine);
 	}
 
@@ -202,26 +201,18 @@ export class Coordinates
 		this.scale.zoomFixPoint.second = second;
 	}
 
-	public svgBodyMouse(e: MouseEvent, type: "click" | "move" | "leave")
+	public svgBodyMouse(e: MouseEvent, type: "move" | "leave")
 	{
 		if (this.scale.separateLine.active)
 		{
 			switch (type)
 			{
-				case "click":
-					this.moveSeparateLine(e);
-					this.scale.separateLine.lock = !this.scale.separateLine.lock;
-					break;
-
 				case "move":
-					if (!this.scale.separateLine.lock) this.moveSeparateLine(e);
+					this.moveSeparateLine(e);
 					break;
 
 				case "leave":
-					if (!this.scale.separateLine.lock)
-					{
-						this.scale.separateLine.el.setAttribute("display", `none`);
-					}
+					this.scale.separateLine.el.setAttribute("display", `none`);
 					break;
 
 				default: throw new Error();
