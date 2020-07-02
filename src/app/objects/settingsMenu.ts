@@ -33,6 +33,7 @@ export class SettingsMenu
 		buttonChange: HTMLButtonElement,
 		buttonRemove: HTMLButtonElement,
 		buttonCancel: HTMLButtonElement,
+		buttonRemoveAll: HTMLButtonElement,
 		checkBoxColor: HTMLInputElement,
 		colorDiv: HTMLDivElement,
 		color: string,
@@ -82,6 +83,7 @@ export class SettingsMenu
 			buttonChange?: HTMLButtonElement,
 			buttonRemove?: HTMLButtonElement,
 			buttonCancel?: HTMLButtonElement,
+			buttonRemoveAll?: HTMLButtonElement,
 			checkBoxColor?: HTMLInputElement,
 			colorDiv?: HTMLDivElement,
 		} = {};
@@ -508,6 +510,43 @@ export class SettingsMenu
 				buttonsDIV.appendChild(buttonAdd);
 				lineInputs.buttonAdd = buttonAdd;
 			}
+
+			this.addingLinesDIV.appendChild( function ()
+			{
+
+				const div = document.createElement("div");
+				div.style.height = "2px";
+				div.style.width = "100%";
+				div.style.display = "flex";
+				div.style.marginBottom = "5px";
+				div.style.marginTop = "12px";
+				div.style.justifyContent = "center";
+
+				const div2 = document.createElement("div");
+				div2.style.height = "2px";
+				div2.style.width = "90%";
+				div2.style.borderRadius = "4px";
+				div2.style.backgroundColor = "hsl(195, 53%, 60%)";
+				div.appendChild(div2);
+
+				return div;
+			}());
+
+			{
+				const buttonsDIV = document.createElement("div");
+				buttonsDIV.style.height = "25px";
+				buttonsDIV.style.width = "100%";
+				buttonsDIV.style.display = "flex";
+				buttonsDIV.style.justifyContent = "space-evenly";
+				buttonsDIV.style.alignItems = "center";
+				buttonsDIV.style.flexWrap = "wrap"
+				this.addingLinesDIV.appendChild(buttonsDIV);
+
+				const buttonRemove = document.createElement("button");
+				buttonRemove.innerText = "remove All";
+				buttonsDIV.appendChild(buttonRemove);
+				lineInputs.buttonRemoveAll = buttonRemove;
+			}
 		}
 
 		{
@@ -597,6 +636,7 @@ export class SettingsMenu
 			buttonChange: lineInputs.buttonChange,
 			buttonRemove: lineInputs.buttonRemove,
 			buttonCancel: lineInputs.buttonCancel,
+			buttonRemoveAll: lineInputs.buttonRemoveAll,
 			checkBoxColor: lineInputs.checkBoxColor,
 			colorDiv: lineInputs.colorDiv,
 		}
