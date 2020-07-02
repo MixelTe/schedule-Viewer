@@ -26,7 +26,7 @@ export class AskWindow
 		this.mainWindow.style.top = `${y}px`;
 		this.mainWindow.style.left = `${x}px`;
 
-		this.listeners = [{el: document.body, event: "click", function: this.clickOnPage.bind(this)}];
+		this.listeners = [{el: document.body, event: "click", function: <() => any>this.clickOnPage.bind(this)}];
 		this.mainWindow.appendChild(function (this: AskWindow, text: string)
 		{
 			const table = document.createElement("table");
