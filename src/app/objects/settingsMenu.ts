@@ -984,26 +984,34 @@ export class SettingsMenu
 
 	}
 
-	private menuSystem(state: "noSelect" | "selected")
+	private menuSystem(state: "noSelect" | "selected" | "realSelected")
 	{
+		this.lineInputs.freqenceRow.style.color = "black";
+		this.lineInputs.radioRepeating.disabled = false;
+		this.lineInputs.radioOnce.disabled = false;
 		switch (state)
 		{
 			case "noSelect":
-				this.lineInputs.buttonAdd.disabled = false;
-				this.lineInputs.buttonChange.disabled = true;
-				this.lineInputs.buttonRemove.disabled = true;
-
 				this.disableInputs("none");
 				break;
 
 			case "selected":
-				this.lineInputs.buttonAdd.disabled = true;
-				this.lineInputs.buttonChange.disabled = false;
-				this.lineInputs.buttonRemove.disabled = false;
+				break;
+
+			case "realSelected":
+				this.lineInputs.freqenceRow.style.color = "gray";
+				this.lineInputs.radioRepeating.disabled = true;
+				this.lineInputs.radioOnce.disabled = true;
+
+				this.lineInputs.radioRepeating.checked = true;
+				this.disableInputs("duration");
 				break;
 
 			default: throw new Error();
 		}
+		this.lineInputs.buttonAdd.disabled = true;
+		this.lineInputs.buttonChange.disabled = false;
+		this.lineInputs.buttonRemove.disabled = false;
 		this.lineInputs.start.style.backgroundColor = this.addingLinesPrm.inputsBackground;
 		this.lineInputs.duration.style.backgroundColor = this.addingLinesPrm.inputsBackground;
 		this.lineInputs.start.style.border = this.addingLinesPrm.inputsBorder;
@@ -1137,9 +1145,8 @@ export class SettingsMenu
 			this.lineInputs.interval.value = this.turnSecondsToTime(data.interval);
 			this.lineInputs.end.value = this.turnSecondsToTime(data.end);
 		}
-		this.menuSystem("selected");
-
-		if (data.real) this.disableInputs("duration");
+		if (data.real) this.menuSystem("realSelected");
+		else this.menuSystem("selected");
 
 		this.lineInputs.color = data.color;
 		this.lineInputs.checkBoxColor.checked = data.autoColor;
