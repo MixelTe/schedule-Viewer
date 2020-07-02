@@ -18,7 +18,7 @@ export class Lines
 	private overLineOpacityMouseOver = 0.2;
 	private overLineOpacitySelected = 0.5;
 	private overLineCustomColor = true;
-	private overLineLinearGradient: SVGStopElement[] | undefined;
+	private overLineLinearGradient: { select: {array: SVGStopElement[]}, over: {array: SVGStopElement[]}} | undefined;
 
 	constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
 	{
@@ -35,10 +35,10 @@ export class Lines
 		this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 		clipPath.appendChild(this.clipRect);
 
-		defs.appendChild(function (this: Lines)
+		const createGradient = function (this: Lines, stopArray: {array: SVGStopElement[]}, id: string)
 		{
 			const linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-			linearGradient.id = "ScheduleViewer-Grafic-Coordinates-linearGradient_Select";
+			linearGradient.id = id;
 			linearGradient.setAttribute("gradientTransform", "rotate(90)")
 
 			const createStop = function (pos: number, opacity: number)
@@ -50,19 +50,21 @@ export class Lines
 				return stop;
 			}
 
-			this.overLineLinearGradient = [
+			stopArray.array = [
 				createStop(0, 0),
 				createStop(10, 100),
 				createStop(80, 100),
 				createStop(100, 0)];
-			linearGradient.appendChild(this.overLineLinearGradient[0]);
-			linearGradient.appendChild(this.overLineLinearGradient[1]);
-			linearGradient.appendChild(this.overLineLinearGradient[2]);
-			linearGradient.appendChild(this.overLineLinearGradient[3]);
+			linearGradient.appendChild(stopArray.array[0]);
+			linearGradient.appendChild(stopArray.array[1]);
+			linearGradient.appendChild(stopArray.array[2]);
+			linearGradient.appendChild(stopArray.array[3]);
 
 			return linearGradient;
-		}.bind(this)())
-
+		}.bind(this);
+		this.overLineLinearGradient = {over: {array: []}, select: {array: []}};
+		defs.appendChild(createGradient(this.overLineLinearGradient.select, "ScheduleViewer-Grafic-Coordinates-linearGradient_Select"))
+		defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"))
 
 		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
 		this.recreateLines(axis, 0, zoom);
@@ -262,7 +264,7 @@ export class Lines
 
 		if (this.overLineCustomColor && this.overLineLinearGradient != undefined)
 		{
-			this.overLineLinearGradient.forEach(el =>
+			this.overLineLinearGradient.select.array.forEach(el =>
 			{
 				el.setAttribute("stop-color", target.getAttribute("stroke") || "HighLight");
 			});
