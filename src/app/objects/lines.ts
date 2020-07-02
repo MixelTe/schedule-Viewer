@@ -87,8 +87,7 @@ export class Lines
 			spaces = 20;
 			// console.log(axis);
 		}
-		this.changeHeightAndRecreate((this.lines.length) * spaces, scroll, zoom);
-
+		this.changeHeightAndRecreate((this.lines.length - 1) * spaces, scroll, zoom);
 		this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
 		this.clipRect.setAttribute("y", `${axis.y}`);
 		this.clipRect.setAttribute("width", `${axis.width - scroll}`);
