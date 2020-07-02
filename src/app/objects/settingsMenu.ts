@@ -978,7 +978,6 @@ export class SettingsMenu
 				}
 				functions.changeLine(newData, this.lineToChange);
 				functions.recreate();
-				this.lineMenuButtons(e, "cancel", functions);
 				break;
 
 			case "remove":

@@ -192,7 +192,8 @@ export class Lines
 		if (el.selected)
 		{
 			rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
-			rect.id = "ScheduleViewer-Grafic-Lines-selected";
+			rect.classList.add("ScheduleViewer-Grafic-Lines-selected");
+			rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
 		}
 		else rect.setAttribute("fill-opacity", `${this.overLineOpacity}`);
 		rect.setAttribute("clip-path", "url(#graficLinesClip)");
@@ -299,7 +300,6 @@ export class Lines
 	public changeLine(data: DataToLineChange, line: LineF)
 	{
 		if (line == undefined) throw new Error(`line not found: ${line}`);
-		line.selected = false;
 
 		line.dasharray[0] = data.interval;
 		if (!line.real) line.dasharray[1] = data.duration;
