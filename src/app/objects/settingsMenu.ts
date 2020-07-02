@@ -1273,12 +1273,16 @@ export class SettingsMenu
 		function createlog(text: string, wrongParametrName: "interval" | "duration" | "durations" | "start" | "end" | "autoColor" | "color" | undefined)
 		{
 			let JSONdata;
-			if (wrongParametrName != undefined)
+			if (wrongParametrName == undefined)
 			{
-				const re = new RegExp(el[wrongParametrName], "g");
+				JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "");
+			}
+			else
+			{
+				const re = new RegExp(el[wrongParametrName]);
 				JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + el[wrongParametrName] + "%c");
 			}
-			console.log(text + "\n" + JSONdata, "color: red", "");
+			console.log(text + "\n" + JSONdata, "color: red", "color: gray");
 		}
 		if (el.interval == undefined) { createlog("line interval not found", "interval"); throw "MyError"; };
 		if (simpleLine)
@@ -1301,10 +1305,21 @@ export class SettingsMenu
 		else
 		{
 			if (!Array.isArray(el.durations)) { createlog("line duration isn't array", "durations"); throw "MyError"; };
-			el.durations.map(el =>
+			let isError = false;
+			el.durations = el.durations.map(el =>
 			{
-				if (typeof el != "number") { createlog("line duration %c contains NaN", undefined); throw "MyError"; };
+				if (typeof el != "number")
+				{
+					isError = true;
+					return `%c${el}%c`;
+				};
+				return el;
 			})
+			if (isError)
+			{
+				createlog("line duration contains NaN", undefined);
+				throw "MyError";
+			}
 		}
 		if (typeof el.start != "number") { createlog("line start is NaN", "start"); throw "MyError"; };
 		if (typeof el.end != "number") { createlog("line end is NaN", "end"); throw "MyError"; };
