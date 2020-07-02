@@ -1293,7 +1293,7 @@ export class SettingsMenu
 		}
 		else
 		{
-			if (typeof el.duration != "object") { console.log("line duration isn't array \n", createJSONlog()); throw "MyError"; };
+			if (typeof el.durations != "object") { console.log("line duration isn't array \n", createJSONlog()); throw "MyError"; };
 		}
 		if (typeof el.start != "number") { console.log("line start is NaN \n", createJSONlog()); throw "MyError"; };
 		if (typeof el.end != "number") { console.log("line end is NaN \n", createJSONlog()); throw "MyError"; };
