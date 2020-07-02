@@ -1,4 +1,5 @@
 import { ColorPicker } from "../../lib/colorPicker.js";
+import { AskWindow } from "./askWindow.js";
 
 export class SettingsMenu
 {
@@ -646,17 +647,17 @@ export class SettingsMenu
 		this.colorizeLineSelectionEl.addEventListener("change", functions.toggleCustomSelectionColor);
 		this.compactLinePlacingEl.addEventListener("change", () => this.toggleCompactLinePlacing(functions));
 
-		this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
-		this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
-		this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
-		this.lineInputs.buttonCancel.addEventListener("click", () => this.lineMenuButtons("cancel", functions));
+		this.lineInputs.buttonAdd.addEventListener("click", (e) => this.lineMenuButtons(e, "add", functions));
+		this.lineInputs.buttonChange.addEventListener("click", (e) => this.lineMenuButtons(e, "change", functions));
+		this.lineInputs.buttonRemove.addEventListener("click", (e) => this.lineMenuButtons(e, "remove", functions));
+		this.lineInputs.buttonCancel.addEventListener("click", (e) => this.lineMenuButtons(e, "cancel", functions));
 		this.lineInputs.radioOnce.addEventListener("click", () => this.disableInputs("once"));
 		this.lineInputs.radioRepeating.addEventListener("click", () => this.disableInputs("repeating"));
 		this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
 		this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
 
-		this.lineInputs.buttonRemoveAll.addEventListener("click", () => this.lineMenuButtons("removeAll", functions));
-		this.lineInputs.buttonExample.addEventListener("click", () => this.lineMenuButtons("example", functions));
+		this.lineInputs.buttonRemoveAll.addEventListener("click", (e) => this.lineMenuButtons(e, "removeAll", functions));
+		this.lineInputs.buttonExample.addEventListener("click", (e) => this.lineMenuButtons(e, "example", functions));
 
 		this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
 		this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
@@ -937,8 +938,10 @@ export class SettingsMenu
 		// el.value = "";
 	}
 
-	private lineMenuButtons(button: "change" | "remove" | "add" | "cancel" | "removeAll" | "example", functions: FunctionsForMenu)
+	private async lineMenuButtons(e: MouseEvent, button: "change" | "remove" | "add" | "cancel" | "removeAll" | "example", functions: FunctionsForMenu)
 	{
+		const x = e.pageX;
+		const y = e.pageY;
 		switch (button)
 		{
 			case "add":
@@ -974,14 +977,14 @@ export class SettingsMenu
 				}
 				functions.changeLine(newData, this.lineToChange);
 				functions.recreate();
-				this.lineMenuButtons("cancel", functions);
+				this.lineMenuButtons(e, "cancel", functions);
 				break;
 
 			case "remove":
 				if (this.lineToChange == undefined) throw new Error();
 				functions.removeLine(this.lineToChange)
 				functions.recreate();
-				this.lineMenuButtons("cancel", functions);
+				this.lineMenuButtons(e, "cancel", functions);
 				break;
 
 			case "cancel":
@@ -1002,8 +1005,11 @@ export class SettingsMenu
 				break;
 
 			case "removeAll":
-				functions.resetLines();
-				functions.recreate();
+				if (await new AskWindow(x, y, "remove all").getAnswer())
+				{
+					functions.resetLines();
+					functions.recreate();
+				}
 				break;
 
 			case "example":
