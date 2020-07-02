@@ -1270,42 +1270,49 @@ export class SettingsMenu
 	}
 	private checkLineFromFile(el: {interval: any, duration?: any, durations?: any, start: any, end: any, autoColor: any, color: any}, simpleLine: boolean)
 	{
-		function createJSONlog() {
-			return JSON.stringify(el, undefined, "   ").replace(/\n      /g, "");
+		function createlog(text: string, wrongParametrName: "interval" | "duration" | "durations" | "start" | "end" | "autoColor" | "color" | undefined)
+		{
+			let JSONdata;
+			if (wrongParametrName != undefined)
+			{
+				const re = new RegExp(el[wrongParametrName], "g");
+				JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + el[wrongParametrName] + "%c");
+			}
+			console.log(text + "\n" + JSONdata, "color: red", "");
 		}
-		if (el.interval == undefined) { console.log("line interval not found \n", ); throw "MyError"; };
+		if (el.interval == undefined) { createlog("line interval not found", "interval"); throw "MyError"; };
 		if (simpleLine)
 		{
-			if (el.duration == undefined) { console.log("line duration not found \n", createJSONlog()); throw "MyError"; };
+			if (el.duration == undefined) { createlog("line duration not found", "duration"); throw "MyError"; };
 		}
 		else
 		{
-			if (el.durations == undefined) { console.log("line duration not found \n", createJSONlog()); throw "MyError"; };
+			if (el.durations == undefined) { createlog("line duration not found", "durations"); throw "MyError"; };
 		}
-		if (el.start == undefined) { console.log("line start not found \n", createJSONlog()); throw "MyError"; };
-		if (el.end == undefined) { console.log("line end not found \n", createJSONlog()); throw "MyError"; };
-		if (el.autoColor == undefined) { console.log("line autoColor not found \n", createJSONlog()); throw "MyError"; };
+		if (el.start == undefined) { createlog("line start not found", "start"); throw "MyError"; };
+		if (el.end == undefined) { createlog("line end not found", "end"); throw "MyError"; };
+		if (el.autoColor == undefined) { createlog("line autoColor not found", "autoColor"); throw "MyError"; };
 
-		if (typeof el.interval != "number") { console.log("line interval is NaN \n", createJSONlog()); throw "MyError"; };
+		if (typeof el.interval != "number") { createlog("line interval is NaN", "interval"); throw "MyError"; };
 		if (simpleLine)
 		{
-			if (typeof el.duration != "number") { console.log("line duration is NaN \n", createJSONlog()); throw "MyError"; };
+			if (typeof el.duration != "number") { createlog("line duration is NaN", "duration"); throw "MyError"; };
 		}
 		else
 		{
-			if (!Array.isArray(el.durations)) { console.log("line duration isn't array \n", createJSONlog()); throw "MyError"; };
+			if (!Array.isArray(el.durations)) { createlog("line duration isn't array", "durations"); throw "MyError"; };
 			el.durations.map(el =>
 			{
-				if (typeof el != "number") { console.log("line duration %c contains NaN \n", createJSONlog()); throw "MyError"; };
+				if (typeof el != "number") { createlog("line duration %c contains NaN", undefined); throw "MyError"; };
 			})
 		}
-		if (typeof el.start != "number") { console.log("line start is NaN \n", createJSONlog()); throw "MyError"; };
-		if (typeof el.end != "number") { console.log("line end is NaN \n", createJSONlog()); throw "MyError"; };
-		if (typeof el.autoColor != "boolean") { console.log("line autoColor isn't boolean \n", createJSONlog()); throw "MyError"; };
+		if (typeof el.start != "number") { createlog("line start is NaN", "start"); throw "MyError"; };
+		if (typeof el.end != "number") { createlog("line end is NaN", "end"); throw "MyError"; };
+		if (typeof el.autoColor != "boolean") { createlog("line autoColor isn't boolean", "autoColor"); throw "MyError"; };
 		if (!el.autoColor)
 		{
-			if (el.color == undefined) { console.log("line color not found \n", createJSONlog()); throw "MyError"; };
-			if (typeof el.color != "string") { console.log("line color isn't string \n", createJSONlog()); throw "MyError"; };
+			if (el.color == undefined) { createlog("line color not found", "color"); throw "MyError"; };
+			if (typeof el.color != "string") { createlog("line color isn't string", "color"); throw "MyError"; };
 		}
 	}
 
