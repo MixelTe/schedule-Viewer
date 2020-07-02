@@ -1007,10 +1007,28 @@ export class SettingsMenu
 				break;
 
 			case "example":
+				functions.resetLines();
+				for (let i = 0; i < 4; i++)
+				{
+					functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+					// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+
+					const duractions = []
+					for (let i = 0; i < this.getRndInteger(600, 900); i++)
+					{
+						duractions.push(this.getRndInteger(40, 160));
+					}
+					functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+				}
+				functions.recreate();
 				break;
 
 			default: throw new Error();
 		}
+	}
+	private getRndInteger(min: number, max: number)
+	{
+		return Math.floor(Math.random() * (max - min) + min);
 	}
 	private async colorInputing(action: "toggleAuto" | "open")
 	{
