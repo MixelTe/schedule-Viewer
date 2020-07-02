@@ -12,12 +12,10 @@ export class SettingsMenu
 	private titlePrm = { height: 100 };
 
 	private settingsDIV = document.createElement("div");
-	private showSepLine = true;
 	private toggleSepLineEl: HTMLInputElement;
 	private revTimeInputEl: HTMLInputElement;
 	private colorizeLineSelectionEl: HTMLInputElement;
 	private revTimeInput = false;
-	private colorizeLineSelection = false;
 	private settingsPrm = { height: 120 };
 
 	private addingLinesDIV = document.createElement("div");
