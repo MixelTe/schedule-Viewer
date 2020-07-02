@@ -1236,7 +1236,7 @@ export class SettingsMenu
 				const el = newSchedule.simpleLines[i];
 
 				try {
-					this.checkLineFromFile(el, el.duration);
+					this.checkLineFromFile(el, true);
 				} catch (er)
 				{
 					if (er == "MyError") continue
@@ -1254,7 +1254,7 @@ export class SettingsMenu
 				const el = newSchedule.realLines[i];
 
 				try {
-					this.checkLineFromFile(el, el.durations);
+					this.checkLineFromFile(el, false);
 				} catch (er)
 				{
 					if (er == "MyError") continue
@@ -1268,13 +1268,38 @@ export class SettingsMenu
 
 		functions.recreate();
 	}
-	private checkLineFromFile(el: {interval: any, start: any, end: any, autoColor: any, color: any}, duration: any)
+	private checkLineFromFile(el: {interval: any, duration?: any, durations?: any, start: any, end: any, autoColor: any, color: any}, simpleLine: boolean)
 	{
 		if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
-		if (duration == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (simpleLine)
+		{
+			if (el.duration == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		}
+		else
+		{
+			if (el.durations == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		}
 		if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
 		if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
 		if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+
+		if (typeof el.interval != "number") { console.log("line interval is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (simpleLine)
+		{
+			if (typeof el.duration != "number") { console.log("line duration is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		}
+		else
+		{
+			if (typeof el.duration != "object") { console.log("line duration isn't array \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		}
+		if (typeof el.start != "number") { console.log("line start is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (typeof el.end != "number") { console.log("line end is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (typeof el.autoColor != "boolean") { console.log("line autoColor isn't boolean \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (!el.autoColor)
+		{
+			if (el.color == undefined) { console.log("line color not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+			if (typeof el.color != "string") { console.log("line color isn't string \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		}
 	}
 
 
