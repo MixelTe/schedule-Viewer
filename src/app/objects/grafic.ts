@@ -202,6 +202,8 @@ export class Grafic
 			getLines: this.lines.getLines.bind(this.lines),
 			changeLine: this.lines.changeLine.bind(this.lines),
 			removeLine: this.lines.removeLine.bind(this.lines),
+			toggleCustomSelectionColor: this.lines.toggleOverLineCustomColor.bind(this.lines),
+			CustomSelectionColorIsActive: this.lines.overLineCustomColorIsActive.bind(this.lines),
 		}
 	}
 	public setFunctionsForLines(functions: FunctionsForLines)

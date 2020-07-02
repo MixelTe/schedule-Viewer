@@ -15,7 +15,9 @@ export class SettingsMenu
 	private showSepLine = true;
 	private toggleSepLineEl: HTMLInputElement;
 	private revTimeInputEl: HTMLInputElement;
+	private colorizeLineSelectionEl: HTMLInputElement;
 	private revTimeInput = false;
+	private colorizeLineSelection = false;
 	private settingsPrm = { height: 120 };
 
 	private addingLinesDIV = document.createElement("div");
@@ -174,6 +176,7 @@ export class SettingsMenu
 
 			this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
 			this.revTimeInputEl = createSetting("reverse time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
+			this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
 
 		}
 
@@ -601,6 +604,7 @@ export class SettingsMenu
 		this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
 		this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
 		this.revTimeInputEl.addEventListener("change", () => this.toggleLineMenuRev());
+		this.colorizeLineSelectionEl.addEventListener("change", functions.toggleCustomSelectionColor);
 
 		this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
 		this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));

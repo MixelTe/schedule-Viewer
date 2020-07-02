@@ -329,6 +329,14 @@ export class Lines
 	{
 		return this.lines;
 	}
+	public toggleOverLineCustomColor()
+	{
+		this.overLineCustomColor = !this.overLineCustomColor;
+	}
+	public overLineCustomColorIsActive()
+	{
+		return this.overLineCustomColor;
+	}
 	public setFunctionsForLines(functions: FunctionsForLines)
 	{
 		this.functionsForLines = functions;
