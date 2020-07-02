@@ -204,6 +204,8 @@ export class Grafic
 			unselectLine: this.lines.unselectLine.bind(this.lines),
 			toggleCustomSelectionColor: this.lines.toggleOverLineCustomColor.bind(this.lines),
 			CustomSelectionColorIsActive: this.lines.overLineCustomColorIsActive.bind(this.lines),
+			togglecompactLinePlacing: this.lines.togglecompactLinePlacing.bind(this.lines),
+			compactLinePlacingIsActive: this.lines.compactLinePlacingIsActive.bind(this.lines),
 		}
 	}
 	public setFunctionsForLines(functions: FunctionsForLines)
