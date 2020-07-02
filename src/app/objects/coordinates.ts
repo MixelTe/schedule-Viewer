@@ -233,7 +233,7 @@ export class Coordinates
 	{
 		newHeight = Math.max(newHeight, this.height)
 		this.axis.height = newHeight - 65;
-		this.changeSVGHeight(newHeight - 20);
+		this.changeSVGHeight(newHeight - 21);
 		this.recreateScale(zoom, translate);
 	}
 

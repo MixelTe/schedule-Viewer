@@ -26,7 +26,7 @@ export class Lines
 		this.overBody = overBody;
 		this.oneHour = oneHour;
 		this.width = bodyPrm.width;
-		this.height = bodyPrm.height;
+		this.height = axis.height;
 		this.changeHeightAndRecreate = changeHeightAndRecreate;
 
 		const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
@@ -80,14 +80,14 @@ export class Lines
 		this.body.innerHTML = "";
 		this.overBody.innerHTML = "";
 
-		let spaces = Math.floor((axis.height) / (Math.max(this.lines.length, 2)));
+		let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
 		if (this.compactLinePlacing) spaces = 0;
 		if (spaces < 20)
 		{
 			spaces = 20;
 			// console.log(axis);
-			this.changeHeightAndRecreate((this.lines.length + 3) * spaces, scroll, zoom);
 		}
+		this.changeHeightAndRecreate((this.lines.length) * spaces, scroll, zoom);
 
 		this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
 		this.clipRect.setAttribute("y", `${axis.y}`);
