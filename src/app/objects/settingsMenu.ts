@@ -1234,12 +1234,15 @@ export class SettingsMenu
 			for (let i = 0; i < newSchedule.simpleLines.length; i++)
 			{
 				const el = newSchedule.simpleLines[i];
-				if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); continue; };
-				if (el.duration == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); continue; };
-				if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); continue; };
-				if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); continue; };
-				if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); continue; };
-				if (!el.autoColor && el.color == undefined) { console.log("line color not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+
+				try {
+					this.checkLineFromFile(el, el.duration);
+				} catch (er)
+				{
+					if (er == "MyError") continue
+					else throw er;
+				}
+
 				functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
 			}
 		}
@@ -1249,12 +1252,15 @@ export class SettingsMenu
 			for (let i = 0; i < newSchedule.realLines.length; i++)
 			{
 				const el = newSchedule.realLines[i];
-				if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); continue; }
-				if (el.durations == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); continue; }
-				if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); continue; }
-				if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); continue; }
-				if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); continue; }
-				if (!el.autoColor && el.color == undefined) { console.log("line color not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+
+				try {
+					this.checkLineFromFile(el, el.durations);
+				} catch (er)
+				{
+					if (er == "MyError") continue
+					else throw er;
+				}
+
 				functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
 			}
 		}
@@ -1262,6 +1268,15 @@ export class SettingsMenu
 
 		functions.recreate();
 	}
+	private checkLineFromFile(el: {interval: any, start: any, end: any, autoColor: any, color: any}, duration: any)
+	{
+		if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (duration == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+	}
+
 
 	public setInputsData(line: LineF)
 	{
