@@ -12,6 +12,7 @@ export class Lines
 	private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
 	private functionsForLines: FunctionsForLines = <FunctionsForLines>{};
 	private showLineAfterEnd = false;
+	private compactLinePlacing = true;
 
 	private overLineOpacity = 0;
 	private overLineOpacityMouseOver = 0.2;
@@ -80,6 +81,7 @@ export class Lines
 		this.overBody.innerHTML = "";
 
 		let spaces = Math.floor((axis.height) / (Math.max(this.lines.length, 2)));
+		if (this.compactLinePlacing) spaces = 0;
 		if (spaces < 20)
 		{
 			spaces = 20;
