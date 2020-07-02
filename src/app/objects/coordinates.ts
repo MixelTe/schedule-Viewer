@@ -247,14 +247,7 @@ export class Coordinates
 
 	public toggleSepLine()
 	{
-		if (this.scale.separateLine.active)
-		{
-			this.scale.separateLine.active = false;
-		}
-		else
-		{
-			this.scale.separateLine.active = true;
-		}
+		this.scale.separateLine.active = !this.scale.separateLine.active;
 	}
 	public SepLineIsActive()
 	{
