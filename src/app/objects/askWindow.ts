@@ -2,7 +2,7 @@ export class AskWindow
 {
 	private mainWindow: HTMLDivElement
 	private resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
-	private listeners: { el: HTMLElement, event: string, function: () => any }[]
+	private globalListeners: { event: string, function: () => any }[]
 	private firstClick = true;
 
 	constructor(x: number, y: number, text: string)
@@ -25,7 +25,7 @@ export class AskWindow
 		this.mainWindow.style.top = `${y}px`;
 		this.mainWindow.style.left = `${x}px`;
 
-		this.listeners = [{el: document.body, event: "click", function: <() => any>this.clickOnPage.bind(this)}];
+		this.globalListeners = [{event: "click", function: <() => any>this.clickOnPage.bind(this)}];
 		const table = document.createElement("table");
 		table.style.width = "100%";
 		table.style.height = "100%";
@@ -42,8 +42,7 @@ export class AskWindow
 			const cell = document.createElement("td");
 			const button = document.createElement("button");
 			button.innerText = text;
-			const listener = { el: button, event: "click", function: this.userAnswer.bind(this, answer) }
-			this.listeners.push(listener);
+			button.addEventListener("click", () => this.userAnswer(answer));
 			cell.appendChild(button);
 			return cell;
 		};
@@ -55,9 +54,9 @@ export class AskWindow
 
 		this.mainWindow.appendChild(table);
 
-		this.listeners.forEach(listener =>
+		this.globalListeners.forEach(listener =>
 		{
-			listener.el.addEventListener(listener.event, listener.function);
+			document.addEventListener(listener.event, listener.function);
 		});
 	}
 	public getAnswer()
@@ -92,9 +91,9 @@ export class AskWindow
     }
 	private userAnswer(answer: boolean)
 	{
-		this.listeners.forEach(listener =>
+		this.globalListeners.forEach(listener =>
 		{
-			listener.el.removeEventListener(listener.event, listener.function);
+			document.removeEventListener(listener.event, listener.function);
 		});
 		document.body.removeChild(this.mainWindow);
 
