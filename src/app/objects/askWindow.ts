@@ -18,8 +18,12 @@ export class AskWindow
 		document.body.appendChild(this.mainWindow);
 
 		const windowBCR = this.mainWindow.getBoundingClientRect();
-		this.mainWindow.style.top = `${y - windowBCR.height}px`;
-		this.mainWindow.style.left = `${x - windowBCR.width/2}px`;
+		y -= windowBCR.height;
+		y = Math.max(y, 0);
+		x = Math.min(x, document.body.offsetWidth - windowBCR.width);
+		x -= windowBCR.width / 2;
+		this.mainWindow.style.top = `${y}px`;
+		this.mainWindow.style.left = `${x}px`;
 
 		this.listeners = [];
 		this.mainWindow.appendChild(function (this: AskWindow, text: string)
