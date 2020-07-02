@@ -1,28 +1,38 @@
 export class AskWindow
 {
-	private mainWindow: HTMLDivElement
+	private body: HTMLDivElement
+	private parent: HTMLElement
 	private resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
 	private firstClick = true;
 
-	constructor(x: number, y: number, text: string)
+	constructor(parent: HTMLElement, text: string)
 	{
-		this.mainWindow = document.createElement("div");
-		this.mainWindow.style.position = "absolute";
-		this.mainWindow.style.width = "max-content";
-		this.mainWindow.style.minWidth = "120px";
-		this.mainWindow.style.height = "100px";
-		this.mainWindow.style.backgroundColor = "lightgreen";
-		this.mainWindow.style.borderRadius = "12px";
-		this.mainWindow.style.border = "3px solid black";
-		document.body.appendChild(this.mainWindow);
+		this.parent = parent;
+		this.body = document.createElement("div");
+		this.body.style.position = "absolute";
+		this.body.style.top = "0px";
+		this.body.style.left = "0px";
+		this.body.style.display = "flex";
+		this.body.style.justifyContent = "center";
+		this.body.style.alignItems = "center";
+		this.body.style.height = "100%";
+		this.body.style.width = "100%";
+		this.body.style.backgroundColor = "transparent";
+		this.body.style.transition = "background-Color 250ms ease-in-out"
+		parent.appendChild(this.body);
+		setTimeout(() => {
+			this.body.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+		}, 1);
 
-		const windowBCR = this.mainWindow.getBoundingClientRect();
-		y -= windowBCR.height;
-		y = Math.max(y, 0);
-		x = Math.min(x, document.body.offsetWidth - windowBCR.width);
-		x -= windowBCR.width / 2;
-		this.mainWindow.style.top = `${y}px`;
-		this.mainWindow.style.left = `${x}px`;
+		const tableDiv = document.createElement("div");
+		tableDiv.style.width = "max-content";
+		tableDiv.style.minWidth = "120px";
+		tableDiv.style.height = "100px";
+		tableDiv.style.backgroundColor = "lightgreen";
+		tableDiv.style.borderRadius = "12px";
+		tableDiv.style.border = "3px solid black";
+		this.body.appendChild(tableDiv);
+
 
 		const table = document.createElement("table");
 		table.style.width = "100%";
@@ -50,7 +60,7 @@ export class AskWindow
 		table.appendChild(row);
 
 
-		this.mainWindow.appendChild(table);
+		tableDiv.appendChild(table);
 	}
 	public getAnswer()
 	{
@@ -61,7 +71,7 @@ export class AskWindow
 	}
 	private userAnswer(answer: boolean)
 	{
-		document.body.removeChild(this.mainWindow);
+		this.parent.removeChild(this.body);
 
 		if (this.resolve != undefined)
 		{

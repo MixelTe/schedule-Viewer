@@ -982,7 +982,7 @@ export class SettingsMenu
 
 			case "remove":
 				this.lineInputs.buttonRemove.disabled = true;
-				if (await new AskWindow(x, y, "remove line").getAnswer())
+				if (await new AskWindow(this.body, "remove line").getAnswer())
 				{
 					if (this.lineToChange == undefined) throw new Error();
 					functions.removeLine(this.lineToChange)
@@ -1011,7 +1011,7 @@ export class SettingsMenu
 
 			case "removeAll":
 				this.lineInputs.buttonRemoveAll.disabled = true;
-				if (await new AskWindow(x, y, "remove all").getAnswer())
+				if (await new AskWindow(this.body, "remove all").getAnswer())
 				{
 					functions.resetLines();
 					functions.recreate();
@@ -1021,7 +1021,7 @@ export class SettingsMenu
 
 			case "example":
 				this.lineInputs.buttonExample.disabled = true;
-				if (await new AskWindow(x, y, "remove all and show example").getAnswer())
+				if (await new AskWindow(this.body, "remove all and show example").getAnswer())
 				{
 					functions.resetLines();
 					for (let i = 0; i < 4; i++)
