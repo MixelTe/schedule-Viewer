@@ -20,6 +20,8 @@ interface FunctionsForMenu
 	unselectLine: (line: LineF) => void,
 	toggleCustomSelectionColor: () => void,
 	CustomSelectionColorIsActive: () => boolean,
+	togglecompactLinePlacing: () => void,
+	compactLinePlacingIsActive: () => boolean,
 }
 
 interface FunctionsForLines

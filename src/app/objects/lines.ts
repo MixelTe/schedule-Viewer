@@ -12,7 +12,7 @@ export class Lines
 	private changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void;
 	private functionsForLines: FunctionsForLines = <FunctionsForLines>{};
 	private showLineAfterEnd = false;
-	private compactLinePlacing = true;
+	private compactLinePlacing = false;
 
 	private overLineOpacity = 0;
 	private overLineOpacityMouseOver = 0.2;
@@ -342,6 +342,14 @@ export class Lines
 	public overLineCustomColorIsActive()
 	{
 		return this.overLineCustomColor;
+	}
+	public togglecompactLinePlacing()
+	{
+		this.compactLinePlacing = !this.compactLinePlacing;
+	}
+	public compactLinePlacingIsActive()
+	{
+		return this.compactLinePlacing;
 	}
 	public setFunctionsForLines(functions: FunctionsForLines)
 	{

@@ -15,6 +15,7 @@ export class SettingsMenu
 	private toggleSepLineEl: HTMLInputElement;
 	private revTimeInputEl: HTMLInputElement;
 	private colorizeLineSelectionEl: HTMLInputElement;
+	private compactLinePlacingEl: HTMLInputElement;
 	private revTimeInput = false;
 	private settingsPrm = { height: 120 };
 
@@ -142,7 +143,7 @@ export class SettingsMenu
 			this.settingsDIV.appendChild(title);
 
 			const menu = document.createElement("div");
-			menu.style.height = "50px";
+			menu.style.height = "90px";
 			menu.style.display = "flex";
 			menu.style.justifyContent = "space-around";
 			menu.style.alignItems = "center";
@@ -175,6 +176,7 @@ export class SettingsMenu
 			this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
 			this.revTimeInputEl = createSetting("reverse time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
 			this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
+			this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
 
 		}
 
@@ -603,6 +605,7 @@ export class SettingsMenu
 		this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
 		this.revTimeInputEl.addEventListener("change", () => this.toggleLineMenuRev());
 		this.colorizeLineSelectionEl.addEventListener("change", functions.toggleCustomSelectionColor);
+		this.compactLinePlacingEl.addEventListener("change", () => this.toggleCompactLinePlacing(functions));
 
 		this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
 		this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
@@ -651,7 +654,11 @@ export class SettingsMenu
 			this.menuOpen = true;
 		}
 	}
-
+	private toggleCompactLinePlacing(functions: FunctionsForMenu)
+	{
+		functions.togglecompactLinePlacing();
+		functions.recreate();
+	}
 	private toggleLineMenuRev()
 	{
 		this.revTimeInput = !this.revTimeInput;
