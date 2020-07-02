@@ -1270,35 +1270,38 @@ export class SettingsMenu
 	}
 	private checkLineFromFile(el: {interval: any, duration?: any, durations?: any, start: any, end: any, autoColor: any, color: any}, simpleLine: boolean)
 	{
-		if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		function createJSONlog() {
+			return JSON.stringify(el, undefined, "   ").replace(/\n      /g, "");
+		}
+		if (el.interval == undefined) { console.log("line interval not found \n", ); throw "MyError"; };
 		if (simpleLine)
 		{
-			if (el.duration == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+			if (el.duration == undefined) { console.log("line duration not found \n", createJSONlog()); throw "MyError"; };
 		}
 		else
 		{
-			if (el.durations == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+			if (el.durations == undefined) { console.log("line duration not found \n", createJSONlog()); throw "MyError"; };
 		}
-		if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
-		if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
-		if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (el.start == undefined) { console.log("line start not found \n", createJSONlog()); throw "MyError"; };
+		if (el.end == undefined) { console.log("line end not found \n", createJSONlog()); throw "MyError"; };
+		if (el.autoColor == undefined) { console.log("line autoColor not found \n", createJSONlog()); throw "MyError"; };
 
-		if (typeof el.interval != "number") { console.log("line interval is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (typeof el.interval != "number") { console.log("line interval is NaN \n", createJSONlog()); throw "MyError"; };
 		if (simpleLine)
 		{
-			if (typeof el.duration != "number") { console.log("line duration is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+			if (typeof el.duration != "number") { console.log("line duration is NaN \n", createJSONlog()); throw "MyError"; };
 		}
 		else
 		{
-			if (typeof el.duration != "object") { console.log("line duration isn't array \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+			if (typeof el.duration != "object") { console.log("line duration isn't array \n", createJSONlog()); throw "MyError"; };
 		}
-		if (typeof el.start != "number") { console.log("line start is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
-		if (typeof el.end != "number") { console.log("line end is NaN \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
-		if (typeof el.autoColor != "boolean") { console.log("line autoColor isn't boolean \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+		if (typeof el.start != "number") { console.log("line start is NaN \n", createJSONlog()); throw "MyError"; };
+		if (typeof el.end != "number") { console.log("line end is NaN \n", createJSONlog()); throw "MyError"; };
+		if (typeof el.autoColor != "boolean") { console.log("line autoColor isn't boolean \n", createJSONlog()); throw "MyError"; };
 		if (!el.autoColor)
 		{
-			if (el.color == undefined) { console.log("line color not found \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
-			if (typeof el.color != "string") { console.log("line color isn't string \n", JSON.stringify(el, undefined, "   ")); throw "MyError"; };
+			if (el.color == undefined) { console.log("line color not found \n", createJSONlog()); throw "MyError"; };
+			if (typeof el.color != "string") { console.log("line color isn't string \n", createJSONlog()); throw "MyError"; };
 		}
 	}
 
