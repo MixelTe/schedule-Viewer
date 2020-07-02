@@ -698,17 +698,14 @@ export class SettingsMenu
 		}
 
 		// console.log("Yee!!!");
-		let color = undefined;
-		if (!this.lineInputs.checkBoxColor.checked) color = this.lineInputs.color;
-
 		if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined)
 		{
-			functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, color);
+			functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 		}
 		else
 		{
 			if (lineData.duration == undefined) throw new Error();
-			functions.addSympleLine(1, 0, lineData.start, 0, color);
+			functions.addSympleLine(1, 0, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 		}
 		functions.recreate();
 	}
