@@ -34,6 +34,7 @@ export class SettingsMenu
 		buttonRemove: HTMLButtonElement,
 		buttonCancel: HTMLButtonElement,
 		buttonRemoveAll: HTMLButtonElement,
+		buttonExample: HTMLButtonElement,
 		checkBoxColor: HTMLInputElement,
 		colorDiv: HTMLDivElement,
 		color: string,
@@ -84,6 +85,7 @@ export class SettingsMenu
 			buttonRemove?: HTMLButtonElement,
 			buttonCancel?: HTMLButtonElement,
 			buttonRemoveAll?: HTMLButtonElement,
+			buttonExample?: HTMLButtonElement,
 			checkBoxColor?: HTMLInputElement,
 			colorDiv?: HTMLDivElement,
 		} = {};
@@ -536,6 +538,12 @@ export class SettingsMenu
 				this.addingLinesDIV.appendChild(buttonsDIV);
 
 				lineInputs.buttonRemoveAll = createButton("remove All", buttonsDIV);
+				lineInputs.buttonExample = createButton("example", buttonsDIV);
+
+				const link = document.createElement("a");
+				link.href = "https://github.com/MixelTe/schedule-Viewer#readme";
+				link.innerText = "Help";
+				buttonsDIV.appendChild(link);
 			}
 		}
 
@@ -627,6 +635,7 @@ export class SettingsMenu
 			buttonRemove: lineInputs.buttonRemove,
 			buttonCancel: lineInputs.buttonCancel,
 			buttonRemoveAll: lineInputs.buttonRemoveAll,
+			buttonExample: lineInputs.buttonExample,
 			checkBoxColor: lineInputs.checkBoxColor,
 			colorDiv: lineInputs.colorDiv,
 		}
