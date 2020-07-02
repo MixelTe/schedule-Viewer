@@ -1234,6 +1234,12 @@ export class SettingsMenu
 			for (let i = 0; i < newSchedule.simpleLines.length; i++)
 			{
 				const el = newSchedule.simpleLines[i];
+				if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+				if (el.duration == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+				if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+				if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+				if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); continue; };
+				if (!el.autoColor && el.color == undefined) { console.log("line color not found \n", JSON.stringify(el, undefined, "   ")); continue; };
 				functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
 			}
 		}
@@ -1243,6 +1249,12 @@ export class SettingsMenu
 			for (let i = 0; i < newSchedule.realLines.length; i++)
 			{
 				const el = newSchedule.realLines[i];
+				if (el.interval == undefined) { console.log("line interval not found \n", JSON.stringify(el, undefined, "   ")); continue; }
+				if (el.durations == undefined) { console.log("line duration not found \n", JSON.stringify(el, undefined, "   ")); continue; }
+				if (el.start == undefined) { console.log("line start not found \n", JSON.stringify(el, undefined, "   ")); continue; }
+				if (el.end == undefined) { console.log("line end not found \n", JSON.stringify(el, undefined, "   ")); continue; }
+				if (el.autoColor == undefined) { console.log("line autoColor not found \n", JSON.stringify(el, undefined, "   ")); continue; }
+				if (!el.autoColor && el.color == undefined) { console.log("line color not found \n", JSON.stringify(el, undefined, "   ")); continue; };
 				functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
 			}
 		}
