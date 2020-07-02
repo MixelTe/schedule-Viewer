@@ -53,8 +53,8 @@ export class Grafic
 
 			for (let i = 0; i < 4; i++)
 			{
-				this.lines.createLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-				this.lines.createLine(this.getRndInteger(2000, 4000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+				// this.lines.createLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+				// this.lines.createLine(this.getRndInteger(2000, 4000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 				// this.lines.createLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 				// this.lines.createLine(this.getRndInteger(80, 120), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 
