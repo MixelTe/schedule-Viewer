@@ -3,6 +3,7 @@ export class AskWindow
 	private mainWindow: HTMLDivElement
 	private resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
 	private listeners: { el: HTMLElement, event: string, function: () => any }[]
+	private firstClick = true;
 
 	constructor(x: number, y: number, text: string)
 	{
@@ -25,7 +26,7 @@ export class AskWindow
 		this.mainWindow.style.top = `${y}px`;
 		this.mainWindow.style.left = `${x}px`;
 
-		this.listeners = [];
+		this.listeners = [{el: document.body, event: "click", function: this.clickOnPage.bind(this)}];
 		this.mainWindow.appendChild(function (this: AskWindow, text: string)
 		{
 			const table = document.createElement("table");
@@ -95,6 +96,29 @@ export class AskWindow
             this.resolve = resolve;
         });
 	}
+	private clickOnPage(e: MouseEvent)
+	{
+		if (this.firstClick) this.firstClick = false;
+        else
+        {
+            const y = e.pageY;
+            const x = e.pageX;
+            if (!this.clickIntersect(x, y))
+			{
+				this.userAnswer(false);
+            }
+        }
+	}
+	private clickIntersect(x: number, y: number)
+    {
+		const windowBCR = this.mainWindow.getBoundingClientRect();
+        return (
+            x > windowBCR.x &&
+            x < windowBCR.x + windowBCR.width &&
+            y > windowBCR.y &&
+            y < windowBCR.y + windowBCR.height
+        );
+    }
 	private userAnswer(answer: boolean)
 	{
 		this.listeners.forEach(listener =>
