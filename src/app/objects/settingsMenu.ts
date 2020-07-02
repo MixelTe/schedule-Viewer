@@ -1002,11 +1002,12 @@ export class SettingsMenu
 		switch (state)
 		{
 			case "noSelect":
+				this.lineInputs.buttonAdd.disabled = false;
+				this.lineInputs.buttonChange.disabled = true;
+				this.lineInputs.buttonRemove.disabled = true;
 				this.disableInputs("none");
 				break;
 
-			case "selected":
-				break;
 
 			case "realSelected":
 				this.lineInputs.freqenceRow.style.color = "gray";
@@ -1015,13 +1016,14 @@ export class SettingsMenu
 
 				this.lineInputs.radioRepeating.checked = true;
 				this.disableInputs("duration");
+			case "selected":
+				this.lineInputs.buttonAdd.disabled = true;
+				this.lineInputs.buttonChange.disabled = false;
+				this.lineInputs.buttonRemove.disabled = false;
 				break;
 
 			default: throw new Error();
 		}
-		this.lineInputs.buttonAdd.disabled = true;
-		this.lineInputs.buttonChange.disabled = false;
-		this.lineInputs.buttonRemove.disabled = false;
 		this.lineInputs.start.style.backgroundColor = this.addingLinesPrm.inputsBackground;
 		this.lineInputs.duration.style.backgroundColor = this.addingLinesPrm.inputsBackground;
 		this.lineInputs.start.style.border = this.addingLinesPrm.inputsBorder;
