@@ -25,7 +25,12 @@ export class scheduleViewer
 		{
 			if (typeof options == "string")
 			{
-				newOptions = JSON.parse(options);
+				try {
+					newOptions = JSON.parse(options);
+				} catch (er)
+				{
+					console.error("uncorect options string");
+				}
 			}
 			else
 			{
@@ -63,7 +68,14 @@ export class scheduleViewer
 	}
 	public setLinesFromString(linesString: string)
 	{
-		const newLinesRaw = JSON.parse(linesString)
+		let newLinesRaw;
+		try {
+			newLinesRaw = JSON.parse(linesString);
+		} catch (er)
+		{
+			console.error("uncorect lines string");
+			return;
+		}
 		const newLines: LineF[] = [];
 		for (let i in newLinesRaw) {
 			newLines.push(newLinesRaw[i]);
