@@ -67,8 +67,13 @@ export class scheduleViewer
 		}
 		return JSON.stringify(options);
 	}
-	public setLinesFromString(linesString: string)
+	public setLinesFromString(linesString: string | null)
 	{
+		if (linesString == null)
+		{
+			console.error("lines string is null");
+			return;
+		}
 		let newLinesRaw;
 		try {
 			newLinesRaw = JSON.parse(linesString);
