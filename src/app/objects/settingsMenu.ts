@@ -90,19 +90,20 @@ export class SettingsMenu
 			colorDiv?: HTMLDivElement,
 		} = {};
 		{
+			const scale = 40
 			const toggleMenuDiv = document.createElement("div");
-			toggleMenuDiv.style.height = `${40}px`
+			toggleMenuDiv.style.height = `${scale}px`
 			toggleMenuDiv.style.position = "absolute";
 			toggleMenuDiv.style.top = `${2}px`;
-			toggleMenuDiv.style.right = `${2}px`;
+			toggleMenuDiv.style.left = `calc(100% - ${scale + 2}px)`;
 			toggleMenuDiv.style.display = "block";
-			toggleMenuDiv.style.width = "100%";
+			toggleMenuDiv.style.width = `${scale}px`;
 			toggleMenuDiv.style.textAlign = "right";
 			this.body.appendChild(toggleMenuDiv);
 
 			this.toggleMenuEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			this.toggleMenuEl.setAttribute("width", `${40}`);
-			this.toggleMenuEl.setAttribute("height", `${40}`);
+			this.toggleMenuEl.setAttribute("width", `${scale}`);
+			this.toggleMenuEl.setAttribute("height", `${scale}`);
 			this.toggleMenuEl.setAttribute("viewBox", `0 0 20 20`);
 			toggleMenuDiv.appendChild(this.toggleMenuEl);
 			const symbol = document.createElementNS("http://www.w3.org/2000/svg", "path");
