@@ -44,11 +44,12 @@ export class Grafic
 		this.svg.style.width = `${this.oneHour * this.zoom * 24 + 30}`;
 		// console.log(this.body.clientHeight);
 		{
-			this.svg.appendChild(this.coordinatesBody);
-			this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this), options);
 
 			this.svg.appendChild(this.linesBody);
+			this.svg.appendChild(this.coordinatesBody);
 			this.svg.appendChild(this.linesOverBody);
+			
+			this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this), options);
 			this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
 
 			for (let i = 0; i < 4; i++)
