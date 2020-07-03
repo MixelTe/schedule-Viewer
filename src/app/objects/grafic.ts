@@ -76,6 +76,17 @@ export class Grafic
 		this.body.addEventListener("mouseleave", (e) => this.coordinates.svgBodyMouse(e, "leave"));
 		this.body.scrollTop = parseInt(this.svg.style.height);
 	}
+	public getOptions()
+	{
+		const linesOptions = this.lines.getOptions();
+		const coordinatesOptions = this.coordinates.getOptions();
+		return {
+			showRealLineAfterEnd: linesOptions.showRealLineAfterEnd,
+    		compactLinePlacing: linesOptions.compactLinePlacing,
+			selectionCustomColor: linesOptions.selectionCustomColor,
+			showSeparateLine: coordinatesOptions.showSeparateLine
+		};
+	}
 
 	private mouseWheel(e: WheelEvent)
 	{

@@ -1,7 +1,8 @@
 import { scheduleViewer } from "./scheduleViewer.js";
 
 
-const grafic = new scheduleViewer(getdiv("svgGrafic"), {openControlPanel: false});
+const grafic = new scheduleViewer(getdiv("svgGrafic"), { openControlPanel: false });
+console.log(grafic.getOptions());
 
 
 

@@ -33,4 +33,18 @@ export class scheduleViewer
 
 		this.body.addEventListener("dragover", (e) => this.settingsMenu.mainBodyDragover.bind(this.settingsMenu)(e));
 	}
+
+	public getOptions(): ScheduleOptions
+	{
+		const settingsMenuOptions = this.settingsMenu.getOptions();
+		const graficOptions = this.grafic.getOptions();
+		return {
+			openControlPanel: settingsMenuOptions.openControlPanel,
+			revTimeInput: settingsMenuOptions.revTimeInput,
+			showRealLineAfterEnd: graficOptions.showRealLineAfterEnd,
+    		compactLinePlacing: graficOptions.compactLinePlacing,
+    		selectionCustomColor: graficOptions.selectionCustomColor,
+    		showSeparateLine: graficOptions.showSeparateLine,
+		}
+	}
 }

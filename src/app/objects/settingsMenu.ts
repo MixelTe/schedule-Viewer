@@ -683,6 +683,10 @@ export class SettingsMenu
 			this.revTimeInputEl.checked = this.revTimeInput;
 		}
 	}
+	public getOptions()
+	{
+		return { openControlPanel: this.revTimeInput, revTimeInput: this.menuOpen };
+	}
 
 	private toggleMenu()
 	{

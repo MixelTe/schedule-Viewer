@@ -80,6 +80,10 @@ export class Lines
 		if (options?.compactLinePlacing != undefined && typeof options.compactLinePlacing == "boolean") this.compactLinePlacing = options.compactLinePlacing;
 		if (options?.selectionCustomColor != undefined && typeof options.selectionCustomColor == "boolean") this.overLineCustomColor = options.selectionCustomColor;
 	}
+	public getOptions()
+	{
+		return { showRealLineAfterEnd: this.showLineAfterEnd, compactLinePlacing: this.compactLinePlacing, selectionCustomColor: this.overLineCustomColor};
+	}
 
 	public recreateLines(axis: Rect, scroll: number, zoom: number)
 	{

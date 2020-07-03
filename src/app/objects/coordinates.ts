@@ -37,6 +37,10 @@ export class Coordinates
 	{
 		if (options?.showSeparateLine != undefined && typeof options.showSeparateLine == "boolean") this.scale.separateLine.active = options.showSeparateLine;
 	}
+	public getOptions()
+	{
+		return { showSeparateLine: this.scale.separateLine.active};
+	}
 	private createAxis(translate = 0)
 	{
 		const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
