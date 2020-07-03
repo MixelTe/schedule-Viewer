@@ -766,11 +766,19 @@ export class SettingsMenu
 		// console.log("Yee!!!");
 		if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined)
 		{
-			functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+			if (typeof lineData.duration == "object")
+			{
+				functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+			}
+			else
+			{
+				functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+			}
 		}
 		else
 		{
 			if (lineData.duration == undefined) throw new Error();
+			if (typeof lineData.duration == "object")  throw new Error();
 			functions.addSympleLine(1, lineData.duration, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 		}
 		functions.recreate();
@@ -817,6 +825,15 @@ export class SettingsMenu
 				duration = this.getSecondsFromString(this.lineInputs.duration);
 			}
 			catch (e) { if (e == "MyError") isError = true; else throw e };
+		}
+		else if (this.lineToChange != undefined)
+		{
+			duration = this.lineInputs.duration.value.split(",").map(el =>
+			{
+				const num = Number(el);
+				if (Number.isNaN(num)) throw new Error("NaN");
+				return num;
+			});
 		}
 
 		if (this.lineInputs.radioRepeating.checked)
