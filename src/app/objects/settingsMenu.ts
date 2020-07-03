@@ -178,7 +178,7 @@ export class SettingsMenu
 			}
 
 			this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
-			this.revTimeInputEl = createSetting("reverse time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
+			this.revTimeInputEl = createSetting("change time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
 			this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
 			this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
 
@@ -502,7 +502,7 @@ export class SettingsMenu
 
 				lineInputs.buttonRemove = createButton("remove", buttonsDIV);
 				lineInputs.buttonChange = createButton("change", buttonsDIV);
-				lineInputs.buttonCancel = createButton("cancel", buttonsDIV);
+				lineInputs.buttonCancel = createButton("clear", buttonsDIV);
 				lineInputs.buttonAdd = createButton("add", buttonsDIV);
 			}
 
@@ -1123,7 +1123,7 @@ export class SettingsMenu
 		switch (state)
 		{
 			case "noSelect":
-				this.lineInputs.buttonAdd.disabled = false;
+				// this.lineInputs.buttonAdd.disabled = false;
 				this.lineInputs.buttonChange.disabled = true;
 				this.lineInputs.buttonRemove.disabled = true;
 				this.disableInputs("none");
@@ -1138,7 +1138,7 @@ export class SettingsMenu
 				this.lineInputs.radioRepeating.checked = true;
 				this.disableInputs("duration");
 			case "selected":
-				this.lineInputs.buttonAdd.disabled = true;
+				// this.lineInputs.buttonAdd.disabled = true;
 				this.lineInputs.buttonChange.disabled = false;
 				this.lineInputs.buttonRemove.disabled = false;
 				break;
