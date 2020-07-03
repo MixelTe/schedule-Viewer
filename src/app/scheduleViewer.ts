@@ -12,7 +12,7 @@ export class scheduleViewer
 	private settingsMenu: SettingsMenu
 
 
-	constructor(body: HTMLDivElement, options?: ScheduleOptions)
+	constructor(body: HTMLDivElement, options?: string | null)
 	{
 		this.body = body;
 		this.body.style.position = "relative";
@@ -20,13 +20,19 @@ export class scheduleViewer
 		this.body.style.display = "flex";
 		this.body.style.userSelect = "none";
 
+		let newOptions = undefined
+		if (options != undefined)
+		{
+			newOptions = JSON.parse(options);
+		}
+
 		{
 			const settingsMenuWidth = 310;
 			this.body.appendChild(this.graficBody);
-			this.grafic = new Grafic(this.graficBody, settingsMenuWidth, options);
+			this.grafic = new Grafic(this.graficBody, settingsMenuWidth, newOptions);
 
 			this.body.appendChild(this.settingsMenuBody);
-			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions(), options);
+			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions(), newOptions);
 
 			this.grafic.setFunctionsForLines({ selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu) });
 		}
@@ -34,11 +40,11 @@ export class scheduleViewer
 		this.body.addEventListener("dragover", (e) => this.settingsMenu.mainBodyDragover.bind(this.settingsMenu)(e));
 	}
 
-	public getOptions(): ScheduleOptions
+	public getOptions()
 	{
 		const settingsMenuOptions = this.settingsMenu.getOptions();
 		const graficOptions = this.grafic.getOptions();
-		return {
+		const options = {
 			openControlPanel: settingsMenuOptions.openControlPanel,
 			revTimeInput: settingsMenuOptions.revTimeInput,
 			showRealLineAfterEnd: graficOptions.showRealLineAfterEnd,
@@ -46,17 +52,19 @@ export class scheduleViewer
     		selectionCustomColor: graficOptions.selectionCustomColor,
     		showSeparateLine: graficOptions.showSeparateLine,
 		}
+		return JSON.stringify(options);
 	}
-	public setLines(newLinesRaw: [])
+	public setLinesFromString(linesString: string)
 	{
+		const newLinesRaw = JSON.parse(linesString)
 		const newLines: LineF[] = [];
 		for (let i in newLinesRaw) {
 			newLines.push(newLinesRaw[i]);
 		}
 		this.grafic.setLines(newLines);
 	}
-	public getLines()
+	public getLinesString()
 	{
-		return Object.assign({}, this.grafic.getLines());
+		return JSON.stringify(Object.assign({}, this.grafic.getLines()));
 	}
 }

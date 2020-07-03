@@ -1,15 +1,16 @@
 import { scheduleViewer } from "./scheduleViewer.js";
 
 
-let optionsRaw = localStorage.getItem("options");
-let options = undefined;
-if (optionsRaw != null) options = JSON.parse(optionsRaw);
+let options = localStorage.getItem("options");
+let lines = localStorage.getItem("lines");
 
 const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
+if (lines != undefined) grafic.setLinesFromString(lines);
 
 
 setInterval(() => {
-	localStorage.setItem("options", JSON.stringify(grafic.getOptions()));
+	localStorage.setItem("options", grafic.getOptions());
+	localStorage.setItem("lines", grafic.getLinesString());
 }, 500);
 
 
