@@ -1206,6 +1206,7 @@ export class SettingsMenu
 		if (dragData == null) return;
 		const filesList = dragData.files;
 		if (filesList == null) return;
+		if (filesList[0] == null) return;
 		const fileText = await filesList[0].text();
 		this.addLinesFromFile(fileText, functions);
 	}
