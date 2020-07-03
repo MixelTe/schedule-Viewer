@@ -47,8 +47,12 @@ export class scheduleViewer
     		showSeparateLine: graficOptions.showSeparateLine,
 		}
 	}
-	public setLines(newLines: LineF[])
+	public setLines(newLinesRaw: [])
 	{
+		const newLines: LineF[] = [];
+		for (let i in newLinesRaw) {
+			newLines.push(newLinesRaw[i]);
+		}
 		this.grafic.setLines(newLines);
 	}
 	public getLines()
