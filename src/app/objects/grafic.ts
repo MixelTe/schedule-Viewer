@@ -84,6 +84,7 @@ export class Grafic
 			showRealLineAfterEnd: linesOptions.showRealLineAfterEnd,
     		compactLinePlacing: linesOptions.compactLinePlacing,
 			selectionCustomColor: linesOptions.selectionCustomColor,
+			compactPlacingAlignIsTop: linesOptions.compactPlacingAlignIsTop,
 			showSeparateLine: coordinatesOptions.showSeparateLine
 		};
 	}

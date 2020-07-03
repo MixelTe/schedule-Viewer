@@ -84,6 +84,7 @@ interface ScheduleOptions
 	revTimeInput?: boolean,
 	showRealLineAfterEnd?: boolean,
 	compactLinePlacing?: boolean,
+	compactPlacingAlignIsTop?: boolean,
 	selectionCustomColor?: boolean,
 	showSeparateLine?: boolean
 }

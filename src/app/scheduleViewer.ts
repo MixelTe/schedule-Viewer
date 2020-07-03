@@ -61,6 +61,7 @@ export class scheduleViewer
 			revTimeInput: settingsMenuOptions.revTimeInput,
 			showRealLineAfterEnd: graficOptions.showRealLineAfterEnd,
     		compactLinePlacing: graficOptions.compactLinePlacing,
+			compactPlacingAlignIsTop: graficOptions.compactPlacingAlignIsTop,
     		selectionCustomColor: graficOptions.selectionCustomColor,
     		showSeparateLine: graficOptions.showSeparateLine,
 		}
