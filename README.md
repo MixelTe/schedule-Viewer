@@ -1,6 +1,67 @@
 # Schedule viewer
+## How to create schedule on your page
+
+Create Div element on page
+
+and set it's width and height
+
+you can also set it's background and border
+``` html
+<div style="width: 100%; height: 800px; border: 1px solid black; background-color: beige;" id="svgGrafic"></div>
+```
+Get this div in program and create new schedule
+``` js
+const grafic = new scheduleViewer(getdiv("svgGrafic"));
+
+
+// way to get div:
+function getdiv(id: string)
+{
+	const el = document.getElementById(id);
+	if (el == null) throw new Error(`${id} not found`);
+	if (el instanceof HTMLDivElement) return el;
+	throw new Error(`${id} element not Div`);
+}
+```
+### Set schedule options
+
+``` js
+const options = {
+    "option": "value"
+}
+const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
+```
+
+### All options:
+option                   | value type | default value | value
+-------------------------|------------|---------------|--------
+openControlPanel         | boolean    | true          | open control panel when scheule created
+revTimeInput             | boolean    | false         | change time input order
+showRealLineAfterEnd     | boolean    | false         | continue show real line after it's ending
+compactLinePlacing       | boolean    | false         | place lines compact
+compactPlacingAlignIsTop | boolean    | true          | vertical line align top or bottom when compact placing is active
+selectionCustomColor     | boolean    | true          | selection color is same as line
+showSeparateLine         | boolean    | true          | show vertical line on cursor
+
+### Save shcedule on page reload
+``` js
+let options = localStorage.getItem("options");
+let lines = localStorage.getItem("lines");
+
+const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
+grafic.setLinesFromString(lines);
+
+// saving options and lines every 500ms
+setInterval(() => {
+	localStorage.setItem("options", grafic.getOptionsString());
+	localStorage.setItem("lines", grafic.getLinesString());
+}, 500);
+```
+
+#
+
 ## How to create schedule with json
-crete json file
+create json file
 
 to add simple lines:
 ``` json5
