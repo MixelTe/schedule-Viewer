@@ -61,7 +61,11 @@ export class scheduleViewer
 		for (let i in newLinesRaw) {
 			newLines.push(newLinesRaw[i]);
 		}
-		this.grafic.setLines(newLines);
+		if (newLines.length > 1)
+		{
+			this.grafic.setLines(newLines);
+			this.settingsMenu.linesIsChanged();
+		}
 	}
 	public getLinesString()
 	{

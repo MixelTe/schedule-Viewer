@@ -1068,7 +1068,7 @@ export class SettingsMenu
 			default: throw new Error();
 		}
 	}
-	private linesIsChanged()
+	public linesIsChanged()
 	{
 		this.linesChanged = true;
 		this.filesInput.value = "";
