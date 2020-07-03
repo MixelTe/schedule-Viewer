@@ -685,7 +685,7 @@ export class SettingsMenu
 	}
 	public getOptions()
 	{
-		return { openControlPanel: this.revTimeInput, revTimeInput: this.menuOpen };
+		return { openControlPanel: this.menuOpen, revTimeInput: this.revTimeInput };
 	}
 
 	private toggleMenu()
