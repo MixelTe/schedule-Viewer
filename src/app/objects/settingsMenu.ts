@@ -18,10 +18,10 @@ export class SettingsMenu
 	private colorizeLineSelectionEl: HTMLInputElement;
 	private compactLinePlacingEl: HTMLInputElement;
 	private revTimeInput = false;
-	private settingsPrm = { height: 120 };
+	private settingsPrm = { height: 140 };
 
 	private addingLinesDIV = document.createElement("div");
-	private addingLinesPrm = { height: 300, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
+	private addingLinesPrm = { height: 320, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
 	private lineInputs: {
 		radioOnce: HTMLInputElement,
 		radioRepeating: HTMLInputElement,
