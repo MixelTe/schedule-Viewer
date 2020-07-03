@@ -948,7 +948,7 @@ export class SettingsMenu
 		{
 			case "add":
 				this.addLine(functions);
-				this.linesChanged = true;
+				this.linesIsChanged();
 				break;
 
 			case "change":
@@ -980,7 +980,7 @@ export class SettingsMenu
 				}
 				functions.changeLine(newData, this.lineToChange);
 				functions.recreate();
-				this.linesChanged = true;
+				this.linesIsChanged();
 				break;
 
 			case "remove":
@@ -990,7 +990,7 @@ export class SettingsMenu
 					functions.removeLine(this.lineToChange)
 					functions.recreate();
 					this.lineMenuButtons(e, "cancel", functions);
-					this.linesChanged = true;
+					this.linesIsChanged();
 				}
 				break;
 
@@ -1053,6 +1053,11 @@ export class SettingsMenu
 
 			default: throw new Error();
 		}
+	}
+	private linesIsChanged()
+	{
+		this.linesChanged = true;
+		this.filesInput.value = "";
 	}
 	private getRndInteger(min: number, max: number)
 	{
