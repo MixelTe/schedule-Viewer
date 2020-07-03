@@ -1235,7 +1235,16 @@ export class SettingsMenu
 			{
 				const el = newSchedule.simpleLines[i];
 
-				try {
+				try
+				{
+					if (typeof el != "object")
+					{
+						const elJson = JSON.stringify(el, undefined, "   ");
+						const re = new RegExp(elJson);
+						let JSONdata = JSON.stringify(newSchedule.simpleLines, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + elJson + "%c");
+						console.log("line not object \n" + JSONdata, "color: red", "");
+						throw "MyError";
+					}
 					this.checkLineFromFile(el, true);
 				} catch (er)
 				{
@@ -1253,7 +1262,16 @@ export class SettingsMenu
 			{
 				const el = newSchedule.realLines[i];
 
-				try {
+				try
+				{
+					if (typeof el != "object")
+					{
+						const elJson = JSON.stringify(el, undefined, "   ");
+						const re = new RegExp(elJson);
+						let JSONdata = JSON.stringify(newSchedule.realLines, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + elJson + "%c");
+						console.log("line not object \n" + JSONdata, "color: red", "");
+						throw "MyError";
+					}
 					this.checkLineFromFile(el, false);
 				} catch (er)
 				{
@@ -1284,18 +1302,23 @@ export class SettingsMenu
 			}
 			console.log(text + "\n" + JSONdata, "color: red", "color: gray");
 		}
-		if (el.interval == undefined) { createlog("line interval not found", "interval"); throw "MyError"; };
+		function createlogNotFound(text: string)
+		{
+			let JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "");
+			console.log(text + "\n" + JSONdata, "color: red", "");
+		}
+		if (el.interval == undefined) { createlogNotFound("line %cinterval%c not found"); throw "MyError"; };
 		if (simpleLine)
 		{
-			if (el.duration == undefined) { createlog("line duration not found", "duration"); throw "MyError"; };
+			if (el.duration == undefined) { createlogNotFound("line %cduration%c not found"); throw "MyError"; };
 		}
 		else
 		{
-			if (el.durations == undefined) { createlog("line duration not found", "durations"); throw "MyError"; };
+			if (el.durations == undefined) { createlogNotFound("line %cdurations%c not found"); throw "MyError"; };
 		}
-		if (el.start == undefined) { createlog("line start not found", "start"); throw "MyError"; };
-		if (el.end == undefined) { createlog("line end not found", "end"); throw "MyError"; };
-		if (el.autoColor == undefined) { createlog("line autoColor not found", "autoColor"); throw "MyError"; };
+		if (el.start == undefined) { createlogNotFound("line %cstart%c not found"); throw "MyError"; };
+		if (el.end == undefined) { createlogNotFound("line %cend%c not found"); throw "MyError"; };
+		if (el.autoColor == undefined) { createlogNotFound("line %cautoColor%c not found"); throw "MyError"; };
 
 		if (typeof el.interval != "number") { createlog("line interval is NaN", "interval"); throw "MyError"; };
 		if (simpleLine)
@@ -1326,7 +1349,7 @@ export class SettingsMenu
 		if (typeof el.autoColor != "boolean") { createlog("line autoColor isn't boolean", "autoColor"); throw "MyError"; };
 		if (!el.autoColor)
 		{
-			if (el.color == undefined) { createlog("line color not found", "color"); throw "MyError"; };
+			if (el.color == undefined) { createlogNotFound("line %ccolor%c not found"); throw "MyError"; };
 			if (typeof el.color != "string") { createlog("line color isn't string", "color"); throw "MyError"; };
 		}
 	}
