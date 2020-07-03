@@ -232,6 +232,11 @@ export class Grafic
 	}
 	public getLines()
 	{
-		return this.lines.getLines();
+		const lines = this.lines.getLines();
+		lines.forEach(el =>
+			{
+				el.selected = false;
+			})
+		return lines;
 	}
 }
