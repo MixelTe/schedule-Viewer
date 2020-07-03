@@ -226,6 +226,7 @@ export class Grafic
 	public setLines(newLines: LineF[])
 	{
 		this.lines.setLines(newLines);
+		this.recreate();
 	}
 	public getLines()
 	{
