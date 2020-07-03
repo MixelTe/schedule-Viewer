@@ -28,7 +28,7 @@ export class Coordinates
 		this.axis.x = 10;
 		this.axis.y = 10;
 		this.axis.width = this.width;
-		this.axis.height = this.height - 50;
+		this.axis.height = this.height - this.axis.y - 40;
 
 		this.setOptions(options);
 		this.recreateScale(zoom, translate);
@@ -241,7 +241,7 @@ export class Coordinates
 	public changeHeightAndRecreate(newHeight: number, translate: number, zoom: number)
 	{
 		newHeight = Math.max(newHeight + this.axis.y + 45 + 20, this.height) - 21
-		this.axis.height = newHeight - 45;
+		this.axis.height = newHeight - this.axis.y - 35;
 		this.changeSVGHeight(newHeight);
 		this.recreateScale(zoom, translate);
 	}
