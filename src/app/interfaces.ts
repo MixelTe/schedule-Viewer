@@ -77,3 +77,13 @@ interface LineF
 	autoColor: boolean,
 	selected: boolean
 }
+
+interface ScheduleOptions
+{
+	openControlPanel?: boolean,
+	revTimeInput?: boolean,
+	showRealLineAfterEnd?: boolean,
+	compactLinePlacing?: boolean,
+	selectionCustomColor?: boolean,
+	showSeparateLine?: boolean
+}

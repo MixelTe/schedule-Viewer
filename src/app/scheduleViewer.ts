@@ -12,7 +12,7 @@ export class scheduleViewer
 	private settingsMenu: SettingsMenu
 
 
-	constructor(body: HTMLDivElement)
+	constructor(body: HTMLDivElement, options?: ScheduleOptions)
 	{
 		this.body = body;
 		this.body.style.position = "relative";
@@ -23,10 +23,10 @@ export class scheduleViewer
 		{
 			const settingsMenuWidth = 310;
 			this.body.appendChild(this.graficBody);
-			this.grafic = new Grafic(this.graficBody, settingsMenuWidth);
+			this.grafic = new Grafic(this.graficBody, settingsMenuWidth, options);
 
 			this.body.appendChild(this.settingsMenuBody);
-			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions());
+			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions(), options);
 
 			this.grafic.setFunctionsForLines({ selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu) });
 		}

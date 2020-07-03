@@ -58,7 +58,7 @@ export class SettingsMenu
 	private overDivText = document.createElement("div");
 	private overDivPrm = { width: 0, height: 0, minusWidth: 0 };
 
-	constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, open = true)
+	constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, options?: ScheduleOptions)
 	{
 		this.menuWidth = width;
 		this.body = body;
@@ -70,8 +70,6 @@ export class SettingsMenu
 		this.body.style.overflowX = "hidden"
 		this.body.style.display = "inline-block";
 		this.body.style.borderLeft = `${2}px solid black`;
-
-		if (!open) this.toggleMenu();
 		this.body.style.transition = "width 1s";
 
 		const lineInputs: {
@@ -672,6 +670,18 @@ export class SettingsMenu
 		this.lineInputs.radioOnce.checked = true;
 		this.disableInputs("once");
 		this.colorInputing("toggleAuto");
+
+		this.setOptions(options);
+	}
+	private setOptions(options?: ScheduleOptions)
+	{
+		if (options?.openControlPanel != undefined && !options.openControlPanel) this.toggleMenu();
+		if (options?.revTimeInput != undefined && typeof options.revTimeInput == "boolean")
+		{
+			this.revTimeInput = !options.revTimeInput;
+			this.toggleLineMenuRev();
+			this.revTimeInputEl.checked = this.revTimeInput;
+		}
 	}
 
 	private toggleMenu()

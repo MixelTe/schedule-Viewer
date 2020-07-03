@@ -17,7 +17,7 @@ export class Coordinates
 	private body: SVGGElement;
 	private changeSVGHeight: (newHeight: number) => void;
 
-	constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0, changeSVGHeight: (newHeight: number) => void)
+	constructor(body: SVGGElement, bodyPrm: Rect, oneHour: number, zoom = 1, translate = 0, changeSVGHeight: (newHeight: number) => void, options?: ScheduleOptions)
 	{
 		this.body = body;
 		this.oneHour = oneHour;
@@ -30,7 +30,12 @@ export class Coordinates
 		this.axis.width = this.width;
 		this.axis.height = this.height - 50;
 
+		this.setOptions(options);
 		this.recreateScale(zoom, translate);
+	}
+	private setOptions(options?: ScheduleOptions)
+	{
+		if (options?.showSeparateLine != undefined && typeof options.showSeparateLine == "boolean") this.scale.separateLine.active = options.showSeparateLine;
 	}
 	private createAxis(translate = 0)
 	{

@@ -20,7 +20,7 @@ export class Lines
 	private overLineCustomColor = true;
 	private overLineLinearGradient: { select: {array: SVGStopElement[]}, over: {array: SVGStopElement[]}} | undefined;
 
-	constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void)
+	constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void, options?: ScheduleOptions)
 	{
 		this.body = body;
 		this.overBody = overBody;
@@ -67,11 +67,18 @@ export class Lines
 		defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"))
 
 		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
+		this.setOptions(options);
 		this.recreateLines(axis, 0, zoom);
 
 		this.overBody.addEventListener("click", (e) => this.overBodyClick(e));
 		this.overBody.addEventListener("mouseover", (e) => this.overBodyMouse(e, "over"));
 		this.overBody.addEventListener("mouseout", (e) => this.overBodyMouse(e, "out"));
+	}
+	private setOptions(options?: ScheduleOptions)
+	{
+		if (options?.showRealLineAfterEnd != undefined && typeof options.showRealLineAfterEnd == "boolean") this.showLineAfterEnd = options.showRealLineAfterEnd;
+		if (options?.compactLinePlacing != undefined && typeof options.compactLinePlacing == "boolean") this.compactLinePlacing = options.compactLinePlacing;
+		if (options?.selectionCustomColor != undefined && typeof options.selectionCustomColor == "boolean") this.overLineCustomColor = options.selectionCustomColor;
 	}
 
 	public recreateLines(axis: Rect, scroll: number, zoom: number)
