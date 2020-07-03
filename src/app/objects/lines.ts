@@ -14,6 +14,7 @@ export class Lines
 	private showLineAfterEnd = false;
 	private compactLinePlacing = false;
 	private compactPlacingOnTop = true;
+	private minSpace = 30;
 
 	private overLineOpacity = 0;
 	private overLineOpacityMouseOver = 0.2;
@@ -104,9 +105,9 @@ export class Lines
 
 		let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
 		if (this.compactLinePlacing) spaces = 0;
-		if (spaces < 20)
+		if (spaces < this.minSpace)
 		{
-			spaces = 20;
+			spaces = this.minSpace;
 			// console.log(axis);
 		}
 		this.changeHeightAndRecreate((this.lines.length - 1) * spaces, scroll, zoom);
