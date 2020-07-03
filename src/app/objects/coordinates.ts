@@ -240,6 +240,7 @@ export class Coordinates
 
 	public changeHeightAndRecreate(newHeight: number, translate: number, zoom: number)
 	{
+		newHeight += 15;
 		newHeight = Math.max(newHeight + this.axis.y + 45 + 20, this.height) - 21
 		this.axis.height = newHeight - this.axis.y - 35;
 		this.changeSVGHeight(newHeight);
