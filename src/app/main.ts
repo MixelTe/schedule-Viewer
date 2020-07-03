@@ -9,7 +9,7 @@ if (lines != undefined) grafic.setLinesFromString(lines);
 
 
 setInterval(() => {
-	localStorage.setItem("options", grafic.getOptions());
+	localStorage.setItem("options", grafic.getOptionsString());
 	localStorage.setItem("lines", grafic.getLinesString());
 }, 500);
 

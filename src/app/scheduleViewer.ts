@@ -12,7 +12,7 @@ export class scheduleViewer
 	private settingsMenu: SettingsMenu
 
 
-	constructor(body: HTMLDivElement, options?: string | null)
+	constructor(body: HTMLDivElement, options?: string | null | ScheduleOptions)
 	{
 		this.body = body;
 		this.body.style.position = "relative";
@@ -23,7 +23,14 @@ export class scheduleViewer
 		let newOptions = undefined
 		if (options != undefined)
 		{
-			newOptions = JSON.parse(options);
+			if (typeof options == "string")
+			{
+				newOptions = JSON.parse(options);
+			}
+			else
+			{
+				newOptions = options;
+			}
 		}
 
 		{
@@ -40,7 +47,7 @@ export class scheduleViewer
 		this.body.addEventListener("dragover", (e) => this.settingsMenu.mainBodyDragover.bind(this.settingsMenu)(e));
 	}
 
-	public getOptions()
+	public getOptionsString()
 	{
 		const settingsMenuOptions = this.settingsMenu.getOptions();
 		const graficOptions = this.grafic.getOptions();
