@@ -84,6 +84,10 @@ export class Lines
 	{
 		return { showRealLineAfterEnd: this.showLineAfterEnd, compactLinePlacing: this.compactLinePlacing, selectionCustomColor: this.overLineCustomColor};
 	}
+	public setLines(newLines: LineF[])
+	{
+		this.lines = newLines;
+	}
 
 	public recreateLines(axis: Rect, scroll: number, zoom: number)
 	{

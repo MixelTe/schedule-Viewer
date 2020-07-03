@@ -223,4 +223,12 @@ export class Grafic
 	{
 		this.lines.setFunctionsForLines(functions);
 	}
+	public setLines(newLines: LineF[])
+	{
+		this.lines.setLines(newLines);
+	}
+	public getLines()
+	{
+		return this.lines.getLines();
+	}
 }

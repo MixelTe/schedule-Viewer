@@ -47,4 +47,12 @@ export class scheduleViewer
     		showSeparateLine: graficOptions.showSeparateLine,
 		}
 	}
+	public setLines(newLines: LineF[])
+	{
+		this.grafic.setLines(newLines);
+	}
+	public getLines()
+	{
+		return Object.assign({}, this.grafic.getLines());
+	}
 }
