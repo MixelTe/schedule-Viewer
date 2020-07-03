@@ -4,6 +4,8 @@ export class Lines {
         this.functionsForLines = {};
         this.showLineAfterEnd = false;
         this.compactLinePlacing = false;
+        this.compactPlacingOnTop = true;
+        this.minSpace = 30;
         this.overLineOpacity = 0;
         this.overLineOpacityMouseOver = 0.2;
         this.overLineOpacitySelected = 0.5;
@@ -59,9 +61,16 @@ export class Lines {
             this.compactLinePlacing = options.compactLinePlacing;
         if (options?.selectionCustomColor != undefined && typeof options.selectionCustomColor == "boolean")
             this.overLineCustomColor = options.selectionCustomColor;
+        if (options?.compactPlacingAlignIsTop != undefined && typeof options.compactPlacingAlignIsTop == "boolean")
+            this.compactPlacingOnTop = options.compactPlacingAlignIsTop;
     }
     getOptions() {
-        return { showRealLineAfterEnd: this.showLineAfterEnd, compactLinePlacing: this.compactLinePlacing, selectionCustomColor: this.overLineCustomColor };
+        return {
+            showRealLineAfterEnd: this.showLineAfterEnd,
+            compactLinePlacing: this.compactLinePlacing,
+            selectionCustomColor: this.overLineCustomColor,
+            compactPlacingAlignIsTop: this.compactPlacingOnTop,
+        };
     }
     setLines(newLines) {
         this.lines = newLines;
@@ -73,8 +82,8 @@ export class Lines {
         let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
         if (this.compactLinePlacing)
             spaces = 0;
-        if (spaces < 20) {
-            spaces = 20;
+        if (spaces < this.minSpace) {
+            spaces = this.minSpace;
             // console.log(axis);
         }
         this.changeHeightAndRecreate((this.lines.length - 1) * spaces, scroll, zoom);
@@ -106,8 +115,13 @@ export class Lines {
         line.setAttribute("stroke", `${el.color}`);
         line.setAttribute("stroke-width", `${el.width}`);
         line.setAttribute("clip-path", "url(#graficLinesClip)");
+        let y;
+        if (this.compactPlacingOnTop)
+            y = axis.y + spaces * index;
+        else
+            y = axis.y + axis.height - spaces * index;
         const oneSecond = (this.oneHour / 60 / 60 * zoom);
-        let path = `M ${axis.x + el.start * oneSecond} ${axis.y + axis.height - spaces * index} `;
+        let path = `M ${axis.x + el.start * oneSecond} ${y} `;
         const interval = el.dasharray[0] * oneSecond;
         if (typeof el.dasharray[1] != "number")
             throw new Error("NaN");
@@ -119,7 +133,7 @@ export class Lines {
             const nextX = axis.x + interval * x + el.start * oneSecond;
             path += `
             h ${duration}
-            M ${nextX} ${axis.y + axis.height - spaces * index}`;
+            M ${nextX} ${y}`;
             if (nextX > el.end * oneSecond + axis.x)
                 break;
         }
@@ -132,8 +146,13 @@ export class Lines {
         line.setAttribute("stroke", `${el.color}`);
         line.setAttribute("stroke-width", `${el.width}`);
         line.setAttribute("clip-path", "url(#graficLinesClip)");
+        let y;
+        if (this.compactPlacingOnTop)
+            y = axis.y + spaces * index;
+        else
+            y = axis.y + axis.height - spaces * index;
         const oneSecond = (this.oneHour / 60 / 60 * zoom);
-        let path = `M ${axis.x + el.start * oneSecond} ${axis.y + axis.height - spaces * index} `;
+        let path = `M ${axis.x + el.start * oneSecond} ${y} `;
         const interval = el.dasharray[0] * oneSecond;
         if (typeof el.dasharray[1] != "object")
             throw new Error("Number");
@@ -153,7 +172,7 @@ export class Lines {
             const nextX = axis.x + interval * x + el.start * oneSecond;
             path += `
             ${dx}
-            M ${nextX} ${axis.y + axis.height - spaces * index}`;
+            M ${nextX} ${y}`;
             if (!this.showLineAfterEnd && nextX > el.end * oneSecond + axis.x)
                 break;
         }
@@ -175,7 +194,12 @@ export class Lines {
             rect.setAttribute("fill-opacity", `${this.overLineOpacity}`);
         rect.setAttribute("clip-path", "url(#graficLinesClip)");
         rect.setAttribute("x", `${axis.x}`);
-        rect.setAttribute("y", `${axis.y + axis.height - spaces * index - spaces / 2}`);
+        let y;
+        if (this.compactPlacingOnTop)
+            y = axis.y + spaces * index;
+        else
+            y = axis.y + axis.height - spaces * index;
+        rect.setAttribute("y", `${y - spaces / 2}`);
         rect.setAttribute("width", `${axis.width}`);
         rect.setAttribute("height", `${spaces}`);
         return rect;

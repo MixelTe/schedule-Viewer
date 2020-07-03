@@ -41,12 +41,17 @@ export class scheduleViewer {
             revTimeInput: settingsMenuOptions.revTimeInput,
             showRealLineAfterEnd: graficOptions.showRealLineAfterEnd,
             compactLinePlacing: graficOptions.compactLinePlacing,
+            compactPlacingAlignIsTop: graficOptions.compactPlacingAlignIsTop,
             selectionCustomColor: graficOptions.selectionCustomColor,
             showSeparateLine: graficOptions.showSeparateLine,
         };
         return JSON.stringify(options);
     }
     setLinesFromString(linesString) {
+        if (linesString == null) {
+            console.error("lines string is null");
+            return;
+        }
         let newLinesRaw;
         try {
             newLinesRaw = JSON.parse(linesString);

@@ -32,18 +32,19 @@ export class SettingsMenu {
         this.body.style.transition = "width 1s";
         const lineInputs = {};
         {
+            const scale = 40;
             const toggleMenuDiv = document.createElement("div");
-            toggleMenuDiv.style.height = `${40}px`;
+            toggleMenuDiv.style.height = `${scale}px`;
             toggleMenuDiv.style.position = "absolute";
             toggleMenuDiv.style.top = `${2}px`;
-            toggleMenuDiv.style.right = `${2}px`;
+            toggleMenuDiv.style.left = `calc(100% - ${scale + 2}px)`;
             toggleMenuDiv.style.display = "block";
-            toggleMenuDiv.style.width = "100%";
+            toggleMenuDiv.style.width = `${scale}px`;
             toggleMenuDiv.style.textAlign = "right";
             this.body.appendChild(toggleMenuDiv);
             this.toggleMenuEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            this.toggleMenuEl.setAttribute("width", `${40}`);
-            this.toggleMenuEl.setAttribute("height", `${40}`);
+            this.toggleMenuEl.setAttribute("width", `${scale}`);
+            this.toggleMenuEl.setAttribute("height", `${scale}`);
             this.toggleMenuEl.setAttribute("viewBox", `0 0 20 20`);
             toggleMenuDiv.appendChild(this.toggleMenuEl);
             const symbol = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -106,7 +107,7 @@ export class SettingsMenu {
                 return input;
             };
             this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
-            this.revTimeInputEl = createSetting("reverse time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
+            this.revTimeInputEl = createSetting("change time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
             this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
             this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
         }
@@ -381,7 +382,7 @@ export class SettingsMenu {
                 this.addingLinesDIV.appendChild(buttonsDIV);
                 lineInputs.buttonRemove = createButton("remove", buttonsDIV);
                 lineInputs.buttonChange = createButton("change", buttonsDIV);
-                lineInputs.buttonCancel = createButton("cancel", buttonsDIV);
+                lineInputs.buttonCancel = createButton("clear", buttonsDIV);
                 lineInputs.buttonAdd = createButton("add", buttonsDIV);
             }
             this.addingLinesDIV.appendChild(function () {
@@ -603,10 +604,17 @@ export class SettingsMenu {
         }
         // console.log("Yee!!!");
         if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined) {
-            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+            if (typeof lineData.duration == "object") {
+                functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+            }
+            else {
+                functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+            }
         }
         else {
             if (lineData.duration == undefined)
+                throw new Error();
+            if (typeof lineData.duration == "object")
                 throw new Error();
             functions.addSympleLine(1, lineData.duration, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
         }
@@ -657,6 +665,14 @@ export class SettingsMenu {
                     throw e;
             }
             ;
+        }
+        else if (this.lineToChange != undefined) {
+            duration = this.lineInputs.duration.value.split(",").map(el => {
+                const num = Number(el);
+                if (Number.isNaN(num))
+                    throw new Error("NaN");
+                return num;
+            });
         }
         if (this.lineInputs.radioRepeating.checked) {
             try {
@@ -959,7 +975,7 @@ export class SettingsMenu {
         this.lineInputs.radioOnce.disabled = false;
         switch (state) {
             case "noSelect":
-                this.lineInputs.buttonAdd.disabled = false;
+                // this.lineInputs.buttonAdd.disabled = false;
                 this.lineInputs.buttonChange.disabled = true;
                 this.lineInputs.buttonRemove.disabled = true;
                 this.disableInputs("none");
@@ -971,7 +987,7 @@ export class SettingsMenu {
                 this.lineInputs.radioRepeating.checked = true;
                 this.disableInputs("duration");
             case "selected":
-                this.lineInputs.buttonAdd.disabled = true;
+                // this.lineInputs.buttonAdd.disabled = true;
                 this.lineInputs.buttonChange.disabled = false;
                 this.lineInputs.buttonRemove.disabled = false;
                 break;

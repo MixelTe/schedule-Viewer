@@ -2,8 +2,7 @@ import { scheduleViewer } from "./scheduleViewer.js";
 let options = localStorage.getItem("options");
 let lines = localStorage.getItem("lines");
 const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
-if (lines != undefined)
-    grafic.setLinesFromString(lines);
+grafic.setLinesFromString(lines);
 setInterval(() => {
     localStorage.setItem("options", grafic.getOptionsString());
     localStorage.setItem("lines", grafic.getLinesString());
