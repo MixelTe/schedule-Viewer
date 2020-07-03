@@ -1,26 +1,17 @@
+import { ColorPicker } from "../../lib/colorPicker.js";
+import { AskWindow } from "./askWindow.js";
 export class SettingsMenu {
-    constructor(body, width, functions, open = true) {
+    constructor(body, width, functions, options) {
         this.menuOpen = true;
         this.titleDIV = document.createElement("div");
         this.titlePrm = { height: 100 };
         this.settingsDIV = document.createElement("div");
-        this.showSepLine = true;
         this.revTimeInput = false;
-        this.settingsPrm = { height: 100 };
+        this.settingsPrm = { height: 140 };
         this.addingLinesDIV = document.createElement("div");
-        this.addingLinesPrm = { height: 200, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
-        this.lineInputs = {
-            radioReal: { input: {}, div: {} },
-            radioSimple: { input: {}, div: {} },
-            interval: {},
-            duration: { input: {}, div: {} },
-            durations: { input: {}, div: {} },
-            start: {},
-            end: {},
-            buttonAdd: {},
-            buttonChange: {},
-            buttonRemove: {},
-        };
+        this.addingLinesPrm = { height: 320, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
+        this.colorPicker = new ColorPicker();
+        this.linesChanged = false;
         this.loadFilesDIV = document.createElement("div");
         this.loadFilesPrm = { height: 80 };
         this.saveFileDIV = document.createElement("div");
@@ -38,9 +29,8 @@ export class SettingsMenu {
         this.body.style.overflowX = "hidden";
         this.body.style.display = "inline-block";
         this.body.style.borderLeft = `${2}px solid black`;
-        if (!open)
-            this.toggleMenu();
         this.body.style.transition = "width 1s";
+        const lineInputs = {};
         {
             const toggleMenuDiv = document.createElement("div");
             toggleMenuDiv.style.height = `${40}px`;
@@ -91,41 +81,34 @@ export class SettingsMenu {
             title.innerText = "Settings";
             this.settingsDIV.appendChild(title);
             const menu = document.createElement("div");
-            menu.style.height = "50px";
+            menu.style.height = "90px";
             menu.style.display = "flex";
             menu.style.justifyContent = "space-around";
             menu.style.alignItems = "center";
             menu.style.flexWrap = "wrap";
             this.settingsDIV.appendChild(menu);
-            const sepLine = document.createElement("div");
-            sepLine.style.height = "max-content";
-            sepLine.style.width = "max-content";
-            menu.appendChild(sepLine);
-            this.toggleSepLineEl = document.createElement("input");
-            this.toggleSepLineEl.type = "checkbox";
-            this.toggleSepLineEl.checked = functions.SepLineIsActive();
-            this.toggleSepLineEl.id = "scheduleViewer-SettingsMenu-sepLineInput";
-            sepLine.appendChild(this.toggleSepLineEl);
-            const sepLineLable = document.createElement("label");
-            sepLineLable.style.height = "max-content";
-            sepLineLable.style.fontSize = "16px";
-            sepLineLable.htmlFor = "scheduleViewer-SettingsMenu-sepLineInput";
-            sepLineLable.innerText = "show separate line";
-            sepLine.appendChild(sepLineLable);
-            const revTime = document.createElement("div");
-            revTime.style.height = "max-content";
-            revTime.style.width = "max-content";
-            menu.appendChild(revTime);
-            this.revTimeInputEl = document.createElement("input");
-            this.revTimeInputEl.type = "checkbox";
-            this.revTimeInputEl.id = "scheduleViewer-SettingsMenu-showAfterEndInput";
-            revTime.appendChild(this.revTimeInputEl);
-            const revTimeLable = document.createElement("label");
-            revTimeLable.style.height = "max-content";
-            revTimeLable.style.fontSize = "16px";
-            revTimeLable.htmlFor = "scheduleViewer-SettingsMenu-showAfterEndInput";
-            revTimeLable.innerText = "reverse time input order";
-            revTime.appendChild(revTimeLable);
+            const createSetting = (text, id, checked) => {
+                const div = document.createElement("div");
+                div.style.height = "max-content";
+                div.style.width = "max-content";
+                menu.appendChild(div);
+                const input = document.createElement("input");
+                input.type = "checkbox";
+                input.checked = checked;
+                input.id = id;
+                div.appendChild(input);
+                const lable = document.createElement("label");
+                lable.style.height = "max-content";
+                lable.style.fontSize = "16px";
+                lable.htmlFor = id;
+                lable.innerText = text;
+                div.appendChild(lable);
+                return input;
+            };
+            this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
+            this.revTimeInputEl = createSetting("reverse time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
+            this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
+            this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
         }
         {
             this.addingLinesDIV.style.height = `${this.addingLinesPrm.height}px`;
@@ -134,147 +117,75 @@ export class SettingsMenu {
             title.style.height = "40px";
             title.style.fontSize = "25px";
             title.style.textAlign = "center";
-            title.innerText = "Lines";
+            title.innerText = "Events";
             this.addingLinesDIV.appendChild(title);
-            const inputWidth = 60;
+            const inputWidth = 100;
             const inputHeight = 15;
+            const inputRadius = 3;
+            const leftRowPadingRight = 10;
             {
-                const addRealLineMenu = document.createElement("div");
-                addRealLineMenu.style.height = "120px";
-                addRealLineMenu.style.display = "flex";
-                addRealLineMenu.style.justifyContent = "space-evenly";
-                addRealLineMenu.style.alignItems = "center";
-                addRealLineMenu.style.flexWrap = "wrap";
-                this.addingLinesDIV.appendChild(addRealLineMenu);
-                const realLineMenu = document.createElement("div");
-                realLineMenu.style.height = "100%";
-                realLineMenu.style.width = "235px";
-                realLineMenu.style.display = "flex";
-                realLineMenu.style.justifyContent = "space-around";
-                realLineMenu.style.alignItems = "center";
-                realLineMenu.style.flexWrap = "wrap";
-                addRealLineMenu.appendChild(realLineMenu);
+                const linesMenuTableDIV = document.createElement("div");
+                linesMenuTableDIV.style.width = "100%";
+                linesMenuTableDIV.style.height = "160px";
+                linesMenuTableDIV.style.display = "flex";
+                linesMenuTableDIV.style.justifyContent = "center";
+                this.addingLinesDIV.appendChild(linesMenuTableDIV);
+                const linesMenuTable = document.createElement("table");
+                linesMenuTable.style.width = "90%";
+                linesMenuTable.style.height = "100%";
+                linesMenuTableDIV.appendChild(linesMenuTable);
                 {
-                    const intervalDiv = document.createElement("div");
-                    intervalDiv.style.height = "max-content";
-                    intervalDiv.style.width = "max-content";
-                    // sympleLineInterval.style.marginRight = "30px";
-                    realLineMenu.appendChild(intervalDiv);
-                    const intervalLable = document.createElement("label");
-                    intervalLable.style.height = "max-content";
-                    intervalLable.style.marginRight = "3px";
-                    intervalLable.style.fontSize = "16px";
-                    intervalLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputInterval";
-                    intervalLable.innerText = "interval";
-                    intervalDiv.appendChild(intervalLable);
-                    const intervalInput = document.createElement("input");
-                    intervalInput.type = "input";
-                    intervalInput.style.width = `${inputWidth}px`;
-                    intervalInput.style.height = `${inputHeight}px`;
-                    intervalInput.id = "scheduleViewer-SettingsMenu-realLineInputInterval";
-                    intervalInput.title = this.addingLinesPrm.inputtitle;
-                    intervalInput.placeholder = this.addingLinesPrm.inputplaceholder;
-                    intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
-                    intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
-                    intervalDiv.appendChild(intervalInput);
-                    this.lineInputs.interval = intervalInput;
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+                        const startLable = document.createElement("label");
+                        // startLable.style.height = "max-content";
+                        // startLable.style.marginRight = "3px";
+                        startLable.style.fontSize = "16px";
+                        startLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth";
+                        startLable.innerText = "Start:";
+                        tableCell.appendChild(startLable);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                        const startInput = document.createElement("input");
+                        startInput.type = "input";
+                        startInput.style.width = `${inputWidth}px`;
+                        startInput.style.height = `${inputHeight}px`;
+                        startInput.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
+                        startInput.title = this.addingLinesPrm.inputtitle;
+                        startInput.placeholder = this.addingLinesPrm.inputplaceholder;
+                        startInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
+                        startInput.style.borderRadius = `${inputRadius}px`;
+                        startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
+                        tableCell.appendChild(startInput);
+                        lineInputs.start = startInput;
+                    }
                 }
                 {
-                    const durationInputMenu = document.createElement("div");
-                    durationInputMenu.style.height = "40px";
-                    durationInputMenu.style.width = "100%";
-                    durationInputMenu.style.display = "flex";
-                    durationInputMenu.style.justifyContent = "space-around";
-                    durationInputMenu.style.flexDirection = "column";
-                    durationInputMenu.style.alignItems = "center";
-                    durationInputMenu.style.flexWrap = "wrap";
-                    realLineMenu.appendChild(durationInputMenu);
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
                     {
-                        const typeDIV = document.createElement("div");
-                        typeDIV.style.height = "max-content";
-                        typeDIV.style.width = "64px";
-                        durationInputMenu.appendChild(typeDIV);
-                        {
-                            const DIV = document.createElement("div");
-                            DIV.style.height = "max-content";
-                            DIV.style.width = "max-content";
-                            typeDIV.appendChild(DIV);
-                            const typeLable = document.createElement("label");
-                            typeLable.style.height = "max-content";
-                            typeLable.style.fontSize = "16px";
-                            typeLable.htmlFor = "scheduleViewer-SettingsMenu-realType";
-                            typeLable.innerText = "real";
-                            DIV.appendChild(typeLable);
-                            const type = document.createElement("input");
-                            type.type = "radio";
-                            type.name = "scheduleViewer-SettingsMenu-type";
-                            type.id = "scheduleViewer-SettingsMenu-realType";
-                            DIV.appendChild(type);
-                            this.lineInputs.radioReal.input = type;
-                            this.lineInputs.radioReal.div = DIV;
-                        }
-                        {
-                            const DIV = document.createElement("div");
-                            DIV.style.height = "max-content";
-                            DIV.style.width = "max-content";
-                            typeDIV.appendChild(DIV);
-                            const typeLable = document.createElement("label");
-                            typeLable.style.height = "max-content";
-                            typeLable.style.fontSize = "16px";
-                            typeLable.htmlFor = "scheduleViewer-SettingsMenu-sympleType";
-                            typeLable.innerText = "simple";
-                            DIV.appendChild(typeLable);
-                            const type = document.createElement("input");
-                            type.type = "radio";
-                            type.name = "scheduleViewer-SettingsMenu-type";
-                            type.id = "scheduleViewer-SettingsMenu-sympleType";
-                            DIV.appendChild(type);
-                            this.lineInputs.radioSimple.input = type;
-                            this.lineInputs.radioSimple.div = DIV;
-                        }
-                    }
-                    {
-                        const durationDIV = document.createElement("div");
-                        durationDIV.style.height = "max-content";
-                        durationDIV.style.width = "max-content";
-                        durationInputMenu.appendChild(durationDIV);
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
                         const durationLable = document.createElement("label");
-                        durationLable.style.height = "max-content";
-                        durationLable.style.marginRight = "3px";
-                        durationLable.style.fontSize = "16px";
-                        durationLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputDuration";
-                        durationLable.innerText = "durations";
-                        durationDIV.appendChild(durationLable);
-                        const durationInput = document.createElement("input");
-                        durationInput.type = "input";
-                        durationInput.style.width = `${55}px`;
-                        durationInput.style.height = `${16}px`;
-                        durationInput.id = "scheduleViewer-SettingsMenu-realLineInputDuration";
-                        durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
-                        durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
-                        durationDIV.appendChild(durationInput);
-                        this.lineInputs.durations.input = durationInput;
-                        this.lineInputs.durations.div = durationDIV;
-                        const durationLable2 = document.createElement("label");
-                        durationLable2.style.height = "max-content";
-                        durationLable2.style.marginRight = "3px";
-                        durationLable2.style.fontSize = "16px";
-                        durationLable2.htmlFor = "scheduleViewer-SettingsMenu-realLineInputDuration";
-                        durationLable2.innerText = "sec list";
-                        durationDIV.appendChild(durationLable2);
-                    }
-                    {
-                        const durationDIV = document.createElement("div");
-                        durationDIV.style.height = "max-content";
-                        durationDIV.style.width = "max-content";
-                        durationInputMenu.appendChild(durationDIV);
-                        const durationLable = document.createElement("label");
-                        durationLable.style.height = "max-content";
-                        durationLable.style.marginRight = "3px";
+                        // durationLable.style.height = "max-content";
+                        // durationLable.style.marginRight = "3px";
                         durationLable.style.fontSize = "16px";
                         durationLable.htmlFor = "scheduleViewer-SettingsMenu-inputDuration";
-                        durationLable.innerText = "duration:";
-                        durationDIV.appendChild(durationLable);
+                        durationLable.innerText = "Duration:";
+                        tableCell.appendChild(durationLable);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
                         const durationInput = document.createElement("input");
                         durationInput.type = "input";
                         durationInput.style.width = `${inputWidth}px`;
@@ -283,93 +194,228 @@ export class SettingsMenu {
                         durationInput.title = this.addingLinesPrm.inputtitle;
                         durationInput.placeholder = this.addingLinesPrm.inputplaceholder;
                         durationInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
+                        durationInput.style.borderRadius = `${inputRadius}px`;
                         durationInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
-                        durationDIV.appendChild(durationInput);
-                        this.lineInputs.duration.input = durationInput;
-                        this.lineInputs.duration.div = durationDIV;
+                        tableCell.appendChild(durationInput);
+                        lineInputs.duration = durationInput;
+                        // lineInputs.duration.div = durationDIV;
                     }
                 }
                 {
-                    const startDIV = document.createElement("div");
-                    startDIV.style.height = "max-content";
-                    startDIV.style.width = "max-content";
-                    // sympleLineStart.style.marginRight = "30px";
-                    realLineMenu.appendChild(startDIV);
-                    const startLable = document.createElement("label");
-                    startLable.style.height = "max-content";
-                    startLable.style.marginRight = "3px";
-                    startLable.style.fontSize = "16px";
-                    startLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputStarth";
-                    startLable.innerText = "start:";
-                    startDIV.appendChild(startLable);
-                    const startInput = document.createElement("input");
-                    startInput.type = "input";
-                    startInput.style.width = `${inputWidth}px`;
-                    startInput.style.height = `${inputHeight}px`;
-                    startInput.id = "scheduleViewer-SettingsMenu-realLineInputStarth";
-                    startInput.title = this.addingLinesPrm.inputtitle;
-                    startInput.placeholder = this.addingLinesPrm.inputplaceholder;
-                    startInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
-                    startInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
-                    startDIV.appendChild(startInput);
-                    this.lineInputs.start = startInput;
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+                    lineInputs.freqenceRow = tableRow;
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.innerText = "Freqence:";
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                        const typeO = document.createElement("input");
+                        typeO.type = "radio";
+                        typeO.name = "scheduleViewer-SettingsMenu-type";
+                        typeO.id = "scheduleViewer-SettingsMenu-realType";
+                        tableCell.appendChild(typeO);
+                        lineInputs.radioOnce = typeO;
+                        const typeLableO = document.createElement("label");
+                        typeLableO.style.height = "max-content";
+                        typeLableO.style.fontSize = "16px";
+                        typeLableO.htmlFor = "scheduleViewer-SettingsMenu-realType";
+                        typeLableO.innerText = "once";
+                        tableCell.appendChild(typeLableO);
+                        const typeR = document.createElement("input");
+                        typeR.type = "radio";
+                        typeR.name = "scheduleViewer-SettingsMenu-type";
+                        typeR.id = "scheduleViewer-SettingsMenu-sympleType";
+                        tableCell.appendChild(typeR);
+                        lineInputs.radioRepeating = typeR;
+                        const typeLableR = document.createElement("label");
+                        typeLableR.style.height = "max-content";
+                        typeLableR.style.fontSize = "16px";
+                        typeLableR.htmlFor = "scheduleViewer-SettingsMenu-sympleType";
+                        typeLableR.innerText = "repeat";
+                        tableCell.appendChild(typeLableR);
+                    }
                 }
                 {
-                    const endDIV = document.createElement("div");
-                    endDIV.style.height = "max-content";
-                    endDIV.style.width = "max-content";
-                    // sympleLineEnd.style.marginRight = "30px";
-                    realLineMenu.appendChild(endDIV);
-                    const endLable = document.createElement("label");
-                    endLable.style.height = "max-content";
-                    endLable.style.marginRight = "3px";
-                    endLable.style.fontSize = "16px";
-                    endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh";
-                    endLable.innerText = "end:";
-                    endDIV.appendChild(endLable);
-                    const endInput = document.createElement("input");
-                    endInput.type = "input";
-                    endInput.style.width = `${inputWidth}px`;
-                    endInput.style.height = `${inputHeight}px`;
-                    endInput.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
-                    endInput.title = this.addingLinesPrm.inputtitle;
-                    endInput.placeholder = this.addingLinesPrm.inputplaceholder;
-                    endInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
-                    endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
-                    endDIV.appendChild(endInput);
-                    this.lineInputs.end = endInput;
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+                        const intervalLable = document.createElement("label");
+                        // intervalLable.style.height = "max-content";
+                        // intervalLable.style.marginRight = "3px";
+                        intervalLable.style.fontSize = "16px";
+                        intervalLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputInterval";
+                        intervalLable.innerText = "Interval";
+                        tableCell.appendChild(intervalLable);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                        const intervalInput = document.createElement("input");
+                        intervalInput.type = "input";
+                        intervalInput.style.width = `${inputWidth}px`;
+                        intervalInput.style.height = `${inputHeight}px`;
+                        intervalInput.id = "scheduleViewer-SettingsMenu-realLineInputInterval";
+                        intervalInput.title = this.addingLinesPrm.inputtitle;
+                        intervalInput.placeholder = this.addingLinesPrm.inputplaceholder;
+                        intervalInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
+                        intervalInput.style.borderRadius = `${inputRadius}px`;
+                        intervalInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
+                        tableCell.appendChild(intervalInput);
+                        lineInputs.interval = intervalInput;
+                    }
                 }
-                const breakDiv = document.createElement("div");
-                breakDiv.style.height = "0px";
-                breakDiv.style.flexBasis = "100%";
-                // sympleLineMenu.appendChild(breakDiv);
+                {
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+                        const endLable = document.createElement("label");
+                        // endLable.style.height = "max-content";
+                        // endLable.style.marginRight = "3px";
+                        endLable.style.fontSize = "16px";
+                        endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh";
+                        endLable.innerText = "End:";
+                        tableCell.appendChild(endLable);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                        const endInput = document.createElement("input");
+                        endInput.type = "input";
+                        endInput.style.width = `${inputWidth}px`;
+                        endInput.style.height = `${inputHeight}px`;
+                        endInput.id = "scheduleViewer-SettingsMenu-realLineInputEndh";
+                        endInput.title = this.addingLinesPrm.inputtitle;
+                        endInput.placeholder = this.addingLinesPrm.inputplaceholder;
+                        endInput.style.border = `${this.addingLinesPrm.inputsBorder}`;
+                        endInput.style.borderRadius = `${inputRadius}px`;
+                        endInput.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
+                        tableCell.appendChild(endInput);
+                        lineInputs.end = endInput;
+                    }
+                }
+                {
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+                        const endLable = document.createElement("label");
+                        // endLable.style.height = "max-content";
+                        // endLable.style.marginRight = "3px";
+                        endLable.style.fontSize = "16px";
+                        endLable.htmlFor = "scheduleViewer-SettingsMenu-realLineInputEndh";
+                        endLable.innerText = "Color:";
+                        tableCell.appendChild(endLable);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                        const colorDiv = document.createElement("div");
+                        colorDiv.style.display = "inline-block";
+                        colorDiv.style.width = "50px";
+                        colorDiv.style.height = "70%";
+                        colorDiv.style.backgroundColor = "lightgreen";
+                        colorDiv.style.border = "1px solid gray";
+                        tableCell.appendChild(colorDiv);
+                        lineInputs.colorDiv = colorDiv;
+                        const checkBox = document.createElement("input");
+                        checkBox.type = "checkBox";
+                        checkBox.checked = true;
+                        checkBox.id = "scheduleViewer-SettingsMenu-colorAuto";
+                        tableCell.appendChild(checkBox);
+                        lineInputs.checkBoxColor = checkBox;
+                        const radioLable = document.createElement("label");
+                        radioLable.style.height = "max-content";
+                        radioLable.style.fontSize = "16px";
+                        radioLable.htmlFor = "scheduleViewer-SettingsMenu-colorAuto";
+                        radioLable.innerText = "auto";
+                        tableCell.appendChild(radioLable);
+                    }
+                }
+                // {
+                //     const tableRow = document.createElement("tr");
+                //     linesMenuTable.appendChild(tableRow);
+                //     {
+                //         const tableCell = document.createElement("td");
+                //         tableRow.appendChild(tableCell);
+                //     }
+                // }
+            }
+            this.hintForLinesInputs = document.createElement("div");
+            this.hintForLinesInputs.style.height = "25px";
+            this.hintForLinesInputs.style.width = "100%";
+            this.hintForLinesInputs.style.fontSize = "14px";
+            this.hintForLinesInputs.style.textAlign = "center";
+            this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
+            this.addingLinesDIV.appendChild(this.hintForLinesInputs);
+            const createButton = (text, parent) => {
+                const button = document.createElement("button");
+                button.innerText = text;
+                parent.appendChild(button);
+                return button;
+            };
+            {
                 const buttonsDIV = document.createElement("div");
-                buttonsDIV.style.height = "100%";
-                buttonsDIV.style.width = "70px";
+                buttonsDIV.style.height = "25px";
+                buttonsDIV.style.width = "100%";
                 buttonsDIV.style.display = "flex";
-                buttonsDIV.style.justifyContent = "space-around";
+                buttonsDIV.style.justifyContent = "space-evenly";
                 buttonsDIV.style.alignItems = "center";
                 buttonsDIV.style.flexWrap = "wrap";
-                addRealLineMenu.appendChild(buttonsDIV);
-                const buttonAdd = document.createElement("button");
-                buttonAdd.innerText = "add";
-                buttonsDIV.appendChild(buttonAdd);
-                this.lineInputs.buttonAdd = buttonAdd;
-                const buttonChange = document.createElement("button");
-                buttonChange.innerText = "change";
-                buttonsDIV.appendChild(buttonChange);
-                this.lineInputs.buttonChange = buttonChange;
-                const buttonRemove = document.createElement("button");
-                buttonRemove.innerText = "remove";
-                buttonsDIV.appendChild(buttonRemove);
-                this.lineInputs.buttonRemove = buttonRemove;
-                this.hintForLinesInputs = document.createElement("div");
-                this.hintForLinesInputs.style.height = "15px";
-                this.hintForLinesInputs.style.width = "100%";
-                this.hintForLinesInputs.style.fontSize = "14px";
-                this.hintForLinesInputs.style.textAlign = "center";
-                this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
-                addRealLineMenu.appendChild(this.hintForLinesInputs);
+                this.addingLinesDIV.appendChild(buttonsDIV);
+                lineInputs.buttonRemove = createButton("remove", buttonsDIV);
+                lineInputs.buttonChange = createButton("change", buttonsDIV);
+                lineInputs.buttonCancel = createButton("cancel", buttonsDIV);
+                lineInputs.buttonAdd = createButton("add", buttonsDIV);
+            }
+            this.addingLinesDIV.appendChild(function () {
+                const div = document.createElement("div");
+                div.style.height = "2px";
+                div.style.width = "100%";
+                div.style.display = "flex";
+                div.style.marginBottom = "5px";
+                div.style.marginTop = "12px";
+                div.style.justifyContent = "center";
+                const div2 = document.createElement("div");
+                div2.style.height = "2px";
+                div2.style.width = "90%";
+                div2.style.borderRadius = "4px";
+                div2.style.backgroundColor = "hsl(195, 53%, 60%)";
+                div.appendChild(div2);
+                return div;
+            }());
+            {
+                const buttonsDIV = document.createElement("div");
+                buttonsDIV.style.height = "25px";
+                buttonsDIV.style.width = "100%";
+                buttonsDIV.style.display = "flex";
+                buttonsDIV.style.justifyContent = "space-evenly";
+                buttonsDIV.style.alignItems = "center";
+                buttonsDIV.style.flexWrap = "wrap";
+                this.addingLinesDIV.appendChild(buttonsDIV);
+                lineInputs.buttonRemoveAll = createButton("remove All", buttonsDIV);
+                lineInputs.buttonExample = createButton("example", buttonsDIV);
+                const link = document.createElement("a");
+                link.href = "https://github.com/MixelTe/schedule-Viewer#readme";
+                link.innerText = "Help";
+                link.target = "_blank";
+                buttonsDIV.appendChild(link);
             }
         }
         {
@@ -436,21 +482,60 @@ export class SettingsMenu {
             this.overDivText.classList.add("scheduleViewer_SVGoverText");
             this.overDiv.appendChild(this.overDivText);
         }
+        this.lineInputs = {
+            color: "hsl(120, 73%, 75%)",
+            radioOnce: lineInputs.radioOnce,
+            radioRepeating: lineInputs.radioRepeating,
+            freqenceRow: lineInputs.freqenceRow,
+            interval: lineInputs.interval,
+            duration: lineInputs.duration,
+            start: lineInputs.start,
+            end: lineInputs.end,
+            buttonAdd: lineInputs.buttonAdd,
+            buttonChange: lineInputs.buttonChange,
+            buttonRemove: lineInputs.buttonRemove,
+            buttonCancel: lineInputs.buttonCancel,
+            buttonRemoveAll: lineInputs.buttonRemoveAll,
+            buttonExample: lineInputs.buttonExample,
+            checkBoxColor: lineInputs.checkBoxColor,
+            colorDiv: lineInputs.colorDiv,
+        };
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
-        this.toggleSepLineEl.addEventListener("change", functions.toggleSepLine);
-        this.revTimeInputEl.addEventListener("change", () => this.toggleLineMenuRev());
-        this.lineInputs.buttonAdd.addEventListener("click", () => this.lineMenuButtons("add", functions));
-        this.lineInputs.buttonChange.addEventListener("click", () => this.lineMenuButtons("change", functions));
-        this.lineInputs.buttonRemove.addEventListener("click", () => this.lineMenuButtons("remove", functions));
-        this.lineInputs.radioReal.input.addEventListener("click", () => this.disableDuractionInput("real"));
-        this.lineInputs.radioSimple.input.addEventListener("click", () => this.disableDuractionInput("simple"));
+        this.toggleSepLineEl.addEventListener("change", () => { functions.toggleSepLine(); this.toggleSepLineEl.checked = functions.SepLineIsActive(); });
+        this.revTimeInputEl.addEventListener("change", () => { this.toggleLineMenuRev(); this.revTimeInputEl.checked = this.revTimeInput; });
+        this.colorizeLineSelectionEl.addEventListener("change", () => { functions.toggleCustomSelectionColor(); this.toggleSepLineEl.checked = functions.CustomSelectionColorIsActive(); });
+        this.compactLinePlacingEl.addEventListener("change", () => { this.toggleCompactLinePlacing(functions); this.compactLinePlacingEl.checked = functions.compactLinePlacingIsActive(); });
+        this.lineInputs.buttonAdd.addEventListener("click", (e) => this.lineMenuButtons(e, "add", functions));
+        this.lineInputs.buttonChange.addEventListener("click", (e) => this.lineMenuButtons(e, "change", functions));
+        this.lineInputs.buttonRemove.addEventListener("click", (e) => this.lineMenuButtons(e, "remove", functions));
+        this.lineInputs.buttonCancel.addEventListener("click", (e) => this.lineMenuButtons(e, "cancel", functions));
+        this.lineInputs.radioOnce.addEventListener("click", () => this.disableInputs("once"));
+        this.lineInputs.radioRepeating.addEventListener("click", () => this.disableInputs("repeating"));
+        this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
+        this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
+        this.lineInputs.buttonRemoveAll.addEventListener("click", (e) => this.lineMenuButtons(e, "removeAll", functions));
+        this.lineInputs.buttonExample.addEventListener("click", (e) => this.lineMenuButtons(e, "example", functions));
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions));
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
         this.overDiv.addEventListener("drop", (e) => this.dragDrop(e, functions));
         this.overDiv.addEventListener("dragleave", () => this.dragleave());
         this.menuSystem("noSelect");
-        this.lineInputs.radioReal.input.checked = true;
-        this.disableDuractionInput("real");
+        this.lineInputs.radioOnce.checked = true;
+        this.disableInputs("once");
+        this.colorInputing("toggleAuto");
+        this.setOptions(options);
+    }
+    setOptions(options) {
+        if (options?.openControlPanel != undefined && !options.openControlPanel)
+            this.toggleMenu();
+        if (options?.revTimeInput != undefined && typeof options.revTimeInput == "boolean") {
+            this.revTimeInput = !options.revTimeInput;
+            this.toggleLineMenuRev();
+            this.revTimeInputEl.checked = this.revTimeInput;
+        }
+    }
+    getOptions() {
+        return { openControlPanel: this.menuOpen, revTimeInput: this.revTimeInput };
     }
     toggleMenu() {
         if (this.menuOpen) {
@@ -474,6 +559,10 @@ export class SettingsMenu {
             this.menuOpen = true;
         }
     }
+    toggleCompactLinePlacing(functions) {
+        functions.togglecompactLinePlacing();
+        functions.recreate();
+    }
     toggleLineMenuRev() {
         this.revTimeInput = !this.revTimeInput;
         if (this.revTimeInput) {
@@ -481,8 +570,8 @@ export class SettingsMenu {
             const title = "time in format: ss or mm:ss or hh:mm:ss";
             this.lineInputs.interval.placeholder = placeholder;
             this.lineInputs.interval.title = title;
-            this.lineInputs.duration.input.placeholder = placeholder;
-            this.lineInputs.duration.input.title = title;
+            this.lineInputs.duration.placeholder = placeholder;
+            this.lineInputs.duration.title = title;
             this.lineInputs.start.placeholder = placeholder;
             this.lineInputs.start.title = title;
             this.lineInputs.end.placeholder = placeholder;
@@ -492,8 +581,8 @@ export class SettingsMenu {
         else {
             this.lineInputs.interval.placeholder = this.addingLinesPrm.inputplaceholder;
             this.lineInputs.interval.title = this.addingLinesPrm.inputtitle;
-            this.lineInputs.duration.input.placeholder = this.addingLinesPrm.inputplaceholder;
-            this.lineInputs.duration.input.title = this.addingLinesPrm.inputtitle;
+            this.lineInputs.duration.placeholder = this.addingLinesPrm.inputplaceholder;
+            this.lineInputs.duration.title = this.addingLinesPrm.inputtitle;
             this.lineInputs.start.placeholder = this.addingLinesPrm.inputplaceholder;
             this.lineInputs.start.title = this.addingLinesPrm.inputtitle;
             this.lineInputs.end.placeholder = this.addingLinesPrm.inputplaceholder;
@@ -502,25 +591,9 @@ export class SettingsMenu {
         }
     }
     addLine(functions) {
-        this.UnmarkAndClear(this.lineInputs.interval);
-        if (this.lineInputs.radioSimple.input.checked) {
-            this.UnmarkAndClear(this.lineInputs.duration.input);
-        }
-        else {
-            this.UnmarkAndClear(this.lineInputs.durations.input);
-        }
-        this.UnmarkAndClear(this.lineInputs.start);
-        this.UnmarkAndClear(this.lineInputs.end);
-        const inputsData = {
-            interval: this.lineInputs.interval.value,
-            duration: this.lineInputs.duration.input.value,
-            durations: this.lineInputs.durations.input.value,
-            start: this.lineInputs.start.value,
-            end: this.lineInputs.end.value,
-        };
         let lineData;
         try {
-            lineData = this.createLineData(inputsData);
+            lineData = this.getLineData();
         }
         catch (e) {
             if (e == "MyError")
@@ -528,87 +601,121 @@ export class SettingsMenu {
             else
                 throw e;
         }
-        this.UnmarkAndClear(this.lineInputs.interval);
-        if (this.lineInputs.radioSimple.input.checked) {
-            this.UnmarkAndClear(this.lineInputs.duration.input);
-        }
-        else {
-            this.UnmarkAndClear(this.lineInputs.durations.input);
-        }
-        this.UnmarkAndClear(this.lineInputs.start);
-        this.UnmarkAndClear(this.lineInputs.end);
         // console.log("Yee!!!");
-        if (typeof lineData.duration == "number") {
-            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
+        if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined) {
+            functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
         }
         else {
-            functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end);
+            if (lineData.duration == undefined)
+                throw new Error();
+            functions.addSympleLine(1, lineData.duration, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
         }
         functions.recreate();
     }
-    createLineData(rawData) {
+    getLineData() {
+        this.UnmarkAndClear(this.lineInputs.start);
+        if (!this.lineToChange?.real)
+            this.UnmarkAndClear(this.lineInputs.duration);
+        if (this.lineInputs.radioRepeating.checked) {
+            this.UnmarkAndClear(this.lineInputs.interval);
+            this.UnmarkAndClear(this.lineInputs.end);
+        }
+        let lineData = this.createLineData();
+        this.UnmarkAndClear(this.lineInputs.start);
+        if (!this.lineToChange?.real)
+            this.UnmarkAndClear(this.lineInputs.duration);
+        if (this.lineInputs.radioRepeating.checked) {
+            this.UnmarkAndClear(this.lineInputs.interval);
+            this.UnmarkAndClear(this.lineInputs.end);
+        }
+        return lineData;
+    }
+    createLineData() {
         let interval;
         let duration;
         let start;
         let end;
+        let isError = false;
         try {
-            interval = this.turnStringToSeconds(rawData.interval);
+            start = this.getSecondsFromString(this.lineInputs.start, true);
         }
         catch (e) {
-            this.markAsUncorrect(this.lineInputs.interval);
-            throw "MyError";
+            if (e == "MyError")
+                isError = true;
+            else
+                throw e;
         }
         ;
-        this.markAsCorrect(this.lineInputs.interval);
-        if (this.lineInputs.radioSimple.input.checked) {
+        if (!this.lineToChange?.real) {
             try {
-                duration = this.turnStringToSeconds(rawData.duration);
+                duration = this.getSecondsFromString(this.lineInputs.duration);
             }
             catch (e) {
-                this.markAsUncorrect(this.lineInputs.duration.input);
-                throw "MyError";
+                if (e == "MyError")
+                    isError = true;
+                else
+                    throw e;
             }
             ;
-            this.markAsCorrect(this.lineInputs.duration.input);
         }
-        else {
-            duration = rawData.durations.split(',').map(num => {
-                const newNum = Number(num);
-                if ((newNum / newNum == 1 || newNum == 0) && num != "")
-                    return newNum;
-                else {
-                    this.markAsUncorrect(this.lineInputs.durations.input);
-                    console.error(`unexpected value in durations: "${num}"`);
-                    throw "MyError";
-                }
-                ;
-            });
-            this.markAsCorrect(this.lineInputs.durations.input);
+        if (this.lineInputs.radioRepeating.checked) {
+            try {
+                interval = this.getSecondsFromString(this.lineInputs.interval);
+            }
+            catch (e) {
+                if (e == "MyError")
+                    isError = true;
+                else
+                    throw e;
+            }
+            ;
+            try {
+                end = this.getSecondsFromString(this.lineInputs.end);
+            }
+            catch (e) {
+                if (e == "MyError")
+                    isError = true;
+                else
+                    throw e;
+            }
+            ;
         }
-        try {
-            start = this.turnStringToSeconds(rawData.start);
-        }
-        catch (e) {
-            this.markAsUncorrect(this.lineInputs.start);
+        if (isError)
             throw "MyError";
+        if (typeof start != "number")
+            throw new Error("NaN");
+        if (!this.lineToChange?.real && typeof duration != "number")
+            throw new Error("NaN");
+        if (this.lineInputs.radioRepeating.checked) {
+            if (typeof interval != "number")
+                throw new Error("NaN");
+            if (typeof end != "number")
+                throw new Error("NaN");
         }
-        ;
-        this.markAsCorrect(this.lineInputs.start);
-        try {
-            end = this.turnStringToSeconds(rawData.end);
-        }
-        catch (e) {
-            this.markAsUncorrect(this.lineInputs.end);
-            throw "MyError";
-        }
-        ;
-        this.markAsCorrect(this.lineInputs.end);
         return {
             interval: interval,
             duration: duration,
             start: start,
             end: end,
         };
+    }
+    getSecondsFromString(field, allowZero = false) {
+        let seconds;
+        try {
+            seconds = this.turnStringToSeconds(field.value);
+        }
+        catch (e) {
+            this.markAsUncorrect(field);
+            throw "MyError";
+        }
+        ;
+        if (!this.checkNumber(seconds, allowZero)) {
+            this.markAsUncorrect(field);
+            throw "MyError";
+        }
+        ;
+        this.markAsCorrect(field);
+        return seconds;
     }
     turnStringToSeconds(string) {
         const array = string.split(":");
@@ -619,26 +726,26 @@ export class SettingsMenu {
             let m = 0;
             let s = 0;
             if (array.length == 1) {
-                s = parseInt(array[0]);
+                s = parseInt(array[0], 10);
                 if (!this.isNumber(s))
                     throw new Error();
             }
             else if (array.length == 2) {
-                m = parseInt(array[0]);
+                m = parseInt(array[0], 10);
                 if (!this.isNumber(m))
                     throw new Error();
-                s = parseInt(array[1]);
+                s = parseInt(array[1], 10);
                 if (!this.isNumber(s))
                     throw new Error();
             }
             else if (array.length == 3) {
-                h = parseInt(array[0]);
+                h = parseInt(array[0], 10);
                 if (!this.isNumber(h))
                     throw new Error();
-                m = parseInt(array[1]);
+                m = parseInt(array[1], 10);
                 if (!this.isNumber(m))
                     throw new Error();
-                s = parseInt(array[2]);
+                s = parseInt(array[2], 10);
                 if (!this.isNumber(s))
                     throw new Error();
             }
@@ -654,9 +761,9 @@ export class SettingsMenu {
             const strS = array[2];
             if (strH == undefined || strH == "")
                 throw new Error();
-            const h = parseInt(strH);
-            const m = parseInt(strM);
-            const s = parseInt(strS);
+            const h = parseInt(strH, 10);
+            const m = parseInt(strM, 10);
+            const s = parseInt(strS, 10);
             if (!this.isNumber(h))
                 throw new Error();
             let allTime = h * 60 * 60;
@@ -672,6 +779,14 @@ export class SettingsMenu {
             }
             // console.log(allTime);
             return allTime;
+        }
+    }
+    checkNumber(num, allowZero) {
+        if (allowZero) {
+            return (0 <= num && num <= 60 * 60 * 24);
+        }
+        else {
+            return (0 < num && num <= 60 * 60 * 24);
         }
     }
     isNumber(num) {
@@ -692,105 +807,211 @@ export class SettingsMenu {
         el.style.backgroundColor = this.addingLinesPrm.inputsBackground;
         // el.value = "";
     }
-    checkNumber(num, type) {
-        if (num >= 0) {
-            switch (type) {
-                case "h":
-                    if (num > 24)
-                        throw new Error("value is too large");
-                    break;
-                case "m":
-                    if (num > 60)
-                        throw new Error("value is too large");
-                    break;
-                case "s":
-                    if (num > 60)
-                        throw new Error("value is too large");
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-            throw new Error("value is too small");
-    }
-    lineMenuButtons(button, functions) {
+    async lineMenuButtons(e, button, functions) {
+        const x = e.pageX;
+        const y = e.pageY;
         switch (button) {
             case "add":
                 this.addLine(functions);
+                this.linesIsChanged();
                 break;
             case "change":
+                if (this.lineToChange == undefined)
+                    throw new Error();
+                let lineData;
+                try {
+                    lineData = this.getLineData();
+                }
+                catch (e) {
+                    if (e == "MyError")
+                        return;
+                    else
+                        throw e;
+                }
+                if (lineData.interval == undefined)
+                    lineData.interval = 1;
+                if (lineData.end == undefined)
+                    lineData.end = 0;
+                if (lineData.duration == undefined) {
+                    if (this.lineToChange.real)
+                        lineData.duration = 0;
+                    else
+                        throw new Error();
+                }
+                const newData = {
+                    interval: lineData.interval,
+                    duration: lineData.duration,
+                    start: lineData.start,
+                    end: lineData.end,
+                    color: this.lineInputs.color,
+                    autoColor: this.lineInputs.checkBoxColor.checked,
+                    real: this.lineToChange.real
+                };
+                functions.changeLine(newData, this.lineToChange);
+                functions.recreate();
+                this.linesIsChanged();
                 break;
             case "remove":
+                if (await new AskWindow(this.body, "remove line").getAnswer()) {
+                    if (this.lineToChange == undefined)
+                        throw new Error();
+                    functions.removeLine(this.lineToChange);
+                    functions.recreate();
+                    this.lineMenuButtons(e, "cancel", functions);
+                    this.linesIsChanged();
+                }
+                break;
+            case "cancel":
+                this.lineInputs.start.value = "";
+                this.lineInputs.duration.value = "";
+                this.lineInputs.interval.value = "";
+                this.lineInputs.end.value = "";
+                this.menuSystem("noSelect");
+                this.lineInputs.radioOnce.checked = true;
+                this.disableInputs("once");
+                this.lineInputs.checkBoxColor.checked = true;
+                this.colorInputing("toggleAuto");
+                if (this.lineToChange != undefined)
+                    functions.unselectLine(this.lineToChange);
+                functions.recreate();
+                this.lineToChange = undefined;
+                break;
+            case "removeAll":
+                {
+                    let continueChange = false;
+                    if (this.linesChanged)
+                        continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+                    else
+                        continueChange = true;
+                    if (continueChange) {
+                        functions.resetLines();
+                        functions.recreate();
+                        this.linesChanged = false;
+                    }
+                }
+                break;
+            case "example":
+                {
+                    let continueChange = false;
+                    if (this.linesChanged)
+                        continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+                    else
+                        continueChange = true;
+                    if (continueChange) {
+                        functions.resetLines();
+                        for (let i = 0; i < 4; i++) {
+                            functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                            // functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                            const duractions = [];
+                            for (let i = 0; i < this.getRndInteger(600, 900); i++) {
+                                duractions.push(this.getRndInteger(40, 160));
+                            }
+                            functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                        }
+                        functions.recreate();
+                        this.linesChanged = false;
+                    }
+                }
+                break;
+            default: throw new Error();
+        }
+    }
+    linesIsChanged() {
+        this.linesChanged = true;
+        this.filesInput.value = "";
+    }
+    getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+    }
+    async colorInputing(action) {
+        switch (action) {
+            case "open":
+                if (!this.lineInputs.checkBoxColor.checked) {
+                    const rect = this.lineInputs.colorDiv.getBoundingClientRect();
+                    rect.x += window.pageXOffset;
+                    rect.y += window.pageYOffset;
+                    const color = this.lineInputs.color;
+                    const h = parseInt(color.slice(color.indexOf("(") + 1, color.indexOf(",")));
+                    const s = parseInt(color.slice(color.indexOf(",") + 2, color.indexOf("%")));
+                    const l = parseInt(color.slice(color.lastIndexOf(",") + 2, color.lastIndexOf("%")));
+                    this.colorPicker.setColorHSL(h, s, l);
+                    const newColor = await this.colorPicker.pick(rect, "up", "center");
+                    if (newColor != undefined)
+                        this.lineInputs.color = newColor.colorHSL;
+                    this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
+                }
+                break;
+            case "toggleAuto":
+                if (this.lineInputs.checkBoxColor.checked) {
+                    this.lineInputs.colorDiv.style.backgroundImage = "linear-gradient(to right, red, violet, blue, lime, yellow, red)";
+                }
+                else {
+                    this.lineInputs.colorDiv.style.backgroundImage = "";
+                    this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
+                }
                 break;
             default: throw new Error();
         }
     }
     menuSystem(state) {
+        this.lineInputs.freqenceRow.style.color = "black";
+        this.lineInputs.radioRepeating.disabled = false;
+        this.lineInputs.radioOnce.disabled = false;
         switch (state) {
             case "noSelect":
                 this.lineInputs.buttonAdd.disabled = false;
                 this.lineInputs.buttonChange.disabled = true;
                 this.lineInputs.buttonRemove.disabled = true;
-                this.lineInputs.radioSimple.div.style.color = "black";
-                this.lineInputs.radioReal.div.style.color = "black";
-                this.lineInputs.radioSimple.input.disabled = false;
-                this.lineInputs.radioReal.input.disabled = false;
-                this.disableDuractionInput("none");
+                this.disableInputs("none");
                 break;
-            case "simple":
+            case "realSelected":
+                this.lineInputs.freqenceRow.style.color = "gray";
+                this.lineInputs.radioRepeating.disabled = true;
+                this.lineInputs.radioOnce.disabled = true;
+                this.lineInputs.radioRepeating.checked = true;
+                this.disableInputs("duration");
+            case "selected":
                 this.lineInputs.buttonAdd.disabled = true;
                 this.lineInputs.buttonChange.disabled = false;
                 this.lineInputs.buttonRemove.disabled = false;
-                this.lineInputs.radioSimple.div.style.color = "gray";
-                this.lineInputs.radioReal.div.style.color = "gray";
-                this.lineInputs.radioSimple.input.disabled = true;
-                this.lineInputs.radioReal.input.disabled = true;
-                this.lineInputs.radioSimple.input.checked = true;
-                this.disableDuractionInput("simple");
-                break;
-            case "real":
-                this.lineInputs.buttonAdd.disabled = true;
-                this.lineInputs.buttonChange.disabled = true;
-                this.lineInputs.buttonRemove.disabled = true;
-                this.lineInputs.radioSimple.div.style.color = "gray";
-                this.lineInputs.radioReal.div.style.color = "gray";
-                this.lineInputs.radioSimple.input.disabled = true;
-                this.lineInputs.radioReal.input.disabled = true;
-                this.lineInputs.radioReal.input.checked = true;
-                this.disableDuractionInput("real");
                 break;
             default: throw new Error();
         }
+        this.lineInputs.start.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+        this.lineInputs.duration.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+        this.lineInputs.start.style.border = this.addingLinesPrm.inputsBorder;
+        this.lineInputs.duration.style.border = this.addingLinesPrm.inputsBorder;
     }
-    disableDuractionInput(type) {
+    disableInputs(type) {
         switch (type) {
             case "none":
-                this.lineInputs.duration.input.disabled = false;
-                this.lineInputs.durations.input.disabled = false;
-                this.lineInputs.duration.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
-                this.lineInputs.durations.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
-                this.lineInputs.duration.div.style.color = "black";
-                this.lineInputs.durations.div.style.color = "black";
+                this.lineInputs.interval.disabled = false;
+                this.lineInputs.end.disabled = false;
+                this.lineInputs.duration.disabled = false;
+                this.lineInputs.interval.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.end.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.duration.style.backgroundColor = this.addingLinesPrm.inputsBackground;
                 break;
-            case "simple":
-                this.lineInputs.duration.input.disabled = false;
-                this.lineInputs.durations.input.disabled = true;
-                this.lineInputs.duration.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
-                this.lineInputs.durations.input.style.backgroundColor = "lightgray";
-                this.lineInputs.duration.div.style.color = "black";
-                this.lineInputs.durations.div.style.color = "gray";
+            case "once":
+                this.lineInputs.interval.disabled = true;
+                this.lineInputs.end.disabled = true;
+                this.lineInputs.interval.style.backgroundColor = "lightgray";
+                this.lineInputs.end.style.backgroundColor = "lightgray";
                 break;
-            case "real":
-                this.lineInputs.duration.input.disabled = true;
-                this.lineInputs.durations.input.disabled = false;
-                this.lineInputs.duration.input.style.backgroundColor = "lightgray";
-                this.lineInputs.durations.input.style.backgroundColor = this.addingLinesPrm.inputsBackground;
-                this.lineInputs.duration.div.style.color = "gray";
-                this.lineInputs.durations.div.style.color = "black";
+            case "repeating":
+                this.lineInputs.interval.disabled = false;
+                this.lineInputs.end.disabled = false;
+                this.lineInputs.interval.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                this.lineInputs.end.style.backgroundColor = this.addingLinesPrm.inputsBackground;
+                break;
+            case "duration":
+                this.lineInputs.duration.disabled = true;
+                this.lineInputs.duration.style.backgroundColor = "lightgray";
                 break;
             default: throw new Error();
         }
+        this.lineInputs.interval.style.border = this.addingLinesPrm.inputsBorder;
+        this.lineInputs.end.style.border = this.addingLinesPrm.inputsBorder;
     }
     async loadSchedule(e, functions) {
         const eTarget = e.target;
@@ -828,47 +1049,269 @@ export class SettingsMenu {
         const filesList = dragData.files;
         if (filesList == null)
             return;
+        if (filesList[0] == null)
+            return;
         const fileText = await filesList[0].text();
         this.addLinesFromFile(fileText, functions);
     }
-    addLinesFromFile(fileText, functions) {
-        const newSchedule = JSON.parse(fileText);
+    async addLinesFromFile(fileText, functions) {
+        let newSchedule;
+        try {
+            newSchedule = JSON.parse(fileText);
+        }
+        catch (er) {
+            this.filesInput.value = "";
+            console.log("Uncorrect File");
+            return;
+        }
         // console.log(newSchedule);
+        let continueChange = false;
+        if (this.linesChanged)
+            continueChange = await new AskWindow(this.body, "remove all and load file").getAnswer();
+        else
+            continueChange = true;
+        if (!continueChange)
+            return;
         functions.resetLines();
-        for (let i = 0; i < newSchedule.simpleLines.length; i++) {
-            const el = newSchedule.simpleLines[i];
-            functions.addSympleLine(el.interval, el.duration, el.start, el.end);
+        if (newSchedule.simpleLines != undefined) {
+            for (let i = 0; i < newSchedule.simpleLines.length; i++) {
+                const el = newSchedule.simpleLines[i];
+                try {
+                    if (typeof el != "object") {
+                        const elJson = JSON.stringify(el, undefined, "   ");
+                        const re = new RegExp(elJson);
+                        let JSONdata = JSON.stringify(newSchedule.simpleLines, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + elJson + "%c");
+                        console.log("line not object \n" + JSONdata, "color: red", "");
+                        throw "MyError";
+                    }
+                    this.checkLineFromFile(el, true);
+                }
+                catch (er) {
+                    if (er == "MyError")
+                        continue;
+                    else
+                        throw er;
+                }
+                functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
+            }
         }
-        for (let i = 0; i < newSchedule.realLines.length; i++) {
-            const el = newSchedule.realLines[i];
-            functions.addRealLine(el.interval, el.durations, el.start, el.end);
+        else
+            console.log("simpleLines not found");
+        if (newSchedule.realLines != undefined) {
+            for (let i = 0; i < newSchedule.realLines.length; i++) {
+                const el = newSchedule.realLines[i];
+                try {
+                    if (typeof el != "object") {
+                        const elJson = JSON.stringify(el, undefined, "   ");
+                        const re = new RegExp(elJson);
+                        let JSONdata = JSON.stringify(newSchedule.realLines, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + elJson + "%c");
+                        console.log("line not object \n" + JSONdata, "color: red", "");
+                        throw "MyError";
+                    }
+                    this.checkLineFromFile(el, false);
+                }
+                catch (er) {
+                    if (er == "MyError")
+                        continue;
+                    else
+                        throw er;
+                }
+                functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
+            }
         }
+        else
+            console.log("realLines not found");
         functions.recreate();
+    }
+    checkLineFromFile(el, simpleLine) {
+        function createlog(text, wrongParametrName) {
+            let JSONdata;
+            if (wrongParametrName == undefined) {
+                JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "");
+            }
+            else {
+                const re = new RegExp(el[wrongParametrName]);
+                JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "").replace(re, "%c" + el[wrongParametrName] + "%c");
+            }
+            console.log(text + "\n" + JSONdata, "color: red", "color: gray");
+        }
+        function createlogNotFound(text) {
+            let JSONdata = JSON.stringify(el, undefined, "   ").replace(/\n      /g, "");
+            console.log(text + "\n" + JSONdata, "color: red", "");
+        }
+        if (el.interval == undefined) {
+            createlogNotFound("line %cinterval%c not found");
+            throw "MyError";
+        }
+        ;
+        if (simpleLine) {
+            if (el.duration == undefined) {
+                createlogNotFound("line %cduration%c not found");
+                throw "MyError";
+            }
+            ;
+        }
+        else {
+            if (el.durations == undefined) {
+                createlogNotFound("line %cdurations%c not found");
+                throw "MyError";
+            }
+            ;
+        }
+        if (el.start == undefined) {
+            createlogNotFound("line %cstart%c not found");
+            throw "MyError";
+        }
+        ;
+        if (el.end == undefined) {
+            createlogNotFound("line %cend%c not found");
+            throw "MyError";
+        }
+        ;
+        if (el.autoColor == undefined) {
+            createlogNotFound("line %cautoColor%c not found");
+            throw "MyError";
+        }
+        ;
+        if (typeof el.interval != "number") {
+            createlog("line interval is NaN", "interval");
+            throw "MyError";
+        }
+        ;
+        if (simpleLine) {
+            if (typeof el.duration != "number") {
+                createlog("line duration is NaN", "duration");
+                throw "MyError";
+            }
+            ;
+        }
+        else {
+            if (!Array.isArray(el.durations)) {
+                createlog("line duration isn't array", "durations");
+                throw "MyError";
+            }
+            ;
+            let isError = false;
+            el.durations = el.durations.map(el => {
+                if (typeof el != "number") {
+                    isError = true;
+                    return `%c${el}%c`;
+                }
+                ;
+                return el;
+            });
+            if (isError) {
+                createlog("line duration contains NaN", undefined);
+                throw "MyError";
+            }
+        }
+        if (typeof el.start != "number") {
+            createlog("line start is NaN", "start");
+            throw "MyError";
+        }
+        ;
+        if (typeof el.end != "number") {
+            createlog("line end is NaN", "end");
+            throw "MyError";
+        }
+        ;
+        if (typeof el.autoColor != "boolean") {
+            createlog("line autoColor isn't boolean", "autoColor");
+            throw "MyError";
+        }
+        ;
+        if (!el.autoColor) {
+            if (el.color == undefined) {
+                createlogNotFound("line %ccolor%c not found");
+                throw "MyError";
+            }
+            ;
+            if (typeof el.color != "string") {
+                createlog("line color isn't string", "color");
+                throw "MyError";
+            }
+            ;
+        }
+    }
+    setInputsData(line) {
+        const data = {
+            interval: line.dasharray[0],
+            duration: line.dasharray[1],
+            start: line.start,
+            end: line.end,
+            color: line.color,
+            autoColor: line.autoColor,
+            real: line.real,
+        };
+        this.lineInputs.start.value = this.turnSecondsToTime(data.start);
+        if (typeof data.duration == "number")
+            this.lineInputs.duration.value = this.turnSecondsToTime(data.duration);
+        else
+            this.lineInputs.duration.value = `${data.duration}`;
+        this.lineInputs.interval.value = "";
+        this.lineInputs.end.value = "";
+        if (data.interval == 1 && data.end == 0) {
+            this.disableInputs("once");
+            this.lineInputs.radioOnce.checked = true;
+            this.lineInputs.interval.value = this.turnSecondsToTime(1);
+            this.lineInputs.end.value = this.turnSecondsToTime(0);
+        }
+        else {
+            this.disableInputs("repeating");
+            this.lineInputs.radioRepeating.checked = true;
+            this.lineInputs.interval.value = this.turnSecondsToTime(data.interval);
+            this.lineInputs.end.value = this.turnSecondsToTime(data.end);
+        }
+        if (data.real)
+            this.menuSystem("realSelected");
+        else
+            this.menuSystem("selected");
+        this.lineInputs.color = data.color;
+        this.lineInputs.checkBoxColor.checked = data.autoColor;
+        this.colorInputing("toggleAuto");
+        this.lineToChange = line;
+    }
+    turnSecondsToTime(secondsHMS) {
+        const h = Math.floor(secondsHMS / 3600);
+        const secondsMS = secondsHMS - h * 3600;
+        const m = Math.floor(secondsMS / 60);
+        const s = secondsMS - m * 60;
+        return `${h}:${m}:${s}`;
     }
     saveSchedule(functions) {
         const scheduleRaw = functions.getLines();
-        const scheduleSave = { simpleLines: [], realLines: [] };
+        const simpleLines = [];
+        const realLines = [];
         for (let i = 1; i < scheduleRaw.length; i++) {
             const el = scheduleRaw[i];
             if (el.real) {
+                if (typeof el.dasharray[1] == "number")
+                    throw new Error();
                 const newEl = {
                     interval: el.dasharray[0],
                     durations: el.dasharray[1],
                     start: el.start,
                     end: el.end,
+                    color: el.color,
+                    autoColor: el.autoColor,
                 };
-                scheduleSave.realLines.push(newEl);
+                realLines.push(newEl);
             }
             else {
+                if (typeof el.dasharray[1] != "number")
+                    throw new Error();
                 const newEl = {
                     interval: el.dasharray[0],
                     duration: el.dasharray[1],
                     start: el.start,
                     end: el.end,
+                    color: el.color,
+                    autoColor: el.autoColor,
                 };
-                scheduleSave.simpleLines.push(newEl);
+                simpleLines.push(newEl);
             }
         }
+        const scheduleSave = { simpleLines, realLines };
         const scheduleText = JSON.stringify(scheduleSave, undefined, "  ");
         // console.log(scheduleRaw);
         // console.log(scheduleSave);

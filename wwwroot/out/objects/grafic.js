@@ -1,11 +1,12 @@
 import { Coordinates } from "./coordinates.js";
 import { Lines } from "./lines.js";
 export class Grafic {
-    constructor(body, rightSpace) {
+    constructor(body, rightSpace, options) {
         this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         this.defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
         this.coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.linesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        this.linesOverBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.oneHour = 60;
         this.zoom = 2;
         this.zoomMin = 0.6;
@@ -33,23 +34,23 @@ export class Grafic {
         // console.log(this.body.clientHeight);
         {
             this.svg.appendChild(this.coordinatesBody);
-            this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this));
+            this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this), options);
             this.svg.appendChild(this.linesBody);
-            this.lines = new Lines(this.linesBody, scgBCR, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates));
-            // for (let i = 0; i < 4; i++)
-            // {
-            //     this.lines.createLine(this.getRndInteger(10, 20), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-            //     // this.lines.createLine(this.getRndInteger(20, 40), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-            //     // this.lines.createLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-            //     // this.lines.createLine(this.getRndInteger(80, 120), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-            //     const duractions = []
-            //     for (let i = 0; i < this.getRndInteger(600, 900); i++)
-            //     {
-            //         duractions.push(this.getRndInteger(40, 160));
-            //     }
-            //     this.lines.createRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
-            // }
-            // this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
+            this.svg.appendChild(this.linesOverBody);
+            this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
+            for (let i = 0; i < 4; i++) {
+                // this.lines.createLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                // this.lines.createLine(this.getRndInteger(2000, 4000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                // this.lines.createLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                // this.lines.createLine(this.getRndInteger(80, 120), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                // const duractions = []
+                // for (let i = 0; i < this.getRndInteger(600, 900); i++)
+                // {
+                //     duractions.push(this.getRndInteger(40, 160));
+                // }
+                // this.lines.createRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+            }
+            this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
         }
         this.svg.addEventListener("wheel", (e) => { if (this.zoomActive)
             this.mouseWheel(e); });
@@ -58,7 +59,19 @@ export class Grafic {
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Control")
             this.zoomActive = false; });
+        this.body.addEventListener("mousemove", (e) => this.coordinates.svgBodyMouse(e, "move"));
+        this.body.addEventListener("mouseleave", (e) => this.coordinates.svgBodyMouse(e, "leave"));
         this.body.scrollTop = parseInt(this.svg.style.height);
+    }
+    getOptions() {
+        const linesOptions = this.lines.getOptions();
+        const coordinatesOptions = this.coordinates.getOptions();
+        return {
+            showRealLineAfterEnd: linesOptions.showRealLineAfterEnd,
+            compactLinePlacing: linesOptions.compactLinePlacing,
+            selectionCustomColor: linesOptions.selectionCustomColor,
+            showSeparateLine: coordinatesOptions.showSeparateLine
+        };
     }
     mouseWheel(e) {
         e.preventDefault();
@@ -158,6 +171,23 @@ export class Grafic {
             recreate: this.recreate.bind(this),
             resetLines: this.lines.resetLines.bind(this.lines),
             getLines: this.lines.getLines.bind(this.lines),
+            changeLine: this.lines.changeLine.bind(this.lines),
+            removeLine: this.lines.removeLine.bind(this.lines),
+            unselectLine: this.lines.unselectLine.bind(this.lines),
+            toggleCustomSelectionColor: this.lines.toggleOverLineCustomColor.bind(this.lines),
+            CustomSelectionColorIsActive: this.lines.overLineCustomColorIsActive.bind(this.lines),
+            togglecompactLinePlacing: this.lines.togglecompactLinePlacing.bind(this.lines),
+            compactLinePlacingIsActive: this.lines.compactLinePlacingIsActive.bind(this.lines),
         };
+    }
+    setFunctionsForLines(functions) {
+        this.lines.setFunctionsForLines(functions);
+    }
+    setLines(newLines) {
+        this.lines.setLines(newLines);
+        this.recreate();
+    }
+    getLines() {
+        return this.lines.getLines();
     }
 }

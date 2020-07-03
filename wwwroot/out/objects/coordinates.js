@@ -1,11 +1,11 @@
 export class Coordinates {
-    constructor(body, bodyPrm, oneHour, zoom = 1, translate = 0, changeSVGHeight) {
+    constructor(body, bodyPrm, oneHour, zoom = 1, translate = 0, changeSVGHeight, options) {
         this.axis = { x: 0, y: 0, width: 0, height: 0, svgEl: {}, color: "black", sWidth: 3 };
         this.scale = {
             hours: { els: [], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
             minutes: { els: [], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
             seconds: { els: [], color: [210, 100, 40], width: 1, height: 15, fontSize: 10, fontFamily: "Verdana, sans-serif" },
-            separateLine: { x: 200, visible: false, color: "orange", width: 1, dasharray: "10, 8", el: {}, lock: false, active: true },
+            separateLine: { x: 200, color: "orange", width: 1, dasharray: "10, 8", el: {}, active: true },
             zoomFixPoint: { second: 0, color: "red", radius: 4 },
         };
         this.minutesSteps = [1, 5, 10, 20, 30, 60];
@@ -18,10 +18,16 @@ export class Coordinates {
         this.axis.x = 10;
         this.axis.y = 10;
         this.axis.width = this.width;
-        this.axis.height = this.height - 65;
+        this.axis.height = this.height - 50;
+        this.setOptions(options);
         this.recreateScale(zoom, translate);
-        body.addEventListener("mouseover", (e) => this.showSeparateLine(e, false));
-        body.addEventListener("click", (e) => this.showSeparateLine(e));
+    }
+    setOptions(options) {
+        if (options?.showSeparateLine != undefined && typeof options.showSeparateLine == "boolean")
+            this.scale.separateLine.active = options.showSeparateLine;
+    }
+    getOptions() {
+        return { showSeparateLine: this.scale.separateLine.active };
     }
     createAxis(translate = 0) {
         const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
@@ -131,10 +137,9 @@ export class Coordinates {
         separateLine.setAttribute("stroke", `${this.scale.separateLine.color}`);
         separateLine.setAttribute("stroke-width", `${this.scale.separateLine.width}`);
         separateLine.setAttribute("stroke-dasharray", `${this.scale.separateLine.dasharray}`);
+        separateLine.setAttribute("display", `none`);
         this.scale.separateLine.el = separateLine;
         this.body.appendChild(separateLine);
-        if (!this.scale.separateLine.visible)
-            this.scale.separateLine.el.setAttribute("display", `none`);
     }
     createLine(x, y, parametrs, changeParametrs = {}) {
         const newParametrs = Object.assign({}, parametrs, changeParametrs);
@@ -162,41 +167,34 @@ export class Coordinates {
     changeZoomFixPoint(second) {
         this.scale.zoomFixPoint.second = second;
     }
-    showSeparateLine(e, lock = true) {
-        const el = e.target;
-        if (el != null && this.scale.separateLine.active) {
-            if (!lock && !this.scale.separateLine.lock || lock) {
-                if (el instanceof SVGLineElement) {
-                    const x = e.offsetX;
-                    this.scale.separateLine.x = x;
-                    this.scale.separateLine.visible = true;
-                    if (lock)
-                        this.scale.separateLine.lock = true;
-                    this.scale.separateLine.el.setAttribute("x1", `${x}`);
-                    this.scale.separateLine.el.setAttribute("x2", `${x}`);
-                    this.scale.separateLine.el.setAttribute("display", `inline`);
-                }
-                else {
-                    this.scale.separateLine.visible = false;
-                    if (lock)
-                        this.scale.separateLine.lock = false;
+    svgBodyMouse(e, type) {
+        if (this.scale.separateLine.active) {
+            switch (type) {
+                case "move":
+                    this.moveSeparateLine(e);
+                    break;
+                case "leave":
                     this.scale.separateLine.el.setAttribute("display", `none`);
-                }
+                    break;
+                default: throw new Error();
             }
         }
     }
+    moveSeparateLine(e) {
+        const x = e.offsetX;
+        this.scale.separateLine.x = x;
+        this.scale.separateLine.el.setAttribute("x1", `${x}`);
+        this.scale.separateLine.el.setAttribute("x2", `${x}`);
+        this.scale.separateLine.el.setAttribute("display", `inline`);
+    }
     changeHeightAndRecreate(newHeight, translate, zoom) {
-        this.axis.height = newHeight - 65;
-        this.changeSVGHeight(newHeight - 20);
+        newHeight = Math.max(newHeight + this.axis.y + 45 + 20, this.height) - 21;
+        this.axis.height = newHeight - 45;
+        this.changeSVGHeight(newHeight);
         this.recreateScale(zoom, translate);
     }
     toggleSepLine() {
-        if (this.scale.separateLine.active) {
-            this.scale.separateLine.active = false;
-        }
-        else {
-            this.scale.separateLine.active = true;
-        }
+        this.scale.separateLine.active = !this.scale.separateLine.active;
     }
     SepLineIsActive() {
         return this.scale.separateLine.active;

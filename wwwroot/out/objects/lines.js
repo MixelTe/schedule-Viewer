@@ -1,44 +1,106 @@
 export class Lines {
-    constructor(body, bodyPrm, defs, axis, oneHour, zoom = 1, changeHeightAndRecreate) {
-        this.drawEmptyLines = false;
+    constructor(body, bodyPrm, overBody, defs, axis, oneHour, zoom = 1, changeHeightAndRecreate, options) {
+        this.linesMap = new Map();
+        this.functionsForLines = {};
         this.showLineAfterEnd = false;
+        this.compactLinePlacing = false;
+        this.overLineOpacity = 0;
+        this.overLineOpacityMouseOver = 0.2;
+        this.overLineOpacitySelected = 0.5;
+        this.overLineCustomColor = true;
         this.body = body;
+        this.overBody = overBody;
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
-        this.height = bodyPrm.height;
+        this.height = axis.height;
         this.changeHeightAndRecreate = changeHeightAndRecreate;
         const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
         clipPath.id = "graficLinesClip";
         defs.appendChild(clipPath);
         this.clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         clipPath.appendChild(this.clipRect);
-        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0 }];
+        const createGradient = function (stopArray, id) {
+            const linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+            linearGradient.id = id;
+            linearGradient.setAttribute("gradientTransform", "rotate(90)");
+            const createStop = function (pos, opacity) {
+                const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop.setAttribute("offset", `${pos}%`);
+                stop.setAttribute("stop-color", "Highlight");
+                stop.setAttribute("stop-opacity", `${opacity}`);
+                return stop;
+            };
+            stopArray.array = [
+                createStop(0, 0),
+                createStop(10, 100),
+                createStop(80, 100),
+                createStop(100, 0)
+            ];
+            linearGradient.appendChild(stopArray.array[0]);
+            linearGradient.appendChild(stopArray.array[1]);
+            linearGradient.appendChild(stopArray.array[2]);
+            linearGradient.appendChild(stopArray.array[3]);
+            return linearGradient;
+        }.bind(this);
+        this.overLineLinearGradient = { over: { array: [] }, select: { array: [] } };
+        defs.appendChild(createGradient(this.overLineLinearGradient.select, "ScheduleViewer-Grafic-Coordinates-linearGradient_Select"));
+        defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"));
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
+        this.setOptions(options);
         this.recreateLines(axis, 0, zoom);
+        this.overBody.addEventListener("click", (e) => this.overBodyClick(e));
+        this.overBody.addEventListener("mouseover", (e) => this.overBodyMouse(e, "over"));
+        this.overBody.addEventListener("mouseout", (e) => this.overBodyMouse(e, "out"));
+    }
+    setOptions(options) {
+        if (options?.showRealLineAfterEnd != undefined && typeof options.showRealLineAfterEnd == "boolean")
+            this.showLineAfterEnd = options.showRealLineAfterEnd;
+        if (options?.compactLinePlacing != undefined && typeof options.compactLinePlacing == "boolean")
+            this.compactLinePlacing = options.compactLinePlacing;
+        if (options?.selectionCustomColor != undefined && typeof options.selectionCustomColor == "boolean")
+            this.overLineCustomColor = options.selectionCustomColor;
+    }
+    getOptions() {
+        return { showRealLineAfterEnd: this.showLineAfterEnd, compactLinePlacing: this.compactLinePlacing, selectionCustomColor: this.overLineCustomColor };
+    }
+    setLines(newLines) {
+        this.lines = newLines;
     }
     recreateLines(axis, scroll, zoom) {
+        this.linesMap.clear();
         this.body.innerHTML = "";
-        let spaces = Math.floor((axis.height) / (Math.max(this.lines.length, 2)));
+        this.overBody.innerHTML = "";
+        let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
+        if (this.compactLinePlacing)
+            spaces = 0;
         if (spaces < 20) {
             spaces = 20;
             // console.log(axis);
-            this.changeHeightAndRecreate((this.lines.length + 3) * spaces, scroll, zoom);
         }
+        this.changeHeightAndRecreate((this.lines.length - 1) * spaces, scroll, zoom);
         this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
         this.clipRect.setAttribute("y", `${axis.y}`);
         this.clipRect.setAttribute("width", `${axis.width - scroll}`);
         this.clipRect.setAttribute("height", `${axis.height}`);
         // console.log(this.clipRect);
         for (let i = 1; i < this.lines.length; i++) {
-            if (this.lines[i].real) {
-                this.body.appendChild(this.createRealPath(i, axis, spaces, zoom));
+            const el = this.lines[i];
+            let line;
+            let overline;
+            if (el.real) {
+                line = this.createRealPath(i, axis, spaces, zoom);
             }
             else {
-                this.body.appendChild(this.createPath(i, axis, spaces, zoom));
+                line = this.createSimplePath(i, axis, spaces, zoom);
             }
+            overline = this.createOverPath(i, axis, spaces);
+            this.linesMap.set(overline, el);
+            this.body.appendChild(line);
+            this.overBody.appendChild(overline);
         }
         ;
     }
-    createPath(index, axis, spaces, zoom) {
+    createSimplePath(index, axis, spaces, zoom) {
         const el = this.lines[index];
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute("stroke", `${el.color}`);
@@ -50,12 +112,16 @@ export class Lines {
         if (typeof el.dasharray[1] != "number")
             throw new Error("NaN");
         const duration = el.dasharray[1] * oneSecond;
-        for (let i = 0; i < axis.width / (interval + duration); i++) {
-            if (i * (interval + duration) > el.end * oneSecond)
-                break;
+        for (let i = 0, x = 1; i < axis.width / interval; i++, x++) {
+            if (el.dasharray[1] / el.dasharray[0] > 1) {
+                x = x + Math.floor(el.dasharray[1] / el.dasharray[0]);
+            }
+            const nextX = axis.x + interval * x + el.start * oneSecond;
             path += `
             h ${duration}
-            m ${interval} 0`;
+            M ${nextX} ${axis.y + axis.height - spaces * index}`;
+            if (nextX > el.end * oneSecond + axis.x)
+                break;
         }
         line.setAttribute("d", path);
         return line;
@@ -76,7 +142,7 @@ export class Lines {
             const duration = durations[i];
             let dx = `h ${duration * oneSecond}`;
             if (typeof duration != "number" || duration / duration != 1) {
-                if (this.drawEmptyLines || duration == 0)
+                if (duration == 0)
                     dx = "v1";
                 else
                     break;
@@ -85,43 +151,139 @@ export class Lines {
                 x = x + Math.floor(duration / el.dasharray[0]);
             }
             const nextX = axis.x + interval * x + el.start * oneSecond;
-            if (!this.showLineAfterEnd && nextX > el.end * oneSecond)
-                break;
             path += `
             ${dx}
             M ${nextX} ${axis.y + axis.height - spaces * index}`;
+            if (!this.showLineAfterEnd && nextX > el.end * oneSecond + axis.x)
+                break;
         }
         line.setAttribute("d", path);
         return line;
     }
-    createLine(interval, duration, start, end) {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, duration], real: false, start, end });
-        const colorStep = 360 / this.lines.length;
-        const colors = [""];
-        for (let i = 1; i < this.lines.length; i++) {
-            colors.push(`hsl(${this.getRnd(colorStep * (i - 1), colorStep * i)}, ${100}%, ${Math.floor(this.getRnd(40, 60))}%)`);
+    createOverPath(index, axis, spaces) {
+        const el = this.lines[index];
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("stroke", `${el.color}`);
+        rect.setAttribute("stroke-width", "0px");
+        rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Over)");
+        if (el.selected) {
+            rect.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
+            rect.classList.add("ScheduleViewer-Grafic-Lines-selected");
+            rect.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
         }
-        for (let i = 1; i < this.lines.length; i++) {
-            const colorIndex = Math.floor(this.getRnd(1, colors.length));
-            this.lines[i].color = colors[colorIndex];
-            colors.splice(colorIndex, 1);
-        }
+        else
+            rect.setAttribute("fill-opacity", `${this.overLineOpacity}`);
+        rect.setAttribute("clip-path", "url(#graficLinesClip)");
+        rect.setAttribute("x", `${axis.x}`);
+        rect.setAttribute("y", `${axis.y + axis.height - spaces * index - spaces / 2}`);
+        rect.setAttribute("width", `${axis.width}`);
+        rect.setAttribute("height", `${spaces}`);
+        return rect;
     }
-    createRealLine(interval, durations, start, end) {
-        this.lines.push({ color: "", width: 16, dasharray: [interval, durations], real: true, start, end });
+    createLine(interval, duration, start, end, color, autoColor = true) {
+        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: autoColor, selected: false });
+        ;
+        this.colorizeLines();
+    }
+    createRealLine(interval, durations, start, end, color, autoColor = true) {
+        this.lines.push({ color: color || "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: autoColor, selected: false });
+        this.colorizeLines();
+    }
+    colorizeLines() {
         const colorStep = 360 / this.lines.length;
         const colors = [""];
         for (let i = 1; i < this.lines.length; i++) {
             colors.push(`hsl(${this.getRnd(colorStep * (i - 1), colorStep * i)}, ${100}%, ${Math.floor(this.getRnd(40, 60))}%)`);
         }
         for (let i = 1; i < this.lines.length; i++) {
+            const line = this.lines[i];
             const colorIndex = Math.floor(this.getRnd(1, colors.length));
-            this.lines[i].color = colors[colorIndex];
+            if (line.autoColor)
+                line.color = colors[colorIndex];
             colors.splice(colorIndex, 1);
         }
     }
     getRnd(min, max) {
         return Math.random() * (max - min) + min;
+    }
+    overBodyClick(e) {
+        const target = e.target;
+        if (target == null)
+            return;
+        if (!(target instanceof SVGRectElement))
+            return;
+        const line = this.linesMap.get(target);
+        if (line == undefined)
+            throw new Error(`line not found: ${target}`);
+        const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
+        for (let i = 0; i < selectedLines.length; i++) {
+            const el = selectedLines[i];
+            el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
+            el.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Over)");
+            el.classList.remove("ScheduleViewer-Grafic-Lines-selected");
+        }
+        if (this.overLineLinearGradient != undefined) {
+            this.overLineLinearGradient.select.array.forEach(el => {
+                if (this.overLineCustomColor)
+                    el.setAttribute("stop-color", target.getAttribute("stroke") || "HighLight");
+                else
+                    el.setAttribute("stop-color", "HighLight");
+            });
+        }
+        this.lines.forEach(el => {
+            el.selected = false;
+        });
+        line.selected = true;
+        target.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Select)");
+        target.setAttribute("fill-opacity", `${this.overLineOpacitySelected}`);
+        target.classList.add("ScheduleViewer-Grafic-Lines-selected");
+        this.functionsForLines.selectLine(line);
+    }
+    overBodyMouse(e, eType) {
+        const target = e.target;
+        if (target == null)
+            return;
+        if (!(target instanceof SVGRectElement))
+            return;
+        if (this.overLineLinearGradient != undefined) {
+            this.overLineLinearGradient.over.array.forEach(el => {
+                if (this.overLineCustomColor)
+                    el.setAttribute("stop-color", target.getAttribute("stroke") || "HighLight");
+                else
+                    el.setAttribute("stop-color", "HighLight");
+            });
+        }
+        if (!target.classList.contains("ScheduleViewer-Grafic-Lines-selected")) {
+            switch (eType) {
+                case "over":
+                    target.setAttribute("fill-opacity", `${this.overLineOpacityMouseOver}`);
+                    break;
+                case "out":
+                    target.setAttribute("fill-opacity", `${this.overLineOpacity}`);
+                    break;
+                default: throw new Error();
+            }
+        }
+    }
+    changeLine(data, line) {
+        if (line == undefined)
+            throw new Error(`line not found: ${line}`);
+        line.dasharray[0] = data.interval;
+        if (!line.real)
+            line.dasharray[1] = data.duration;
+        line.start = data.start;
+        line.end = data.end;
+        line.color = data.color;
+        line.autoColor = data.autoColor;
+    }
+    removeLine(line) {
+        const lineIndex = this.lines.indexOf(line);
+        if (lineIndex == -1)
+            throw new Error(`line not found: ${line}`);
+        this.lines.splice(lineIndex, 1);
+    }
+    unselectLine(line) {
+        line.selected = false;
     }
     changeClip(axis, scroll) {
         this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
@@ -130,9 +292,24 @@ export class Lines {
         this.clipRect.setAttribute("height", `${axis.height}`);
     }
     resetLines() {
-        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0 }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
     }
     getLines() {
         return this.lines;
+    }
+    toggleOverLineCustomColor() {
+        this.overLineCustomColor = !this.overLineCustomColor;
+    }
+    overLineCustomColorIsActive() {
+        return this.overLineCustomColor;
+    }
+    togglecompactLinePlacing() {
+        this.compactLinePlacing = !this.compactLinePlacing;
+    }
+    compactLinePlacingIsActive() {
+        return this.compactLinePlacing;
+    }
+    setFunctionsForLines(functions) {
+        this.functionsForLines = functions;
     }
 }
