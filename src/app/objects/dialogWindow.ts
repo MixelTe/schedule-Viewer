@@ -102,3 +102,28 @@ export class DialogWindow
 		return cell;
 	}
 }
+
+
+// class ExtendsDialogWindow extends DialogWindow
+// {
+// 	protected answer: boolean = false;
+// 	protected resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
+
+// 	constructor(parent: HTMLElement)
+// 	{
+// 		super(parent, "max-content", "120px", "150px", "120px");
+
+// 		const rowStyle = [{ property: "text-align", value: "center" }];
+// 		this.table.appendChild(this.createRow(rowStyle, [
+// 			this.createCell(2, "Some text", [], [])
+// 		]));
+// 	}
+
+// 	public getAnswer()
+// 	{
+// 		return new Promise<boolean>((resolve, reject) =>
+//         {
+// 			this.resolve = resolve;
+//         });
+// 	}
+// }
