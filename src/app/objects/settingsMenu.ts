@@ -1060,6 +1060,7 @@ export class SettingsMenu
 						functions.resetLines();
 						functions.recreate();
 						this.linesChanged = false;
+						this.lineMenuButtons(e, "cancel", functions);
 					}
 				}
 				break;
@@ -1088,6 +1089,7 @@ export class SettingsMenu
 						}
 						functions.recreate();
 						this.linesChanged = false;
+						this.lineMenuButtons(e, "cancel", functions);
 					}
 				}
 				break;
