@@ -95,6 +95,7 @@ export class scheduleViewer
 		{
 			this.grafic.setLines(newLines);
 			this.settingsMenu.linesIsChanged();
+			this.settingsMenu.setLinesCount(this.grafic.getLinesCount());
 		}
 	}
 	public getLinesString()

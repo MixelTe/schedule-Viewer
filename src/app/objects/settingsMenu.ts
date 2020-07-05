@@ -734,6 +734,10 @@ export class SettingsMenu
 	{
 		return { openControlPanel: this.menuOpen, revTimeInput: this.revTimeInput };
 	}
+	public setLinesCount(count: number)
+	{
+		this.lineCount = count;
+	}
 
 	private toggleMenu()
 	{
@@ -1108,6 +1112,7 @@ export class SettingsMenu
 						functions.recreate();
 						this.linesChanged = false;
 						this.lineMenuButtons(e, "cancel", functions);
+						this.lineCount = 0;
 					}
 				}
 				break;
@@ -1120,12 +1125,15 @@ export class SettingsMenu
 					if (continueChange)
 					{
 						functions.resetLines();
+						this.lineCount = 0;
 						for (let i = 1; i <= 4; i++)
 						{
+							this.lineCount += 1;
 							let lineName = `Line ${i*2 - 1}`;
 							functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000), lineName);
 							// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 
+							this.lineCount += 1;
 							lineName = `Line ${i*2}`;
 							const duractions = []
 							for (let i = 0; i < this.getRndInteger(600, 900); i++)

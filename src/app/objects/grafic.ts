@@ -250,4 +250,8 @@ export class Grafic
 			})
 		return lines;
 	}
+	public getLinesCount()
+	{
+		return this.lines.getLines().length - 1;
+	}
 }
