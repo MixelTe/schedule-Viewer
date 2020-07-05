@@ -71,6 +71,7 @@ interface Schedule
 interface LineF
 {
 	color: string,
+	name: string,
 	width: number,
 	dasharray: number[] | [number, number[]],
 	real: boolean,

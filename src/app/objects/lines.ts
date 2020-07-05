@@ -14,7 +14,7 @@ export class Lines
 	private showLineAfterEnd = false;
 	private compactLinePlacing = false;
 	private compactPlacingOnTop = true;
-	private minSpace = 30;
+	private minSpace = 40;
 
 	private overLineOpacity = 0;
 	private overLineOpacityMouseOver = 0.2;
@@ -68,7 +68,7 @@ export class Lines
 		defs.appendChild(createGradient(this.overLineLinearGradient.select, "ScheduleViewer-Grafic-Coordinates-linearGradient_Select"))
 		defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"))
 
-		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
+		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false, name: "DevLine" }];
 		this.setOptions(options);
 		this.recreateLines(axis, 0, zoom);
 
@@ -134,8 +134,22 @@ export class Lines
 			overline = this.createOverPath(i, axis, spaces);
 			this.linesMap.set(overline, el)
 			this.body.appendChild(line);
+			this.body.appendChild(this.createLineText(i, axis, spaces, zoom));
 			this.overBody.appendChild(overline);
 		};
+	}
+	private createLineText(index: number, axis: Rect, spaces: number, zoom: number)
+	{
+		const el = this.lines[index];
+		const x = axis.x + el.start * (this.oneHour / 60 / 60 * zoom);
+		const y = axis.y + spaces * index - (el.width / 2 + 2);
+		const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		text.setAttribute("stroke", "black");
+		text.innerHTML = el.name;
+		text.setAttribute("x", `${x}`);
+		text.setAttribute("y", `${y}`);
+		text.style.fontFamily = "Verdana, sans-serif";
+		return text;
 	}
 	private createSimplePath(index: number, axis: Rect, spaces: number, zoom: number)
 	{
@@ -236,12 +250,12 @@ export class Lines
 	}
 	public createLine(interval: number, duration: number, start: number, end: number, color?: string | undefined, autoColor = true)
 	{
-		this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: autoColor, selected: false });;
+		this.lines.push({ color: color || "", name: "Line 1", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: autoColor, selected: false });
 		this.colorizeLines();
 	}
 	public createRealLine(interval: number, durations: number[], start: number, end: number, color?: string | undefined, autoColor = true)
 	{
-		this.lines.push({ color: color || "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: autoColor, selected: false });
+		this.lines.push({ color: color || "", name: "Line 1", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: autoColor, selected: false });
 		this.colorizeLines();
 	}
 	private colorizeLines()
@@ -363,7 +377,7 @@ export class Lines
 	}
 	public resetLines()
 	{
-		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
+		this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false, name: "DevLine" }];
 	}
 	public getLines()
 	{
