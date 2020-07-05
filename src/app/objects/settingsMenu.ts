@@ -1306,7 +1306,7 @@ export class SettingsMenu
 					else throw er;
 				}
 
-				functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
+				functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.name, el.color, el.autoColor);
 			}
 		}
 		else console.log("simpleLines not found");
@@ -1333,14 +1333,14 @@ export class SettingsMenu
 					else throw er;
 				}
 
-				functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
+				functions.addRealLine(el.interval, el.durations, el.start, el.end, el.name, el.color, el.autoColor);
 			}
 		}
 		else console.log("realLines not found");
 
 		functions.recreate();
 	}
-	private checkLineFromFile(el: {interval: any, duration?: any, durations?: any, start: any, end: any, autoColor: any, color: any}, simpleLine: boolean)
+	private checkLineFromFile(el: {interval: any, duration?: any, durations?: any, start: any, end: any, autoColor: any, color: any, name: string}, simpleLine: boolean)
 	{
 		function createlog(text: string, wrongParametrName: "interval" | "duration" | "durations" | "start" | "end" | "autoColor" | "color" | undefined)
 		{
@@ -1373,6 +1373,7 @@ export class SettingsMenu
 		if (el.start == undefined) { createlogNotFound("line %cstart%c not found"); throw "MyError"; };
 		if (el.end == undefined) { createlogNotFound("line %cend%c not found"); throw "MyError"; };
 		if (el.autoColor == undefined) { createlogNotFound("line %cautoColor%c not found"); throw "MyError"; };
+		if (el.name == undefined) { createlogNotFound("line %cname%c not found"); throw "MyError"; };
 
 		if (typeof el.interval != "number") { createlog("line interval is NaN", "interval"); throw "MyError"; };
 		if (simpleLine)
@@ -1476,6 +1477,7 @@ export class SettingsMenu
 			{
 				if (typeof el.dasharray[1] == "number") throw new Error()
 				const newEl = {
+					name: el.name,
 					interval: el.dasharray[0],
 					durations: el.dasharray[1],
 					start: el.start,
@@ -1489,6 +1491,7 @@ export class SettingsMenu
 			{
 				if (typeof el.dasharray[1] != "number") throw new Error()
 				const newEl = {
+					name: el.name,
 					interval: el.dasharray[0],
 					duration: el.dasharray[1],
 					start: el.start,

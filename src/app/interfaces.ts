@@ -47,6 +47,7 @@ interface Schedule
 	simpleLines:
 	[
 		{
+			name: string,
 			interval: number,
 			duration: number,
 			start: number,
@@ -58,6 +59,7 @@ interface Schedule
 	realLines:
 	[
 		{
+			name: string,
 			interval: number,
 			durations: number[],
 			start: number,
