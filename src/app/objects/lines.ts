@@ -355,6 +355,7 @@ export class Lines
 
 		line.dasharray[0] = data.interval;
 		if (!line.real) line.dasharray[1] = data.duration;
+		line.name = data.name;
 		line.start = data.start;
 		line.end = data.end;
 		line.color = data.color;

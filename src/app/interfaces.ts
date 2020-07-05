@@ -33,6 +33,7 @@ interface FunctionsForLines
 
 interface DataToLineChange
 {
+	name: string,
 	interval: number,
 	duration: number | number[],
 	start: number,

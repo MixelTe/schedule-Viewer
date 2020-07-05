@@ -811,7 +811,10 @@ export class SettingsMenu
 		}
 
 		// console.log("Yee!!!");
-		const lineName = `Line ${this.lineCount += 1}`;
+		this.lineCount += 1;
+		let lineName = lineData.name;
+		if (lineName == "") lineName = `Line ${this.lineCount}`;
+
 		if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined)
 		{
 			if (typeof lineData.duration == "object")
@@ -859,6 +862,7 @@ export class SettingsMenu
 		let duration;
 		let start;
 		let end;
+		const name = this.lineInputs.name.value;
 
 		let isError = false;
 		try
@@ -908,6 +912,7 @@ export class SettingsMenu
 		}
 
 		return {
+			name,
 			interval: interval,
 			duration: duration,
 			start: start,
@@ -1049,6 +1054,7 @@ export class SettingsMenu
 					else throw new Error();
 				}
 				const newData = {
+					name: lineData.name,
 					interval: lineData.interval,
 					duration: lineData.duration,
 					start: lineData.start,
@@ -1074,6 +1080,7 @@ export class SettingsMenu
 				break;
 
 			case "cancel":
+				this.lineInputs.name.value = "";
 				this.lineInputs.start.value = "";
 				this.lineInputs.duration.value = "";
 				this.lineInputs.interval.value = "";
@@ -1457,6 +1464,7 @@ export class SettingsMenu
 	public setInputsData(line: LineF)
 	{
 		const data = {
+			name: line.name,
 			interval: line.dasharray[0],
 			duration: line.dasharray[1],
 			start: line.start,
@@ -1491,6 +1499,8 @@ export class SettingsMenu
 		this.lineInputs.color = data.color;
 		this.lineInputs.checkBoxColor.checked = data.autoColor;
 		this.colorInputing("toggleAuto");
+
+		this.lineInputs.name.value = data.name;
 
 		this.lineToChange = line;
 	}
