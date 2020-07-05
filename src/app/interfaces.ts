@@ -13,6 +13,7 @@ interface FunctionsForMenu
 	addSympleLine: (interval: number, duration: number, start: number, end: number, color?: string | undefined, autoColor?: boolean) => void,
 	addRealLine: (interval: number, durations: number[], start: number, end: number, color?: string | undefined, autoColor?: boolean) => void,
 	recreate: () => void,
+	resetZoom: () => void,
 	resetLines: () => void,
 	getLines: () => LineF[],
 	changeLine: (data: DataToLineChange, line: LineF) => void,

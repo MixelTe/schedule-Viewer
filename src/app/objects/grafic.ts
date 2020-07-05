@@ -203,6 +203,12 @@ export class Grafic
 		this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
 		this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
 	}
+	private resetZoom()
+	{
+		this.zoom = this.zoomMin;
+		this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 24 + 30, this.body.getBoundingClientRect().width)}`;
+		this.body.scrollLeft = 0;
+	}
 
 	public getFunctions(): FunctionsForMenu
 	{
@@ -212,6 +218,7 @@ export class Grafic
 			addSympleLine: this.lines.createLine.bind(this.lines),
 			addRealLine: this.lines.createRealLine.bind(this.lines),
 			recreate: this.recreate.bind(this),
+			resetZoom: this.resetZoom.bind(this),
 			resetLines: this.lines.resetLines.bind(this.lines),
 			getLines: this.lines.getLines.bind(this.lines),
 			changeLine: this.lines.changeLine.bind(this.lines),

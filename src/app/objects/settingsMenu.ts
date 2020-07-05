@@ -35,6 +35,7 @@ export class SettingsMenu
 		buttonRemove: HTMLButtonElement,
 		buttonCancel: HTMLButtonElement,
 		buttonRemoveAll: HTMLButtonElement,
+		buttonResetZoom: HTMLButtonElement,
 		buttonExample: HTMLButtonElement,
 		checkBoxColor: HTMLInputElement,
 		colorDiv: HTMLDivElement,
@@ -85,6 +86,7 @@ export class SettingsMenu
 			buttonRemove?: HTMLButtonElement,
 			buttonCancel?: HTMLButtonElement,
 			buttonRemoveAll?: HTMLButtonElement,
+			buttonResetZoom?: HTMLButtonElement,
 			buttonExample?: HTMLButtonElement,
 			checkBoxColor?: HTMLInputElement,
 			colorDiv?: HTMLDivElement,
@@ -539,6 +541,7 @@ export class SettingsMenu
 				this.addingLinesDIV.appendChild(buttonsDIV);
 
 				lineInputs.buttonRemoveAll = createButton("remove All", buttonsDIV);
+				lineInputs.buttonResetZoom = createButton("reset zoom", buttonsDIV);
 				lineInputs.buttonExample = createButton("example", buttonsDIV);
 
 				const link = document.createElement("a");
@@ -637,6 +640,7 @@ export class SettingsMenu
 			buttonRemove: lineInputs.buttonRemove,
 			buttonCancel: lineInputs.buttonCancel,
 			buttonRemoveAll: lineInputs.buttonRemoveAll,
+			buttonResetZoom: lineInputs.buttonResetZoom,
 			buttonExample: lineInputs.buttonExample,
 			checkBoxColor: lineInputs.checkBoxColor,
 			colorDiv: lineInputs.colorDiv,
@@ -659,6 +663,7 @@ export class SettingsMenu
 
 		this.lineInputs.buttonRemoveAll.addEventListener("click", (e) => this.lineMenuButtons(e, "removeAll", functions));
 		this.lineInputs.buttonExample.addEventListener("click", (e) => this.lineMenuButtons(e, "example", functions));
+		this.lineInputs.buttonResetZoom.addEventListener("click", (e) => this.lineMenuButtons(e, "resetZoom", functions));
 
 		this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions))
 		this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
@@ -972,7 +977,7 @@ export class SettingsMenu
 		// el.value = "";
 	}
 
-	private async lineMenuButtons(e: MouseEvent, button: "change" | "remove" | "add" | "cancel" | "removeAll" | "example", functions: FunctionsForMenu)
+	private async lineMenuButtons(e: MouseEvent, button: "change" | "remove" | "add" | "cancel" | "removeAll" | "example" | "resetZoom", functions: FunctionsForMenu)
 	{
 		const x = e.pageX;
 		const y = e.pageY;
@@ -1081,6 +1086,11 @@ export class SettingsMenu
 						this.linesChanged = false;
 					}
 				}
+				break;
+
+			case "resetZoom":
+				functions.resetZoom();
+				functions.recreate();
 				break;
 
 			default: throw new Error();
