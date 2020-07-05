@@ -137,14 +137,14 @@ export class Lines
 			overline = this.createOverPath(i, axis, spaces);
 			this.linesMap.set(overline, el)
 			this.body.appendChild(line);
-			this.body.appendChild(this.createLineText(i, axis, spaces, zoom));
+			this.nameBody.appendChild(this.createLineText(i, axis, spaces, zoom, scroll));
 			this.overBody.appendChild(overline);
 		};
 	}
-	private createLineText(index: number, axis: Rect, spaces: number, zoom: number)
+	private createLineText(index: number, axis: Rect, spaces: number, zoom: number, scroll: number)
 	{
 		const el = this.lines[index];
-		const x = axis.x + el.start * (this.oneHour / 60 / 60 * zoom);
+		const x = Math.max(axis.x + el.start * (this.oneHour / 60 / 60 * zoom), axis.x + scroll);
 		const y = axis.y + spaces * index - (el.width / 2 + 2);
 		const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		text.setAttribute("stroke", "black");
@@ -371,8 +371,17 @@ export class Lines
 		line.selected = false;
 	}
 
-	public changeClip(axis: Rect, scroll: number)
+	public changeClip(axis: Rect, scroll: number, zoom: number)
 	{
+		this.nameBody.innerHTML = "";
+		let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
+		if (this.compactLinePlacing) spaces = 0;
+		if (spaces < this.minSpace) spaces = this.minSpace;
+		for (let i = 1; i < this.lines.length; i++)
+		{
+			this.nameBody.appendChild(this.createLineText(i, axis, spaces, zoom, scroll));
+		};
+
 		this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
 		this.clipRect.setAttribute("y", `${axis.y}`);
 		this.clipRect.setAttribute("width", `${axis.width - scroll}`);
