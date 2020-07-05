@@ -78,7 +78,7 @@ export class Lines
 		this.overBody.addEventListener("mouseover", (e) => this.overBodyMouse(e, "over"));
 		this.overBody.addEventListener("mouseout", (e) => this.overBodyMouse(e, "out"));
 	}
-	private setOptions(options?: ScheduleOptions)
+	public setOptions(options?: ScheduleOptions)
 	{
 		if (options?.showRealLineAfterEnd != undefined && typeof options.showRealLineAfterEnd == "boolean") this.showLineAfterEnd = options.showRealLineAfterEnd;
 		if (options?.compactLinePlacing != undefined && typeof options.compactLinePlacing == "boolean") this.compactLinePlacing = options.compactLinePlacing;
@@ -396,17 +396,9 @@ export class Lines
 	{
 		return this.lines;
 	}
-	public toggleOverLineCustomColor()
-	{
-		this.overLineCustomColor = !this.overLineCustomColor;
-	}
 	public overLineCustomColorIsActive()
 	{
 		return this.overLineCustomColor;
-	}
-	public togglecompactLinePlacing()
-	{
-		this.compactLinePlacing = !this.compactLinePlacing;
 	}
 	public compactLinePlacingIsActive()
 	{

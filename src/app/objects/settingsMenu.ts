@@ -15,8 +15,9 @@ export class SettingsMenu
 	private settingsDIV = document.createElement("div");
 	private toggleSepLineEl: HTMLInputElement;
 	private revTimeInputEl: HTMLInputElement;
-	private colorizeLineSelectionEl: HTMLInputElement;
-	private compactLinePlacingEl: HTMLInputElement;
+	private moreSettingsButton: HTMLButtonElement;
+	// private colorizeLineSelectionEl: HTMLInputElement;
+	// private compactLinePlacingEl: HTMLInputElement;
 	private revTimeInput = false;
 	private settingsPrm = { height: 140 };
 
@@ -158,6 +159,7 @@ export class SettingsMenu
 			menu.style.justifyContent = "space-around";
 			menu.style.alignItems = "center";
 			menu.style.flexWrap = "wrap";
+			menu.style.flexDirection = "column";
 			this.settingsDIV.appendChild(menu);
 
 			const createSetting = (text: string, id: string, checked: boolean) =>
@@ -185,8 +187,16 @@ export class SettingsMenu
 
 			this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
 			this.revTimeInputEl = createSetting("change time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
-			this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
-			this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
+			this.moreSettingsButton = function ()
+			{
+				const button = document.createElement("button");
+				button.textContent = "other settings"
+				return button;
+			}();
+			menu.appendChild(this.moreSettingsButton);
+
+			// this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
+			// this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
 
 		}
 
@@ -690,8 +700,9 @@ export class SettingsMenu
 		this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
 		this.toggleSepLineEl.addEventListener("change", () => { functions.toggleSepLine(); this.toggleSepLineEl.checked = functions.SepLineIsActive(); });
 		this.revTimeInputEl.addEventListener("change", () => { this.toggleLineMenuRev(); this.revTimeInputEl.checked = this.revTimeInput; });
-		this.colorizeLineSelectionEl.addEventListener("change", () => { functions.toggleCustomSelectionColor(); this.colorizeLineSelectionEl.checked = functions.CustomSelectionColorIsActive(); });
-		this.compactLinePlacingEl.addEventListener("change",  () => { this.toggleCompactLinePlacing(functions); this.compactLinePlacingEl.checked = functions.compactLinePlacingIsActive(); });
+		this.moreSettingsButton.addEventListener("click", () => this.changeSettings(functions));
+		// this.colorizeLineSelectionEl.addEventListener("change", () => { functions.toggleCustomSelectionColor(); this.colorizeLineSelectionEl.checked = functions.CustomSelectionColorIsActive(); });
+		// this.compactLinePlacingEl.addEventListener("change",  () => { this.toggleCompactLinePlacing(functions); this.compactLinePlacingEl.checked = functions.compactLinePlacingIsActive(); });
 
 		this.lineInputs.buttonAdd.addEventListener("click", (e) => this.lineMenuButtons(e, "add", functions));
 		this.lineInputs.buttonChange.addEventListener("click", (e) => this.lineMenuButtons(e, "change", functions));
@@ -764,11 +775,7 @@ export class SettingsMenu
 			this.menuOpen = true;
 		}
 	}
-	private toggleCompactLinePlacing(functions: FunctionsForMenu)
-	{
-		functions.togglecompactLinePlacing();
-		functions.recreate();
-	}
+
 	private toggleLineMenuRev()
 	{
 		this.revTimeInput = !this.revTimeInput;
@@ -800,6 +807,20 @@ export class SettingsMenu
 
 			this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
 		}
+	}
+	private changeSettings(functions: FunctionsForMenu)
+	{
+		const data = {
+			openControlPanel: Math.random() > 0.5,
+			revTimeInput: Math.random() > 0.5,
+			showRealLineAfterEnd: Math.random() > 0.5,
+			compactLinePlacing: Math.random() > 0.5,
+			compactPlacingAlignIsTop: Math.random() > 0.5,
+			selectionCustomColor: Math.random() > 0.5,
+			showSeparateLine: Math.random() > 0.5,
+			showYAxis: Math.random() > 0.5,
+		}
+		functions.setSettings(data);
 	}
 
 	private addLine(functions: FunctionsForMenu)

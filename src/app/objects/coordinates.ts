@@ -33,7 +33,7 @@ export class Coordinates
 		this.setOptions(options);
 		this.recreateScale(zoom, translate);
 	}
-	private setOptions(options?: ScheduleOptions)
+	public setOptions(options?: ScheduleOptions)
 	{
 		if (options?.showSeparateLine != undefined && typeof options.showSeparateLine == "boolean") this.scale.separateLine.active = options.showSeparateLine;
 		if (options != undefined && typeof options.showYAxis == "boolean") this.axis.showYAxis = options.showYAxis;

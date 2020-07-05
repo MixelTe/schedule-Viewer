@@ -19,10 +19,9 @@ interface FunctionsForMenu
 	changeLine: (data: DataToLineChange, line: LineF) => void,
 	removeLine: (line: LineF) => void,
 	unselectLine: (line: LineF) => void,
-	toggleCustomSelectionColor: () => void,
 	CustomSelectionColorIsActive: () => boolean,
-	togglecompactLinePlacing: () => void,
 	compactLinePlacingIsActive: () => boolean,
+	setSettings: (data: ScheduleOptionsFull) => void,
 }
 
 interface FunctionsForLines
@@ -94,4 +93,16 @@ interface ScheduleOptions
 	selectionCustomColor?: boolean,
 	showSeparateLine?: boolean,
 	showYAxis?: boolean,
+}
+
+interface ScheduleOptionsFull
+{
+	openControlPanel: boolean,
+	revTimeInput: boolean,
+	showRealLineAfterEnd: boolean,
+	compactLinePlacing: boolean,
+	compactPlacingAlignIsTop: boolean,
+	selectionCustomColor: boolean,
+	showSeparateLine: boolean,
+	showYAxis: boolean,
 }

@@ -226,10 +226,9 @@ export class Grafic
 			changeLine: this.lines.changeLine.bind(this.lines),
 			removeLine: this.lines.removeLine.bind(this.lines),
 			unselectLine: this.lines.unselectLine.bind(this.lines),
-			toggleCustomSelectionColor: this.lines.toggleOverLineCustomColor.bind(this.lines),
 			CustomSelectionColorIsActive: this.lines.overLineCustomColorIsActive.bind(this.lines),
-			togglecompactLinePlacing: this.lines.togglecompactLinePlacing.bind(this.lines),
 			compactLinePlacingIsActive: this.lines.compactLinePlacingIsActive.bind(this.lines),
+			setSettings: this.apllyNewSettings.bind(this),
 		}
 	}
 	public setFunctionsForLines(functions: FunctionsForLines)
@@ -253,5 +252,13 @@ export class Grafic
 	public getLinesCount()
 	{
 		return this.lines.getLines().length - 1;
+	}
+	public apllyNewSettings(options: ScheduleOptionsFull)
+	{
+		this.lines.setOptions(options);
+		this.coordinates.setOptions(options);
+
+
+		this.recreate();
 	}
 }
