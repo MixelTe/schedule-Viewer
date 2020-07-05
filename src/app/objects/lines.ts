@@ -6,6 +6,7 @@ export class Lines
 	private oneHour: number;
 	private body: SVGGElement;
 	private overBody: SVGGElement;
+	private nameBody: SVGGElement;
 	private lines: LineF[];
 	private linesMap: Map<SVGRectElement, LineF> = new Map();
 	private clipRect: SVGRectElement;
@@ -22,10 +23,11 @@ export class Lines
 	private overLineCustomColor = true;
 	private overLineLinearGradient: { select: {array: SVGStopElement[]}, over: {array: SVGStopElement[]}} | undefined;
 
-	constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void, options?: ScheduleOptions)
+	constructor(body: SVGGElement, bodyPrm: Rect, overBody: SVGGElement, nameBody: SVGGElement, defs: SVGDefsElement, axis: Rect, oneHour: number, zoom = 1, changeHeightAndRecreate: (newHeight: number, scroll: number, zoom: number) => void, options?: ScheduleOptions)
 	{
 		this.body = body;
 		this.overBody = overBody;
+		this.nameBody = nameBody;
 		this.oneHour = oneHour;
 		this.width = bodyPrm.width;
 		this.height = axis.height;
@@ -102,6 +104,7 @@ export class Lines
 		this.linesMap.clear();
 		this.body.innerHTML = "";
 		this.overBody.innerHTML = "";
+		this.nameBody.innerHTML = "";
 
 		let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
 		if (this.compactLinePlacing) spaces = 0;

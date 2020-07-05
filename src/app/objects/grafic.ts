@@ -11,6 +11,7 @@ export class Grafic
 	private coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
 	private lines: Lines;
 	private linesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
+	private linesNames = document.createElementNS("http://www.w3.org/2000/svg", "g");
 	private linesOverBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
 	private oneHour = 60;
 	private zoom = 2;
@@ -46,11 +47,12 @@ export class Grafic
 		{
 
 			this.svg.appendChild(this.linesBody);
+			this.svg.appendChild(this.linesNames);
 			this.svg.appendChild(this.coordinatesBody);
 			this.svg.appendChild(this.linesOverBody);
 
 			this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this), options);
-			this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
+			this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.linesNames, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
 
 			this.coordinatesBody.addEventListener("click", this.lines.clickOutside.bind(this.lines))
 			for (let i = 0; i < 4; i++)
