@@ -162,7 +162,7 @@ export class Lines
 			}
 			const nextX = axis.x + interval * x + el.start * oneSecond;
 			path += `
-            h ${duration}
+            h ${Math.max(duration, 1)}
             M ${nextX} ${y}`
 			if (nextX > el.end * oneSecond + axis.x) break;
 		}
@@ -190,7 +190,7 @@ export class Lines
 		for (let i = 0, x = 1; i < axis.width / interval; i++, x++)
 		{
 			const duration = durations[i];
-			let dx = `h ${duration * oneSecond}`;
+			let dx = `h ${Math.max(duration * oneSecond, 1)}`;
 			if (typeof duration != "number" || duration / duration != 1)
 			{
 				if (duration == 0) dx = "v1"
