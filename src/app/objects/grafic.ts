@@ -188,7 +188,7 @@ export class Grafic
 		this.zoomFix.delta = zoomFixPointX - scrollLeft;
 
 		this.coordinates.recreateScale(this.zoom, scrollLeft);
-		this.lines.changeClip(this.coordinates.axis, this.body.scrollLeft, this.zoom);
+		this.lines.onScrollMove(this.coordinates.axis, this.body.scrollLeft, this.zoom);
 	}
 	private changeSVGHeight(height: number)
 	{

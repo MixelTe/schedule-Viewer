@@ -371,7 +371,7 @@ export class Lines
 		line.selected = false;
 	}
 
-	public changeClip(axis: Rect, scroll: number, zoom: number)
+	public onScrollMove(axis: Rect, scroll: number, zoom: number)
 	{
 		this.nameBody.innerHTML = "";
 		let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
