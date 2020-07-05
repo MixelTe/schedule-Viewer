@@ -42,6 +42,7 @@ compactLinePlacing       | boolean    | false         | place lines compact
 compactPlacingAlignIsTop | boolean    | true          | vertical line align top or bottom when compact placing is active
 selectionCustomColor     | boolean    | true          | selection color is same as line
 showSeparateLine         | boolean    | true          | show vertical line on cursor
+showYAxis                | boolean    | false         | show vertical line on axis
 
 ### Save shcedule on page reload
 ``` js

@@ -64,6 +64,7 @@ export class scheduleViewer
 			compactPlacingAlignIsTop: graficOptions.compactPlacingAlignIsTop,
     		selectionCustomColor: graficOptions.selectionCustomColor,
     		showSeparateLine: graficOptions.showSeparateLine,
+    		showYAxis: graficOptions.showYAxis,
 		}
 		return JSON.stringify(options);
 	}

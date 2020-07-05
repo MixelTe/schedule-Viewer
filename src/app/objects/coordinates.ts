@@ -3,7 +3,7 @@ export class Coordinates
 	private width: number;
 	private height: number;
 
-	public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 3 };
+	public axis = { x: 0, y: 0, width: 0, height: 0, svgEl: <SVGPolylineElement>{}, color: "black", sWidth: 3, showYAxis: false };
 	private scale = {
 		hours: { els: <any>[], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
 		minutes: { els: <any>[], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
@@ -36,19 +36,25 @@ export class Coordinates
 	private setOptions(options?: ScheduleOptions)
 	{
 		if (options?.showSeparateLine != undefined && typeof options.showSeparateLine == "boolean") this.scale.separateLine.active = options.showSeparateLine;
+		if (options != undefined && typeof options.showYAxis == "boolean") this.axis.showYAxis = options.showYAxis;
 	}
 	public getOptions()
 	{
-		return { showSeparateLine: this.scale.separateLine.active};
+		return {
+			showSeparateLine: this.scale.separateLine.active,
+			showYAxis: this.axis.showYAxis
+		};
 	}
 	private createAxis(translate = 0)
 	{
 		const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-		axis.setAttribute("points",
-			`${this.axis.x + translate} ${this.axis.y}
-            ${this.axis.x + translate} ${this.axis.y + this.axis.height}
-            ${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}`
-		);
+		let points = "";
+		if (this.axis.showYAxis) points = `${this.axis.x + translate} ${this.axis.y} `;
+		points += `
+		${this.axis.x + translate} ${this.axis.y + this.axis.height}
+		${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}
+		`
+		axis.setAttribute("points", points);
 		axis.setAttribute("stroke", `${this.axis.color}`);
 		axis.setAttribute("fill", `transparent`);
 		axis.setAttribute("stroke-width", `${this.axis.sWidth}`);

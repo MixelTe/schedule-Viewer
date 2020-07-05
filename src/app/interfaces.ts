@@ -86,5 +86,6 @@ interface ScheduleOptions
 	compactLinePlacing?: boolean,
 	compactPlacingAlignIsTop?: boolean,
 	selectionCustomColor?: boolean,
-	showSeparateLine?: boolean
+	showSeparateLine?: boolean,
+	showYAxis?: boolean,
 }
