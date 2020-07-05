@@ -1393,6 +1393,10 @@ export class SettingsMenu
 	}
 
 
+	public unSelectLine(functions: FunctionsForMenu, e: MouseEvent)
+	{
+		this.lineMenuButtons(e, "cancel", functions);
+	}
 	public setInputsData(line: LineF)
 	{
 		const data = {

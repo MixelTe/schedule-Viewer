@@ -26,7 +26,8 @@ interface FunctionsForMenu
 
 interface FunctionsForLines
 {
-	selectLine: (line: LineF) => void
+	selectLine: (line: LineF) => void,
+	unSelectLine: (e: MouseEvent) => void,
 }
 
 interface DataToLineChange

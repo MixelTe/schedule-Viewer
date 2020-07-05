@@ -44,9 +44,13 @@ export class scheduleViewer
 			this.grafic = new Grafic(this.graficBody, settingsMenuWidth, newOptions);
 
 			this.body.appendChild(this.settingsMenuBody);
-			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions(), newOptions);
+			const functionsForMenu = this.grafic.getFunctions();
+			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, functionsForMenu, newOptions);
 
-			this.grafic.setFunctionsForLines({ selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu) });
+			this.grafic.setFunctionsForLines({
+				selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu),
+				unSelectLine: this.settingsMenu.unSelectLine.bind(this.settingsMenu, functionsForMenu),
+			});
 		}
 
 		this.body.addEventListener("dragover", (e) => this.settingsMenu.mainBodyDragover.bind(this.settingsMenu)(e));

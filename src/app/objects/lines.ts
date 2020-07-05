@@ -265,6 +265,10 @@ export class Lines
 		return Math.random() * (max - min) + min;
 	}
 
+	public clickOutside(e: MouseEvent)
+	{
+		this.functionsForLines.unSelectLine(e);
+	}
 	private overBodyClick(e: MouseEvent)
 	{
 		const target = e.target;
