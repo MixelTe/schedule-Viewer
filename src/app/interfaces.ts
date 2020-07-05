@@ -10,8 +10,8 @@ interface FunctionsForMenu
 {
 	toggleSepLine: () => void,
 	SepLineIsActive: () => boolean,
-	addSympleLine: (interval: number, duration: number, start: number, end: number, color?: string | undefined, autoColor?: boolean) => void,
-	addRealLine: (interval: number, durations: number[], start: number, end: number, color?: string | undefined, autoColor?: boolean) => void,
+	addSympleLine: (interval: number, duration: number, start: number, end: number, name: string, color?: string | undefined, autoColor?: boolean) => void,
+	addRealLine: (interval: number, durations: number[], start: number, end: number, name: string, color?: string | undefined, autoColor?: boolean) => void,
 	recreate: () => void,
 	resetZoom: () => void,
 	resetLines: () => void,

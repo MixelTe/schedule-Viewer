@@ -45,6 +45,7 @@ export class SettingsMenu
 	private hintForLinesInputs: HTMLDivElement;
 	private colorPicker = new ColorPicker();
 	private linesChanged = false;
+	private lineCount = 0;
 
 	private loadFilesDIV = document.createElement("div");
 	private loadFilesPrm = { height: 80 };
@@ -770,22 +771,23 @@ export class SettingsMenu
 		}
 
 		// console.log("Yee!!!");
+		const lineName = `Line ${this.lineCount += 1}`;
 		if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined)
 		{
 			if (typeof lineData.duration == "object")
 			{
-				functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+				functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end, lineName, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 			}
 			else
 			{
-				functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+				functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, lineName, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 			}
 		}
 		else
 		{
 			if (lineData.duration == undefined) throw new Error();
 			if (typeof lineData.duration == "object")  throw new Error();
-			functions.addSympleLine(1, lineData.duration, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+			functions.addSympleLine(1, lineData.duration, lineData.start, 0, lineName, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
 		}
 		functions.recreate();
 	}
@@ -1070,17 +1072,19 @@ export class SettingsMenu
 					if (continueChange)
 					{
 						functions.resetLines();
-						for (let i = 0; i < 4; i++)
+						for (let i = 1; i <= 4; i++)
 						{
-							functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+							let lineName = `Line ${i*2 - 1}`;
+							functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000), lineName);
 							// functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
 
+							lineName = `Line ${i*2}`;
 							const duractions = []
 							for (let i = 0; i < this.getRndInteger(600, 900); i++)
 							{
 								duractions.push(this.getRndInteger(40, 160));
 							}
-							functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+							functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000), lineName);
 						}
 						functions.recreate();
 						this.linesChanged = false;
