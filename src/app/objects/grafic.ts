@@ -69,7 +69,7 @@ export class Grafic
 			this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
 		}
 		this.svg.addEventListener("wheel", (e) => { if (this.zoomActive) this.mouseWheel(e) });
-		this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
+		// this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
 		this.body.addEventListener("scroll", () => this.scrollDiv());
 		document.addEventListener("keydown", (e) => this.keyDown(e));
 		document.addEventListener("keyup", (e) => { if (e.key == "Control") this.zoomActive = false; });
