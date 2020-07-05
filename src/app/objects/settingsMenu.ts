@@ -26,6 +26,7 @@ export class SettingsMenu
 		radioOnce: HTMLInputElement,
 		radioRepeating: HTMLInputElement,
 		freqenceRow: HTMLTableRowElement,
+		name: HTMLInputElement,
 		interval: HTMLInputElement,
 		duration: HTMLInputElement,
 		start: HTMLInputElement,
@@ -78,6 +79,7 @@ export class SettingsMenu
 			radioOnce?: HTMLInputElement,
 			radioRepeating?: HTMLInputElement,
 			freqenceRow?: HTMLTableRowElement,
+			name?: HTMLInputElement,
 			interval?: HTMLInputElement,
 			duration?: HTMLInputElement,
 			start?: HTMLInputElement,
@@ -218,6 +220,43 @@ export class SettingsMenu
 				linesMenuTable.style.height = "100%";
 				linesMenuTableDIV.appendChild(linesMenuTable);
 
+
+				{
+					const tableRow = document.createElement("tr");
+					linesMenuTable.appendChild(tableRow);
+
+					{
+						const tableCell = document.createElement("td");
+						tableCell.style.textAlign = "right";
+						tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+						tableRow.appendChild(tableCell);
+
+						const lable = document.createElement("label");
+						// startLable.style.height = "max-content";
+						// startLable.style.marginRight = "3px";
+						lable.style.fontSize = "16px";
+						lable.htmlFor = "scheduleViewer-SettingsMenu-lineInputName"
+						lable.innerText = "Name:";
+						tableCell.appendChild(lable);
+					}
+					{
+						const tableCell = document.createElement("td");
+						tableRow.appendChild(tableCell);
+
+						const input = document.createElement("input");
+						input.type = "input";
+						input.style.width = `${inputWidth}px`
+						input.style.height = `${inputHeight}px`
+						input.id = "scheduleViewer-SettingsMenu-lineInputName";
+						input.title = "line name";
+						input.style.border = `${this.addingLinesPrm.inputsBorder}`
+						input.style.borderRadius = `${inputRadius}px`
+						input.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`
+						tableCell.appendChild(input);
+						lineInputs.name = input;
+					}
+
+				}
 
 				{
 					const tableRow = document.createElement("tr");
@@ -632,6 +671,7 @@ export class SettingsMenu
 			radioOnce: lineInputs.radioOnce,
 			radioRepeating: lineInputs.radioRepeating,
 			freqenceRow: lineInputs.freqenceRow,
+			name: lineInputs.name,
 			interval: lineInputs.interval,
 			duration: lineInputs.duration,
 			start: lineInputs.start,
