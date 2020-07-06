@@ -1,10 +1,10 @@
 import { Grafic } from "./objects/grafic.js";
 import { SettingsMenu } from "./objects/settingsMenu.js";
-export class scheduleViewer {
+export class ScheduleViewer {
     constructor(body, options) {
         this.graficBody = document.createElement("div");
         this.settingsMenuBody = document.createElement("div");
-        this.version = "1.9";
+        this.version = "1.9.1";
         this.body = body;
         this.body.style.position = "relative";
         this.body.style.overflow = "hidden";

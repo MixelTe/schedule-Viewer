@@ -527,14 +527,10 @@ export class SettingsMenu {
             this.overDiv.appendChild(this.overDivText);
         }
         {
-            const height = 20;
-            const width = 100;
             const div = document.createElement("div");
             div.style.position = "absolute";
-            div.style.top = `calc(100% - ${height}px)`;
-            div.style.left = `calc(100% - ${width}px)`;
-            div.style.height = `${height}px`;
-            div.style.width = `${width}px`;
+            div.style.height = "max-content";
+            div.style.width = "max-content";
             div.style.display = "flex";
             div.style.justifyContent = "flex-end";
             this.body.appendChild(div);
@@ -545,6 +541,9 @@ export class SettingsMenu {
             versionDiv.innerText = `version: ${version}`;
             versionDiv.style.fontSize = "14px";
             div.appendChild(versionDiv);
+            const bcr = div.getBoundingClientRect();
+            div.style.top = `calc(100% - ${bcr.height}px)`;
+            div.style.left = `calc(100% - ${bcr.width}px)`;
         }
         this.lineInputs = {
             color: "hsl(120, 73%, 75%)",

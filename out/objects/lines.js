@@ -130,7 +130,7 @@ export class Lines {
         else
             y = axis.y + axis.height - spaces * index - (el.width / 2 + 2);
         const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        text.setAttribute("stroke", this.nameColor);
+        text.setAttribute("fill", this.nameColor);
         text.innerHTML = el.name;
         text.setAttribute("x", `${x}`);
         text.setAttribute("y", `${y}`);
@@ -258,7 +258,8 @@ export class Lines {
         return Math.random() * (max - min) + min;
     }
     clickOutside(e) {
-        this.functionsForLines.unSelectLine(e);
+        if (!(e.target instanceof SVGRectElement))
+            this.functionsForLines.unSelectLine(e);
     }
     overBodyClick(e) {
         const target = e.target;

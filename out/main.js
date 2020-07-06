@@ -1,7 +1,7 @@
-import { scheduleViewer } from "./scheduleViewer.js";
+import { ScheduleViewer } from "./scheduleViewer.js";
 let options = localStorage.getItem("options");
 let lines = localStorage.getItem("lines");
-const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
+const grafic = new ScheduleViewer(getdiv("svgGrafic"), options);
 grafic.setLinesFromString(lines);
 setInterval(() => {
     localStorage.setItem("options", grafic.getOptionsString());
