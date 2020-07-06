@@ -61,7 +61,7 @@ export class SettingsMenu
 	private overDivText = document.createElement("div");
 	private overDivPrm = { width: 0, height: 0, minusWidth: 0 };
 
-	constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, options?: ScheduleOptions)
+	constructor(body: HTMLDivElement, width: number, functions: FunctionsForMenu, version: string, options?: ScheduleOptions)
 	{
 		this.menuWidth = width;
 		this.body = body;
@@ -669,6 +669,28 @@ export class SettingsMenu
 			this.overDivText.style.fontSize = "40px"
 			this.overDivText.classList.add("scheduleViewer_SVGoverText");
 			this.overDiv.appendChild(this.overDivText);
+		}
+
+		{
+			const height = 20;
+			const width = 100;
+			const div = document.createElement("div");
+			div.style.position = "absolute";
+			div.style.top = `calc(100% - ${height}px)`;
+			div.style.left = `calc(100% - ${width}px)`;
+			div.style.height = `${height}px`;
+			div.style.width = `${width}px`;
+			div.style.display = "flex";
+			div.style.justifyContent = "flex-end";
+			this.body.appendChild(div);
+
+			const versionDiv = document.createElement("div");
+			versionDiv.style.height = "max-content";
+			versionDiv.style.width = "max-content";
+			versionDiv.style.marginRight = "5px";
+			versionDiv.innerText = `version: ${version}`;
+			versionDiv.style.fontSize = "14px";
+			div.appendChild(versionDiv);
 		}
 
 

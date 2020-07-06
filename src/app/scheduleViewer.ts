@@ -11,6 +11,8 @@ export class scheduleViewer
 	private settingsMenuBody = document.createElement("div");
 	private settingsMenu: SettingsMenu
 
+	private version = "1.9";
+
 
 	constructor(body: HTMLDivElement, options?: string | null | ScheduleOptions)
 	{
@@ -45,7 +47,7 @@ export class scheduleViewer
 
 			this.body.appendChild(this.settingsMenuBody);
 			const functionsForMenu = this.grafic.getFunctions();
-			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, functionsForMenu, newOptions);
+			this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, functionsForMenu, this.version, newOptions);
 
 			this.grafic.setFunctionsForLines({
 				selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu),
