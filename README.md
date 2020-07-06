@@ -44,6 +44,7 @@ selectionCustomColor     | boolean    | true          | selection color is same 
 showSeparateLine         | boolean    | true          | show vertical line on cursor
 showYAxis                | boolean    | false         | show Y axis
 lineNamesOnStart         | boolean    | true          | move names to line begin
+darkTheme                | boolean    | false         | enable dark theme
 
 ### Save shcedule on page reload
 ``` js
