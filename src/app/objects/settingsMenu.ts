@@ -813,6 +813,7 @@ export class SettingsMenu
 			selectionCustomColor: graficData.selectionCustomColor,
 			showSeparateLine: graficData.showSeparateLine,
 			showYAxis: graficData.showYAxis,
+			lineNamesOnStart: graficData.lineNamesOnStart,
 		}
 		const settings = await new SettingsWindow(this.body, data).getAnswer();
 		// if (typeof settings != "boolean")
@@ -824,6 +825,7 @@ export class SettingsMenu
 		// 	if (data.selectionCustomColor != settings.selectionCustomColor) console.log("selectionCustomColor: " + data.selectionCustomColor + " => " + settings.selectionCustomColor);
 		// 	if (data.showSeparateLine != settings.showSeparateLine) console.log("showSeparateLine: " + data.showSeparateLine + " => " + settings.showSeparateLine);
 		// 	if (data.showYAxis != settings.showYAxis) console.log("showYAxis: " + data.showYAxis + " => " + settings.showYAxis);
+		// 	if (data.lineNamesOnStart != settings.lineNamesOnStart) console.log("lineNamesOnStart: " + data.lineNamesOnStart + " => " + settings.lineNamesOnStart);
 		// }
 		if (typeof settings != "boolean")
 		{

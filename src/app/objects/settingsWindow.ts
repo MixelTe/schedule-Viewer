@@ -35,6 +35,7 @@ export class SettingsWindow extends DialogWindow
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
 			this.createCell(1, "", cellStyle, this.createOption("show Y axis", "scheduleViewer-SettingsWindow-showYAxis", false, 6)),
+			this.createCell(1, "", cellStyle, this.createOption("move names to line begin", "scheduleViewer-SettingsWindow-lineNamesOnStart", false, 7)),
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
 			this.createCell(1, "", cellStyle, []),
@@ -66,6 +67,7 @@ export class SettingsWindow extends DialogWindow
 				selectionCustomColor: this.inputs[4].checked,
 				showSeparateLine: this.inputs[5].checked,
 				showYAxis: this.inputs[6].checked,
+				lineNamesOnStart: this.inputs[7].checked,
 			}
 			this.answer = data;
 		}
@@ -85,6 +87,7 @@ export class SettingsWindow extends DialogWindow
 		this.inputs[4].checked = data.selectionCustomColor;
 		this.inputs[5].checked = data.showSeparateLine;
 		this.inputs[6].checked = data.showYAxis;
+		this.inputs[7].checked = data.lineNamesOnStart;
 	}
 
 	private createOption(text: string, id: string, checked: boolean, index: number)

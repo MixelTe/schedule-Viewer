@@ -117,4 +117,5 @@ interface ScheduleOptionsFull
 	selectionCustomColor: boolean,
 	showSeparateLine: boolean,
 	showYAxis: boolean,
+	lineNamesOnStart: boolean,
 }
