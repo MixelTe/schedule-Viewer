@@ -811,17 +811,27 @@ export class SettingsMenu
 	}
 	private async changeSettings(functions: FunctionsForMenu)
 	{
+		const graficData = functions.getOptions();
 		const data = {
-			revTimeInput: Math.random() > 0.5,
-			showRealLineAfterEnd: Math.random() > 0.5,
-			compactLinePlacing: Math.random() > 0.5,
-			compactPlacingAlignIsTop: Math.random() > 0.5,
-			selectionCustomColor: Math.random() > 0.5,
-			showSeparateLine: Math.random() > 0.5,
-			showYAxis: Math.random() > 0.5,
+			revTimeInput: this.revTimeInput,
+			showRealLineAfterEnd: graficData.showRealLineAfterEnd,
+			compactLinePlacing: graficData.compactLinePlacing,
+			compactPlacingAlignIsTop: graficData.compactPlacingAlignIsTop,
+			selectionCustomColor: graficData.selectionCustomColor,
+			showSeparateLine: graficData.showSeparateLine,
+			showYAxis: graficData.showYAxis,
 		}
 		const settings = await new SettingsWindow(this.body, data).getAnswer();
-		console.log(settings);
+		if (typeof settings != "boolean")
+		{
+			if (data.revTimeInput != settings.revTimeInput) console.log("revTimeInput: " + data.revTimeInput + " => " + settings.revTimeInput);
+			if (data.showRealLineAfterEnd != settings.showRealLineAfterEnd) console.log("showRealLineAfterEnd: " + data.showRealLineAfterEnd + " => " + settings.showRealLineAfterEnd);
+			if (data.compactLinePlacing != settings.compactLinePlacing) console.log("compactLinePlacing: " + data.compactLinePlacing + " => " + settings.compactLinePlacing);
+			if (data.compactPlacingAlignIsTop != settings.compactPlacingAlignIsTop) console.log("compactPlacingAlignIsTop: " + data.compactPlacingAlignIsTop + " => " + settings.compactPlacingAlignIsTop);
+			if (data.selectionCustomColor != settings.selectionCustomColor) console.log("selectionCustomColor: " + data.selectionCustomColor + " => " + settings.selectionCustomColor);
+			if (data.showSeparateLine != settings.showSeparateLine) console.log("showSeparateLine: " + data.showSeparateLine + " => " + settings.showSeparateLine);
+			if (data.showYAxis != settings.showYAxis) console.log("showYAxis: " + data.showYAxis + " => " + settings.showYAxis);
+		}
 		if (typeof settings != "boolean") functions.setSettings(settings);
 	}
 

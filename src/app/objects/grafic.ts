@@ -80,7 +80,7 @@ export class Grafic
 		this.body.addEventListener("mouseleave", (e) => this.coordinates.svgBodyMouse(e, "leave"));
 		this.body.scrollTop = parseInt(this.svg.style.height);
 	}
-	public getOptions()
+	public getOptions(): ScheduleOptionsGraic
 	{
 		const linesOptions = this.lines.getOptions();
 		const coordinatesOptions = this.coordinates.getOptions();
@@ -223,6 +223,7 @@ export class Grafic
 			resetZoom: this.resetZoom.bind(this),
 			resetLines: this.lines.resetLines.bind(this.lines),
 			getLines: this.lines.getLines.bind(this.lines),
+			getOptions: this.getOptions.bind(this),
 			changeLine: this.lines.changeLine.bind(this.lines),
 			removeLine: this.lines.removeLine.bind(this.lines),
 			unselectLine: this.lines.unselectLine.bind(this.lines),

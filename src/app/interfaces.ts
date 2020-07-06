@@ -16,6 +16,7 @@ interface FunctionsForMenu
 	resetZoom: () => void,
 	resetLines: () => void,
 	getLines: () => LineF[],
+	getOptions: () => ScheduleOptionsGraic,
 	changeLine: (data: DataToLineChange, line: LineF) => void,
 	removeLine: (line: LineF) => void,
 	unselectLine: (line: LineF) => void,
@@ -93,6 +94,16 @@ interface ScheduleOptions
 	selectionCustomColor?: boolean,
 	showSeparateLine?: boolean,
 	showYAxis?: boolean,
+}
+
+interface ScheduleOptionsGraic
+{
+	showRealLineAfterEnd: boolean,
+	compactLinePlacing: boolean,
+	compactPlacingAlignIsTop: boolean,
+	selectionCustomColor: boolean,
+	showSeparateLine: boolean,
+	showYAxis: boolean,
 }
 
 interface ScheduleOptionsFull
