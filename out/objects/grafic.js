@@ -6,6 +6,7 @@ export class Grafic {
         this.defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
         this.coordinatesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.linesBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        this.linesNames = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.linesOverBody = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.oneHour = 60;
         this.zoom = 2;
@@ -34,10 +35,12 @@ export class Grafic {
         // console.log(this.body.clientHeight);
         {
             this.svg.appendChild(this.linesBody);
+            this.svg.appendChild(this.linesNames);
             this.svg.appendChild(this.coordinatesBody);
             this.svg.appendChild(this.linesOverBody);
             this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this), options);
-            this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
+            this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.linesNames, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
+            this.coordinatesBody.addEventListener("click", this.lines.clickOutside.bind(this.lines));
             for (let i = 0; i < 4; i++) {
                 // this.lines.createLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
                 // this.lines.createLine(this.getRndInteger(2000, 4000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
@@ -54,7 +57,7 @@ export class Grafic {
         }
         this.svg.addEventListener("wheel", (e) => { if (this.zoomActive)
             this.mouseWheel(e); });
-        this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
+        // this.svg.addEventListener("click", (e) => this.mouseClick(e, true));
         this.body.addEventListener("scroll", () => this.scrollDiv());
         document.addEventListener("keydown", (e) => this.keyDown(e));
         document.addEventListener("keyup", (e) => { if (e.key == "Control")
@@ -71,7 +74,9 @@ export class Grafic {
             compactLinePlacing: linesOptions.compactLinePlacing,
             selectionCustomColor: linesOptions.selectionCustomColor,
             compactPlacingAlignIsTop: linesOptions.compactPlacingAlignIsTop,
-            showSeparateLine: coordinatesOptions.showSeparateLine
+            lineNamesOnStart: linesOptions.lineNamesOnStart,
+            showSeparateLine: coordinatesOptions.showSeparateLine,
+            showYAxis: coordinatesOptions.showYAxis
         };
     }
     mouseWheel(e) {
@@ -150,7 +155,7 @@ export class Grafic {
         }
         this.zoomFix.delta = zoomFixPointX - scrollLeft;
         this.coordinates.recreateScale(this.zoom, scrollLeft);
-        this.lines.changeClip(this.coordinates.axis, this.body.scrollLeft);
+        this.lines.onScrollMove(this.coordinates.axis, this.body.scrollLeft, this.zoom);
     }
     changeSVGHeight(height) {
         const newHeight = Math.max(height, this.body.clientHeight - 4);
@@ -163,6 +168,11 @@ export class Grafic {
         this.coordinates.recreateScale(this.zoom, this.body.scrollLeft);
         this.lines.recreateLines(this.coordinates.axis, this.body.scrollLeft, this.zoom);
     }
+    resetZoom() {
+        this.zoom = this.zoomMin;
+        this.svg.style.width = `${Math.max(this.oneHour * this.zoom * 24 + 30, this.body.getBoundingClientRect().width)}`;
+        this.body.scrollLeft = 0;
+    }
     getFunctions() {
         return {
             toggleSepLine: this.coordinates.toggleSepLine.bind(this.coordinates),
@@ -170,15 +180,17 @@ export class Grafic {
             addSympleLine: this.lines.createLine.bind(this.lines),
             addRealLine: this.lines.createRealLine.bind(this.lines),
             recreate: this.recreate.bind(this),
+            resetZoom: this.resetZoom.bind(this),
             resetLines: this.lines.resetLines.bind(this.lines),
             getLines: this.lines.getLines.bind(this.lines),
+            getOptions: this.getOptions.bind(this),
             changeLine: this.lines.changeLine.bind(this.lines),
             removeLine: this.lines.removeLine.bind(this.lines),
             unselectLine: this.lines.unselectLine.bind(this.lines),
-            toggleCustomSelectionColor: this.lines.toggleOverLineCustomColor.bind(this.lines),
             CustomSelectionColorIsActive: this.lines.overLineCustomColorIsActive.bind(this.lines),
-            togglecompactLinePlacing: this.lines.togglecompactLinePlacing.bind(this.lines),
             compactLinePlacingIsActive: this.lines.compactLinePlacingIsActive.bind(this.lines),
+            setSettings: this.apllyNewSettings.bind(this),
+            setTheme: this.setTheme.bind(this),
         };
     }
     setFunctionsForLines(functions) {
@@ -189,10 +201,31 @@ export class Grafic {
         this.recreate();
     }
     getLines() {
-        const lines = this.lines.getLines();
-        lines.forEach(el => {
-            el.selected = false;
-        });
+        const lines = JSON.parse(JSON.stringify(this.lines.getLines()));
+        for (const key in lines) {
+            if (lines.hasOwnProperty(key)) {
+                const el = lines[key];
+                el.selected = false;
+            }
+        }
         return lines;
+    }
+    getLinesCount() {
+        return this.lines.getLines().length - 1;
+    }
+    apllyNewSettings(options) {
+        this.lines.setOptions(options);
+        this.coordinates.setOptions(options);
+        this.recreate();
+    }
+    setTheme(dark) {
+        if (dark) {
+            this.body.style.backgroundColor = "black";
+        }
+        else {
+            this.body.style.backgroundColor = "";
+        }
+        this.lines.setTheme(dark);
+        this.coordinates.setTheme(dark);
     }
 }

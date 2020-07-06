@@ -4,6 +4,7 @@ export class scheduleViewer {
     constructor(body, options) {
         this.graficBody = document.createElement("div");
         this.settingsMenuBody = document.createElement("div");
+        this.version = "1.9";
         this.body = body;
         this.body.style.position = "relative";
         this.body.style.overflow = "hidden";
@@ -28,8 +29,12 @@ export class scheduleViewer {
             this.body.appendChild(this.graficBody);
             this.grafic = new Grafic(this.graficBody, settingsMenuWidth, newOptions);
             this.body.appendChild(this.settingsMenuBody);
-            this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, this.grafic.getFunctions(), newOptions);
-            this.grafic.setFunctionsForLines({ selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu) });
+            const functionsForMenu = this.grafic.getFunctions();
+            this.settingsMenu = new SettingsMenu(this.settingsMenuBody, settingsMenuWidth, functionsForMenu, this.version, newOptions);
+            this.grafic.setFunctionsForLines({
+                selectLine: this.settingsMenu.setInputsData.bind(this.settingsMenu),
+                unSelectLine: this.settingsMenu.unSelectLine.bind(this.settingsMenu, functionsForMenu),
+            });
         }
         this.body.addEventListener("dragover", (e) => this.settingsMenu.mainBodyDragover.bind(this.settingsMenu)(e));
     }
@@ -39,11 +44,14 @@ export class scheduleViewer {
         const options = {
             openControlPanel: settingsMenuOptions.openControlPanel,
             revTimeInput: settingsMenuOptions.revTimeInput,
+            darkTheme: settingsMenuOptions.darkTheme,
             showRealLineAfterEnd: graficOptions.showRealLineAfterEnd,
             compactLinePlacing: graficOptions.compactLinePlacing,
             compactPlacingAlignIsTop: graficOptions.compactPlacingAlignIsTop,
             selectionCustomColor: graficOptions.selectionCustomColor,
             showSeparateLine: graficOptions.showSeparateLine,
+            showYAxis: graficOptions.showYAxis,
+            lineNamesOnStart: graficOptions.lineNamesOnStart,
         };
         return JSON.stringify(options);
     }
@@ -67,9 +75,10 @@ export class scheduleViewer {
         if (newLines.length > 1) {
             this.grafic.setLines(newLines);
             this.settingsMenu.linesIsChanged();
+            this.settingsMenu.setLinesCount(this.grafic.getLinesCount());
         }
     }
     getLinesString() {
-        return JSON.stringify(Object.assign({}, this.grafic.getLines()));
+        return JSON.stringify(this.grafic.getLines());
     }
 }

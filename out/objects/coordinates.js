@@ -1,6 +1,6 @@
 export class Coordinates {
     constructor(body, bodyPrm, oneHour, zoom = 1, translate = 0, changeSVGHeight, options) {
-        this.axis = { x: 0, y: 0, width: 0, height: 0, svgEl: {}, color: "black", sWidth: 3 };
+        this.axis = { x: 0, y: 0, width: 0, height: 0, svgEl: {}, color: "black", sWidth: 3, showYAxis: false };
         this.scale = {
             hours: { els: [], color: [240, 100, 27], width: 2, height: 25, fontSize: 20, fontFamily: "Verdana, sans-serif" },
             minutes: { els: [], color: [240, 100, 50], width: 1, height: 20, fontSize: 13, fontFamily: "Verdana, sans-serif" },
@@ -25,15 +25,25 @@ export class Coordinates {
     setOptions(options) {
         if (options?.showSeparateLine != undefined && typeof options.showSeparateLine == "boolean")
             this.scale.separateLine.active = options.showSeparateLine;
+        if (options != undefined && typeof options.showYAxis == "boolean")
+            this.axis.showYAxis = options.showYAxis;
     }
     getOptions() {
-        return { showSeparateLine: this.scale.separateLine.active };
+        return {
+            showSeparateLine: this.scale.separateLine.active,
+            showYAxis: this.axis.showYAxis
+        };
     }
     createAxis(translate = 0) {
         const axis = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        axis.setAttribute("points", `${this.axis.x + translate} ${this.axis.y}
-            ${this.axis.x + translate} ${this.axis.y + this.axis.height}
-            ${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}`);
+        let points = "";
+        if (this.axis.showYAxis)
+            points = `${this.axis.x + translate} ${this.axis.y} `;
+        points += `
+		${this.axis.x + translate} ${this.axis.y + this.axis.height}
+		${this.axis.x + translate + this.axis.width} ${this.axis.y + this.axis.height}
+		`;
+        axis.setAttribute("points", points);
         axis.setAttribute("stroke", `${this.axis.color}`);
         axis.setAttribute("fill", `transparent`);
         axis.setAttribute("stroke-width", `${this.axis.sWidth}`);
@@ -199,5 +209,19 @@ export class Coordinates {
     }
     SepLineIsActive() {
         return this.scale.separateLine.active;
+    }
+    setTheme(dark) {
+        if (dark) {
+            this.axis.color = "gray";
+            this.scale.hours.color = [180, 100, 43];
+            this.scale.minutes.color = [180, 100, 100];
+            this.scale.seconds.color = [160, 100, 80];
+        }
+        else {
+            this.axis.color = "black";
+            this.scale.hours.color = [240, 100, 27];
+            this.scale.minutes.color = [240, 100, 50];
+            this.scale.seconds.color = [210, 100, 40];
+        }
     }
 }

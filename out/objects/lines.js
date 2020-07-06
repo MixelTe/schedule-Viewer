@@ -1,17 +1,20 @@
 export class Lines {
-    constructor(body, bodyPrm, overBody, defs, axis, oneHour, zoom = 1, changeHeightAndRecreate, options) {
+    constructor(body, bodyPrm, overBody, nameBody, defs, axis, oneHour, zoom = 1, changeHeightAndRecreate, options) {
         this.linesMap = new Map();
         this.functionsForLines = {};
         this.showLineAfterEnd = false;
         this.compactLinePlacing = false;
         this.compactPlacingOnTop = true;
-        this.minSpace = 30;
+        this.lineNamesOnStart = false;
+        this.minSpace = 40;
+        this.nameColor = "black";
         this.overLineOpacity = 0;
         this.overLineOpacityMouseOver = 0.2;
         this.overLineOpacitySelected = 0.5;
         this.overLineCustomColor = true;
         this.body = body;
         this.overBody = overBody;
+        this.nameBody = nameBody;
         this.oneHour = oneHour;
         this.width = bodyPrm.width;
         this.height = axis.height;
@@ -47,7 +50,7 @@ export class Lines {
         this.overLineLinearGradient = { over: { array: [] }, select: { array: [] } };
         defs.appendChild(createGradient(this.overLineLinearGradient.select, "ScheduleViewer-Grafic-Coordinates-linearGradient_Select"));
         defs.appendChild(createGradient(this.overLineLinearGradient.over, "ScheduleViewer-Grafic-Coordinates-linearGradient_Over"));
-        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false, name: "DevLine" }];
         this.setOptions(options);
         this.recreateLines(axis, 0, zoom);
         this.overBody.addEventListener("click", (e) => this.overBodyClick(e));
@@ -63,6 +66,8 @@ export class Lines {
             this.overLineCustomColor = options.selectionCustomColor;
         if (options?.compactPlacingAlignIsTop != undefined && typeof options.compactPlacingAlignIsTop == "boolean")
             this.compactPlacingOnTop = options.compactPlacingAlignIsTop;
+        if (options != undefined && typeof options.lineNamesOnStart == "boolean")
+            this.lineNamesOnStart = options.lineNamesOnStart;
     }
     getOptions() {
         return {
@@ -70,6 +75,7 @@ export class Lines {
             compactLinePlacing: this.compactLinePlacing,
             selectionCustomColor: this.overLineCustomColor,
             compactPlacingAlignIsTop: this.compactPlacingOnTop,
+            lineNamesOnStart: this.lineNamesOnStart,
         };
     }
     setLines(newLines) {
@@ -79,6 +85,7 @@ export class Lines {
         this.linesMap.clear();
         this.body.innerHTML = "";
         this.overBody.innerHTML = "";
+        this.nameBody.innerHTML = "";
         let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
         if (this.compactLinePlacing)
             spaces = 0;
@@ -105,9 +112,30 @@ export class Lines {
             overline = this.createOverPath(i, axis, spaces);
             this.linesMap.set(overline, el);
             this.body.appendChild(line);
+            this.nameBody.appendChild(this.createLineText(i, axis, spaces, zoom, scroll));
             this.overBody.appendChild(overline);
         }
         ;
+    }
+    createLineText(index, axis, spaces, zoom, scroll) {
+        const el = this.lines[index];
+        let x;
+        if (this.lineNamesOnStart)
+            x = Math.max(axis.x + el.start * (this.oneHour / 60 / 60 * zoom), axis.x + scroll);
+        else
+            x = axis.x + scroll;
+        let y;
+        if (this.compactPlacingOnTop)
+            y = axis.y + spaces * index - (el.width / 2 + 2);
+        else
+            y = axis.y + axis.height - spaces * index - (el.width / 2 + 2);
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("stroke", this.nameColor);
+        text.innerHTML = el.name;
+        text.setAttribute("x", `${x}`);
+        text.setAttribute("y", `${y}`);
+        text.style.fontFamily = "Verdana, sans-serif";
+        return text;
     }
     createSimplePath(index, axis, spaces, zoom) {
         const el = this.lines[index];
@@ -132,7 +160,7 @@ export class Lines {
             }
             const nextX = axis.x + interval * x + el.start * oneSecond;
             path += `
-            h ${duration}
+            h ${Math.max(duration, 1)}
             M ${nextX} ${y}`;
             if (nextX > el.end * oneSecond + axis.x)
                 break;
@@ -159,7 +187,7 @@ export class Lines {
         const durations = el.dasharray[1];
         for (let i = 0, x = 1; i < axis.width / interval; i++, x++) {
             const duration = durations[i];
-            let dx = `h ${duration * oneSecond}`;
+            let dx = `h ${Math.max(duration * oneSecond, 1)}`;
             if (typeof duration != "number" || duration / duration != 1) {
                 if (duration == 0)
                     dx = "v1";
@@ -204,13 +232,12 @@ export class Lines {
         rect.setAttribute("height", `${spaces}`);
         return rect;
     }
-    createLine(interval, duration, start, end, color, autoColor = true) {
-        this.lines.push({ color: color || "", width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: autoColor, selected: false });
-        ;
+    createLine(interval, duration, start, end, name, color, autoColor = true) {
+        this.lines.push({ color: color || "", name, width: 16, dasharray: [interval, duration], real: false, start, end, autoColor: autoColor, selected: false });
         this.colorizeLines();
     }
-    createRealLine(interval, durations, start, end, color, autoColor = true) {
-        this.lines.push({ color: color || "", width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: autoColor, selected: false });
+    createRealLine(interval, durations, start, end, name, color, autoColor = true) {
+        this.lines.push({ color: color || "", name, width: 16, dasharray: [interval, durations], real: true, start, end, autoColor: autoColor, selected: false });
         this.colorizeLines();
     }
     colorizeLines() {
@@ -230,6 +257,9 @@ export class Lines {
     getRnd(min, max) {
         return Math.random() * (max - min) + min;
     }
+    clickOutside(e) {
+        this.functionsForLines.unSelectLine(e);
+    }
     overBodyClick(e) {
         const target = e.target;
         if (target == null)
@@ -240,7 +270,7 @@ export class Lines {
         if (line == undefined)
             throw new Error(`line not found: ${target}`);
         const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
-        for (let i = 0; i < selectedLines.length; i++) {
+        for (let i = selectedLines.length - 1; i >= 0; i--) {
             const el = selectedLines[i];
             el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
             el.setAttribute("fill", "url(#ScheduleViewer-Grafic-Coordinates-linearGradient_Over)");
@@ -295,6 +325,7 @@ export class Lines {
         line.dasharray[0] = data.interval;
         if (!line.real)
             line.dasharray[1] = data.duration;
+        line.name = data.name;
         line.start = data.start;
         line.end = data.end;
         line.color = data.color;
@@ -309,31 +340,43 @@ export class Lines {
     unselectLine(line) {
         line.selected = false;
     }
-    changeClip(axis, scroll) {
+    onScrollMove(axis, scroll, zoom) {
+        this.nameBody.innerHTML = "";
+        let spaces = Math.floor((this.height) / (Math.max(this.lines.length, 2)));
+        if (this.compactLinePlacing)
+            spaces = 0;
+        if (spaces < this.minSpace)
+            spaces = this.minSpace;
+        for (let i = 1; i < this.lines.length; i++) {
+            this.nameBody.appendChild(this.createLineText(i, axis, spaces, zoom, scroll));
+        }
+        ;
         this.clipRect.setAttribute("x", `${axis.x + scroll + 2}`);
         this.clipRect.setAttribute("y", `${axis.y}`);
         this.clipRect.setAttribute("width", `${axis.width - scroll}`);
         this.clipRect.setAttribute("height", `${axis.height}`);
     }
     resetLines() {
-        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false }];
+        this.lines = [{ color: "red", width: 20, dasharray: [10, 10], real: false, start: 0, end: 0, autoColor: true, selected: false, name: "DevLine" }];
     }
     getLines() {
         return this.lines;
     }
-    toggleOverLineCustomColor() {
-        this.overLineCustomColor = !this.overLineCustomColor;
-    }
     overLineCustomColorIsActive() {
         return this.overLineCustomColor;
-    }
-    togglecompactLinePlacing() {
-        this.compactLinePlacing = !this.compactLinePlacing;
     }
     compactLinePlacingIsActive() {
         return this.compactLinePlacing;
     }
     setFunctionsForLines(functions) {
         this.functionsForLines = functions;
+    }
+    setTheme(dark) {
+        if (dark) {
+            this.nameColor = "white";
+        }
+        else {
+            this.nameColor = "black";
+        }
     }
 }

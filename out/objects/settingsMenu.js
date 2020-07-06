@@ -1,8 +1,12 @@
 import { ColorPicker } from "../../lib/colorPicker.js";
 import { AskWindow } from "./askWindow.js";
+import { SettingsWindow } from "./settingsWindow.js";
 export class SettingsMenu {
-    constructor(body, width, functions, options) {
+    constructor(body, width, functions, version, options) {
         this.menuOpen = true;
+        this.darkTheme = false;
+        this.textColor = "black";
+        this.backgroundColor = "lightblue";
         this.titleDIV = document.createElement("div");
         this.titlePrm = { height: 100 };
         this.settingsDIV = document.createElement("div");
@@ -12,6 +16,7 @@ export class SettingsMenu {
         this.addingLinesPrm = { height: 320, inputsBorder: "1px solid grey", inputsBackground: "white", inputtitle: "time in format: hh or hh:mm or hh:mm:ss", inputplaceholder: "hh:mm" };
         this.colorPicker = new ColorPicker();
         this.linesChanged = false;
+        this.lineCount = 0;
         this.loadFilesDIV = document.createElement("div");
         this.loadFilesPrm = { height: 80 };
         this.saveFileDIV = document.createElement("div");
@@ -24,7 +29,7 @@ export class SettingsMenu {
         this.body.style.height = "calc(100% - 0px)";
         this.body.style.width = `${width}px`;
         this.body.style.minWidth = `${width}px`;
-        this.body.style.backgroundColor = "lightblue";
+        this.body.style.backgroundColor = this.backgroundColor;
         this.body.style.overflowY = "auto";
         this.body.style.overflowX = "hidden";
         this.body.style.display = "inline-block";
@@ -87,6 +92,7 @@ export class SettingsMenu {
             menu.style.justifyContent = "space-around";
             menu.style.alignItems = "center";
             menu.style.flexWrap = "wrap";
+            menu.style.flexDirection = "column";
             this.settingsDIV.appendChild(menu);
             const createSetting = (text, id, checked) => {
                 const div = document.createElement("div");
@@ -108,8 +114,12 @@ export class SettingsMenu {
             };
             this.toggleSepLineEl = createSetting("show separate line", "scheduleViewer-SettingsMenu-sepLineInput", functions.SepLineIsActive());
             this.revTimeInputEl = createSetting("change time input order", "scheduleViewer-SettingsMenu-showAfterEndInput", this.revTimeInput);
-            this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
-            this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
+            this.moreSettingsButton = function () {
+                const button = document.createElement("button");
+                button.textContent = "other settings";
+                return button;
+            }();
+            menu.appendChild(this.moreSettingsButton);
         }
         {
             this.addingLinesDIV.style.height = `${this.addingLinesPrm.height}px`;
@@ -135,6 +145,38 @@ export class SettingsMenu {
                 linesMenuTable.style.width = "90%";
                 linesMenuTable.style.height = "100%";
                 linesMenuTableDIV.appendChild(linesMenuTable);
+                {
+                    const tableRow = document.createElement("tr");
+                    linesMenuTable.appendChild(tableRow);
+                    {
+                        const tableCell = document.createElement("td");
+                        tableCell.style.textAlign = "right";
+                        tableCell.style.paddingRight = `${leftRowPadingRight}px`;
+                        tableRow.appendChild(tableCell);
+                        const lable = document.createElement("label");
+                        // startLable.style.height = "max-content";
+                        // startLable.style.marginRight = "3px";
+                        lable.style.fontSize = "16px";
+                        lable.htmlFor = "scheduleViewer-SettingsMenu-lineInputName";
+                        lable.innerText = "Name:";
+                        tableCell.appendChild(lable);
+                    }
+                    {
+                        const tableCell = document.createElement("td");
+                        tableRow.appendChild(tableCell);
+                        const input = document.createElement("input");
+                        input.type = "input";
+                        input.style.width = `${inputWidth}px`;
+                        input.style.height = `${inputHeight}px`;
+                        input.id = "scheduleViewer-SettingsMenu-lineInputName";
+                        input.title = "line name";
+                        input.style.border = `${this.addingLinesPrm.inputsBorder}`;
+                        input.style.borderRadius = `${inputRadius}px`;
+                        input.style.backgroundColor = `${this.addingLinesPrm.inputsBackground}`;
+                        tableCell.appendChild(input);
+                        lineInputs.name = input;
+                    }
+                }
                 {
                     const tableRow = document.createElement("tr");
                     linesMenuTable.appendChild(tableRow);
@@ -411,6 +453,7 @@ export class SettingsMenu {
                 buttonsDIV.style.flexWrap = "wrap";
                 this.addingLinesDIV.appendChild(buttonsDIV);
                 lineInputs.buttonRemoveAll = createButton("remove All", buttonsDIV);
+                lineInputs.buttonResetZoom = createButton("reset zoom", buttonsDIV);
                 lineInputs.buttonExample = createButton("example", buttonsDIV);
                 const link = document.createElement("a");
                 link.href = "https://github.com/MixelTe/schedule-Viewer#readme";
@@ -483,11 +526,32 @@ export class SettingsMenu {
             this.overDivText.classList.add("scheduleViewer_SVGoverText");
             this.overDiv.appendChild(this.overDivText);
         }
+        {
+            const height = 20;
+            const width = 100;
+            const div = document.createElement("div");
+            div.style.position = "absolute";
+            div.style.top = `calc(100% - ${height}px)`;
+            div.style.left = `calc(100% - ${width}px)`;
+            div.style.height = `${height}px`;
+            div.style.width = `${width}px`;
+            div.style.display = "flex";
+            div.style.justifyContent = "flex-end";
+            this.body.appendChild(div);
+            const versionDiv = document.createElement("div");
+            versionDiv.style.height = "max-content";
+            versionDiv.style.width = "max-content";
+            versionDiv.style.marginRight = "5px";
+            versionDiv.innerText = `version: ${version}`;
+            versionDiv.style.fontSize = "14px";
+            div.appendChild(versionDiv);
+        }
         this.lineInputs = {
             color: "hsl(120, 73%, 75%)",
             radioOnce: lineInputs.radioOnce,
             radioRepeating: lineInputs.radioRepeating,
             freqenceRow: lineInputs.freqenceRow,
+            name: lineInputs.name,
             interval: lineInputs.interval,
             duration: lineInputs.duration,
             start: lineInputs.start,
@@ -497,6 +561,7 @@ export class SettingsMenu {
             buttonRemove: lineInputs.buttonRemove,
             buttonCancel: lineInputs.buttonCancel,
             buttonRemoveAll: lineInputs.buttonRemoveAll,
+            buttonResetZoom: lineInputs.buttonResetZoom,
             buttonExample: lineInputs.buttonExample,
             checkBoxColor: lineInputs.checkBoxColor,
             colorDiv: lineInputs.colorDiv,
@@ -504,8 +569,7 @@ export class SettingsMenu {
         this.toggleMenuEl.addEventListener("click", () => this.toggleMenu());
         this.toggleSepLineEl.addEventListener("change", () => { functions.toggleSepLine(); this.toggleSepLineEl.checked = functions.SepLineIsActive(); });
         this.revTimeInputEl.addEventListener("change", () => { this.toggleLineMenuRev(); this.revTimeInputEl.checked = this.revTimeInput; });
-        this.colorizeLineSelectionEl.addEventListener("change", () => { functions.toggleCustomSelectionColor(); this.toggleSepLineEl.checked = functions.CustomSelectionColorIsActive(); });
-        this.compactLinePlacingEl.addEventListener("change", () => { this.toggleCompactLinePlacing(functions); this.compactLinePlacingEl.checked = functions.compactLinePlacingIsActive(); });
+        this.moreSettingsButton.addEventListener("click", () => this.changeSettings(functions));
         this.lineInputs.buttonAdd.addEventListener("click", (e) => this.lineMenuButtons(e, "add", functions));
         this.lineInputs.buttonChange.addEventListener("click", (e) => this.lineMenuButtons(e, "change", functions));
         this.lineInputs.buttonRemove.addEventListener("click", (e) => this.lineMenuButtons(e, "remove", functions));
@@ -513,9 +577,10 @@ export class SettingsMenu {
         this.lineInputs.radioOnce.addEventListener("click", () => this.disableInputs("once"));
         this.lineInputs.radioRepeating.addEventListener("click", () => this.disableInputs("repeating"));
         this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
-        this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
+        this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto", functions));
         this.lineInputs.buttonRemoveAll.addEventListener("click", (e) => this.lineMenuButtons(e, "removeAll", functions));
         this.lineInputs.buttonExample.addEventListener("click", (e) => this.lineMenuButtons(e, "example", functions));
+        this.lineInputs.buttonResetZoom.addEventListener("click", (e) => this.lineMenuButtons(e, "resetZoom", functions));
         this.filesInput.addEventListener("change", (e) => this.loadSchedule(e, functions));
         this.saveFileButton.addEventListener("click", () => this.saveSchedule(functions));
         this.overDiv.addEventListener("drop", (e) => this.dragDrop(e, functions));
@@ -524,11 +589,13 @@ export class SettingsMenu {
         this.lineInputs.radioOnce.checked = true;
         this.disableInputs("once");
         this.colorInputing("toggleAuto");
-        this.setOptions(options);
+        this.setOptions(options, functions);
     }
-    setOptions(options) {
+    setOptions(options, functions) {
         if (options?.openControlPanel != undefined && !options.openControlPanel)
             this.toggleMenu();
+        if (options != undefined && typeof options.darkTheme == "boolean")
+            this.setTheme(options.darkTheme, functions);
         if (options?.revTimeInput != undefined && typeof options.revTimeInput == "boolean") {
             this.revTimeInput = !options.revTimeInput;
             this.toggleLineMenuRev();
@@ -536,7 +603,31 @@ export class SettingsMenu {
         }
     }
     getOptions() {
-        return { openControlPanel: this.menuOpen, revTimeInput: this.revTimeInput };
+        return {
+            openControlPanel: this.menuOpen,
+            revTimeInput: this.revTimeInput,
+            darkTheme: this.darkTheme,
+        };
+    }
+    setLinesCount(count) {
+        this.lineCount = count;
+    }
+    setTheme(dark, functions) {
+        if (dark) {
+            this.backgroundColor = "black";
+            this.textColor = "white";
+            this.body.style.borderLeftColor = "gray";
+        }
+        else {
+            this.backgroundColor = "lightblue";
+            this.textColor = "black";
+            this.body.style.borderLeftColor = "black";
+        }
+        this.body.style.backgroundColor = this.backgroundColor;
+        this.body.style.color = this.textColor;
+        this.lineInputs.freqenceRow.style.color = this.textColor;
+        this.darkTheme = dark;
+        functions.setTheme(dark);
     }
     toggleMenu() {
         if (this.menuOpen) {
@@ -559,10 +650,6 @@ export class SettingsMenu {
             this.saveFileDIV.style.visibility = "visible";
             this.menuOpen = true;
         }
-    }
-    toggleCompactLinePlacing(functions) {
-        functions.togglecompactLinePlacing();
-        functions.recreate();
     }
     toggleLineMenuRev() {
         this.revTimeInput = !this.revTimeInput;
@@ -591,6 +678,37 @@ export class SettingsMenu {
             this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
         }
     }
+    async changeSettings(functions) {
+        const graficData = functions.getOptions();
+        const data = {
+            revTimeInput: this.revTimeInput,
+            darkTheme: this.darkTheme,
+            showRealLineAfterEnd: graficData.showRealLineAfterEnd,
+            compactLinePlacing: graficData.compactLinePlacing,
+            compactPlacingAlignIsTop: graficData.compactPlacingAlignIsTop,
+            selectionCustomColor: graficData.selectionCustomColor,
+            showSeparateLine: graficData.showSeparateLine,
+            showYAxis: graficData.showYAxis,
+            lineNamesOnStart: graficData.lineNamesOnStart,
+        };
+        const settings = await new SettingsWindow(this.body, data, this.darkTheme).getAnswer();
+        // if (typeof settings != "boolean")
+        // {
+        // 	if (data.revTimeInput != settings.revTimeInput) console.log("revTimeInput: " + data.revTimeInput + " => " + settings.revTimeInput);
+        // 	if (data.showRealLineAfterEnd != settings.showRealLineAfterEnd) console.log("showRealLineAfterEnd: " + data.showRealLineAfterEnd + " => " + settings.showRealLineAfterEnd);
+        // 	if (data.compactLinePlacing != settings.compactLinePlacing) console.log("compactLinePlacing: " + data.compactLinePlacing + " => " + settings.compactLinePlacing);
+        // 	if (data.compactPlacingAlignIsTop != settings.compactPlacingAlignIsTop) console.log("compactPlacingAlignIsTop: " + data.compactPlacingAlignIsTop + " => " + settings.compactPlacingAlignIsTop);
+        // 	if (data.selectionCustomColor != settings.selectionCustomColor) console.log("selectionCustomColor: " + data.selectionCustomColor + " => " + settings.selectionCustomColor);
+        // 	if (data.showSeparateLine != settings.showSeparateLine) console.log("showSeparateLine: " + data.showSeparateLine + " => " + settings.showSeparateLine);
+        // 	if (data.showYAxis != settings.showYAxis) console.log("showYAxis: " + data.showYAxis + " => " + settings.showYAxis);
+        // 	if (data.lineNamesOnStart != settings.lineNamesOnStart) console.log("lineNamesOnStart: " + data.lineNamesOnStart + " => " + settings.lineNamesOnStart);
+        // }
+        if (typeof settings != "boolean") {
+            this.setOptions(settings, functions);
+            functions.setSettings(settings);
+            this.toggleSepLineEl.checked = functions.SepLineIsActive();
+        }
+    }
     addLine(functions) {
         let lineData;
         try {
@@ -603,12 +721,16 @@ export class SettingsMenu {
                 throw e;
         }
         // console.log("Yee!!!");
+        this.lineCount += 1;
+        let lineName = lineData.name;
+        if (lineName == "")
+            lineName = `Line ${this.lineCount}`;
         if (lineData.interval != undefined && lineData.end != undefined && lineData.duration != undefined) {
             if (typeof lineData.duration == "object") {
-                functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+                functions.addRealLine(lineData.interval, lineData.duration, lineData.start, lineData.end, lineName, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
             }
             else {
-                functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+                functions.addSympleLine(lineData.interval, lineData.duration, lineData.start, lineData.end, lineName, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
             }
         }
         else {
@@ -616,7 +738,7 @@ export class SettingsMenu {
                 throw new Error();
             if (typeof lineData.duration == "object")
                 throw new Error();
-            functions.addSympleLine(1, lineData.duration, lineData.start, 0, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
+            functions.addSympleLine(1, lineData.duration, lineData.start, 0, lineName, this.lineInputs.color, this.lineInputs.checkBoxColor.checked);
         }
         functions.recreate();
     }
@@ -643,6 +765,7 @@ export class SettingsMenu {
         let duration;
         let start;
         let end;
+        const name = this.lineInputs.name.value;
         let isError = false;
         try {
             start = this.getSecondsFromString(this.lineInputs.start, true);
@@ -709,6 +832,7 @@ export class SettingsMenu {
                 throw new Error("NaN");
         }
         return {
+            name,
             interval: interval,
             duration: duration,
             start: start,
@@ -855,6 +979,7 @@ export class SettingsMenu {
                         throw new Error();
                 }
                 const newData = {
+                    name: lineData.name,
                     interval: lineData.interval,
                     duration: lineData.duration,
                     start: lineData.start,
@@ -868,7 +993,7 @@ export class SettingsMenu {
                 this.linesIsChanged();
                 break;
             case "remove":
-                if (await new AskWindow(this.body, "remove line").getAnswer()) {
+                if (await new AskWindow(this.body, "remove line", this.darkTheme).getAnswer()) {
                     if (this.lineToChange == undefined)
                         throw new Error();
                     functions.removeLine(this.lineToChange);
@@ -878,6 +1003,7 @@ export class SettingsMenu {
                 }
                 break;
             case "cancel":
+                this.lineInputs.name.value = "";
                 this.lineInputs.start.value = "";
                 this.lineInputs.duration.value = "";
                 this.lineInputs.interval.value = "";
@@ -896,13 +1022,15 @@ export class SettingsMenu {
                 {
                     let continueChange = false;
                     if (this.linesChanged)
-                        continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+                        continueChange = await new AskWindow(this.body, "remove all and show example", this.darkTheme).getAnswer();
                     else
                         continueChange = true;
                     if (continueChange) {
                         functions.resetLines();
                         functions.recreate();
                         this.linesChanged = false;
+                        this.lineMenuButtons(e, "cancel", functions);
+                        this.lineCount = 0;
                     }
                 }
                 break;
@@ -910,24 +1038,34 @@ export class SettingsMenu {
                 {
                     let continueChange = false;
                     if (this.linesChanged)
-                        continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+                        continueChange = await new AskWindow(this.body, "remove all and show example", this.darkTheme).getAnswer();
                     else
                         continueChange = true;
                     if (continueChange) {
                         functions.resetLines();
-                        for (let i = 0; i < 4; i++) {
-                            functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                        this.lineCount = 0;
+                        for (let i = 1; i <= 4; i++) {
+                            this.lineCount += 1;
+                            let lineName = `Line ${i * 2 - 1}`;
+                            functions.addSympleLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000), lineName);
                             // functions.addSympleLine(this.getRndInteger(40, 80), this.getRndInteger(10, 90), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                            this.lineCount += 1;
+                            lineName = `Line ${i * 2}`;
                             const duractions = [];
                             for (let i = 0; i < this.getRndInteger(600, 900); i++) {
                                 duractions.push(this.getRndInteger(40, 160));
                             }
-                            functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));
+                            functions.addRealLine(60, duractions, this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000), lineName);
                         }
                         functions.recreate();
                         this.linesChanged = false;
+                        this.lineMenuButtons(e, "cancel", functions);
                     }
                 }
+                break;
+            case "resetZoom":
+                functions.resetZoom();
+                functions.recreate();
                 break;
             default: throw new Error();
         }
@@ -939,7 +1077,7 @@ export class SettingsMenu {
     getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min) + min);
     }
-    async colorInputing(action) {
+    async colorInputing(action, functions) {
         switch (action) {
             case "open":
                 if (!this.lineInputs.checkBoxColor.checked) {
@@ -965,12 +1103,19 @@ export class SettingsMenu {
                     this.lineInputs.colorDiv.style.backgroundImage = "";
                     this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
                 }
+                if (functions != undefined && this.lineToChange != undefined) {
+                    const newData = Object.assign({ interval: 0, duration: 0 }, this.lineToChange);
+                    newData.interval = newData.dasharray[0];
+                    newData.duration = newData.dasharray[1];
+                    newData.autoColor = this.lineInputs.checkBoxColor.checked;
+                    functions.changeLine(newData, this.lineToChange);
+                }
                 break;
             default: throw new Error();
         }
     }
     menuSystem(state) {
-        this.lineInputs.freqenceRow.style.color = "black";
+        this.lineInputs.freqenceRow.style.color = this.textColor;
         this.lineInputs.radioRepeating.disabled = false;
         this.lineInputs.radioOnce.disabled = false;
         switch (state) {
@@ -1083,7 +1228,7 @@ export class SettingsMenu {
         // console.log(newSchedule);
         let continueChange = false;
         if (this.linesChanged)
-            continueChange = await new AskWindow(this.body, "remove all and load file").getAnswer();
+            continueChange = await new AskWindow(this.body, "remove all and load file", this.darkTheme).getAnswer();
         else
             continueChange = true;
         if (!continueChange)
@@ -1108,7 +1253,7 @@ export class SettingsMenu {
                     else
                         throw er;
                 }
-                functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.color, el.autoColor);
+                functions.addSympleLine(el.interval, el.duration, el.start, el.end, el.name, el.color, el.autoColor);
             }
         }
         else
@@ -1132,7 +1277,7 @@ export class SettingsMenu {
                     else
                         throw er;
                 }
-                functions.addRealLine(el.interval, el.durations, el.start, el.end, el.color, el.autoColor);
+                functions.addRealLine(el.interval, el.durations, el.start, el.end, el.name, el.color, el.autoColor);
             }
         }
         else
@@ -1186,6 +1331,11 @@ export class SettingsMenu {
         ;
         if (el.autoColor == undefined) {
             createlogNotFound("line %cautoColor%c not found");
+            throw "MyError";
+        }
+        ;
+        if (el.name == undefined) {
+            createlogNotFound("line %cname%c not found");
             throw "MyError";
         }
         ;
@@ -1249,8 +1399,12 @@ export class SettingsMenu {
             ;
         }
     }
+    unSelectLine(functions, e) {
+        this.lineMenuButtons(e, "cancel", functions);
+    }
     setInputsData(line) {
         const data = {
+            name: line.name,
             interval: line.dasharray[0],
             duration: line.dasharray[1],
             start: line.start,
@@ -1285,6 +1439,7 @@ export class SettingsMenu {
         this.lineInputs.color = data.color;
         this.lineInputs.checkBoxColor.checked = data.autoColor;
         this.colorInputing("toggleAuto");
+        this.lineInputs.name.value = data.name;
         this.lineToChange = line;
     }
     turnSecondsToTime(secondsHMS) {
@@ -1304,6 +1459,7 @@ export class SettingsMenu {
                 if (typeof el.dasharray[1] == "number")
                     throw new Error();
                 const newEl = {
+                    name: el.name,
                     interval: el.dasharray[0],
                     durations: el.dasharray[1],
                     start: el.start,
@@ -1317,6 +1473,7 @@ export class SettingsMenu {
                 if (typeof el.dasharray[1] != "number")
                     throw new Error();
                 const newEl = {
+                    name: el.name,
                     interval: el.dasharray[0],
                     duration: el.dasharray[1],
                     start: el.start,
