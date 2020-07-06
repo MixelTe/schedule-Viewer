@@ -296,7 +296,7 @@ export class Lines
 		const line = this.linesMap.get(target);
 		if (line == undefined) throw new Error(`line not found: ${target}`);
 		const selectedLines = this.overBody.getElementsByClassName("ScheduleViewer-Grafic-Lines-selected");
-		for (let i = 0; i < selectedLines.length; i++)
+		for (let i = selectedLines.length - 1; i >= 0; i--)
 		{
 			const el = selectedLines[i];
 			el.setAttribute("fill-opacity", `${this.overLineOpacity}`);
