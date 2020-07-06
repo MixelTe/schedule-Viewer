@@ -243,7 +243,7 @@ export class Grafic
 	}
 	public getLines()
 	{
-		const lines = Object.assign({}, this.lines.getLines());
+		const lines = JSON.parse(JSON.stringify(this.lines.getLines()));
 		for (const key in lines) {
 			if (lines.hasOwnProperty(key)) {
 				const el = lines[key];
