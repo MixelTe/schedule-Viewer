@@ -1,5 +1,6 @@
 import { ColorPicker } from "../../lib/colorPicker.js";
 import { AskWindow } from "./askWindow.js";
+import { SettingsWindow } from "./settingsWindow.js";
 
 export class SettingsMenu
 {
@@ -808,10 +809,9 @@ export class SettingsMenu
 			this.hintForLinesInputs.innerText = this.addingLinesPrm.inputtitle;
 		}
 	}
-	private changeSettings(functions: FunctionsForMenu)
+	private async changeSettings(functions: FunctionsForMenu)
 	{
 		const data = {
-			openControlPanel: Math.random() > 0.5,
 			revTimeInput: Math.random() > 0.5,
 			showRealLineAfterEnd: Math.random() > 0.5,
 			compactLinePlacing: Math.random() > 0.5,
@@ -820,7 +820,9 @@ export class SettingsMenu
 			showSeparateLine: Math.random() > 0.5,
 			showYAxis: Math.random() > 0.5,
 		}
-		functions.setSettings(data);
+		const settings = await new SettingsWindow(this.body, data).getAnswer();
+		console.log(settings);
+		if (typeof settings != "boolean") functions.setSettings(settings);
 	}
 
 	private addLine(functions: FunctionsForMenu)

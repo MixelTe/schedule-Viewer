@@ -97,7 +97,6 @@ interface ScheduleOptions
 
 interface ScheduleOptionsFull
 {
-	openControlPanel: boolean,
 	revTimeInput: boolean,
 	showRealLineAfterEnd: boolean,
 	compactLinePlacing: boolean,
