@@ -7,21 +7,11 @@ and set it's width and height
 
 you can also set it's background and border
 ``` html
-<div style="width: 100%; height: 800px; border: 1px solid black; background-color: beige;" id="svgGrafic"></div>
+<div style="width: 100%; height: 800px; border: 1px solid black; background-color: beige;"></div>
 ```
 Get this div in program and create new schedule
 ``` js
-const grafic = new scheduleViewer(getdiv("svgGrafic"));
-
-
-// way to get div:
-function getdiv(id: string)
-{
-	const el = document.getElementById(id);
-	if (el == null) throw new Error(`${id} not found`);
-	if (el instanceof HTMLDivElement) return el;
-	throw new Error(`${id} element not Div`);
-}
+const schedule = new ScheduleViewer(HTMLDivElement);
 ```
 ### Set schedule options
 
@@ -29,13 +19,13 @@ function getdiv(id: string)
 const options = {
     "option": "value"
 }
-const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
+const schedule = new ScheduleViewer(HTMLDivElement, options);
 ```
 
 ### All options:
 option                   | value type | default value | value
 -------------------------|------------|---------------|--------
-openControlPanel         | boolean    | true          | open control panel when scheule created
+openControlPanel         | boolean    | true          | open control panel when schedule created
 revTimeInput             | boolean    | false         | change time input order
 showRealLineAfterEnd     | boolean    | false         | continue show real line after it's ending
 compactLinePlacing       | boolean    | false         | place lines compact
@@ -51,13 +41,13 @@ darkTheme                | boolean    | false         | enable dark theme
 let options = localStorage.getItem("options");
 let lines = localStorage.getItem("lines");
 
-const grafic = new scheduleViewer(getdiv("svgGrafic"), options);
-grafic.setLinesFromString(lines);
+const schedule = new ScheduleViewer(HTMLDivElement, options);
+schedule.setLinesFromString(lines);
 
 // saving options and lines every 500ms
 setInterval(() => {
-	localStorage.setItem("options", grafic.getOptionsString());
-	localStorage.setItem("lines", grafic.getLinesString());
+	localStorage.setItem("options", schedule.getOptionsString());
+	localStorage.setItem("lines", schedule.getLinesString());
 }, 500);
 ```
 
