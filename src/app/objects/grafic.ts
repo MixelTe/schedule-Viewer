@@ -89,6 +89,7 @@ export class Grafic
     		compactLinePlacing: linesOptions.compactLinePlacing,
 			selectionCustomColor: linesOptions.selectionCustomColor,
 			compactPlacingAlignIsTop: linesOptions.compactPlacingAlignIsTop,
+			lineNamesOnStart: linesOptions.lineNamesOnStart,
 			showSeparateLine: coordinatesOptions.showSeparateLine,
 			showYAxis: coordinatesOptions.showYAxis
 		};

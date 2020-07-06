@@ -69,6 +69,7 @@ export class scheduleViewer
     		selectionCustomColor: graficOptions.selectionCustomColor,
     		showSeparateLine: graficOptions.showSeparateLine,
     		showYAxis: graficOptions.showYAxis,
+			lineNamesOnStart: graficOptions.lineNamesOnStart,
 		}
 		return JSON.stringify(options);
 	}

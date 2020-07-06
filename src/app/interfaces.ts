@@ -94,6 +94,7 @@ interface ScheduleOptions
 	selectionCustomColor?: boolean,
 	showSeparateLine?: boolean,
 	showYAxis?: boolean,
+	lineNamesOnStart?: boolean,
 }
 
 interface ScheduleOptionsGraic
@@ -104,6 +105,7 @@ interface ScheduleOptionsGraic
 	selectionCustomColor: boolean,
 	showSeparateLine: boolean,
 	showYAxis: boolean,
+	lineNamesOnStart: boolean,
 }
 
 interface ScheduleOptionsFull

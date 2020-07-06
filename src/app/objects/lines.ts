@@ -15,6 +15,7 @@ export class Lines
 	private showLineAfterEnd = false;
 	private compactLinePlacing = false;
 	private compactPlacingOnTop = true;
+	private lineNamesOnStart = false;
 	private minSpace = 40;
 
 	private overLineOpacity = 0;
@@ -84,6 +85,7 @@ export class Lines
 		if (options?.compactLinePlacing != undefined && typeof options.compactLinePlacing == "boolean") this.compactLinePlacing = options.compactLinePlacing;
 		if (options?.selectionCustomColor != undefined && typeof options.selectionCustomColor == "boolean") this.overLineCustomColor = options.selectionCustomColor;
 		if (options?.compactPlacingAlignIsTop != undefined && typeof options.compactPlacingAlignIsTop == "boolean") this.compactPlacingOnTop = options.compactPlacingAlignIsTop;
+		if (options != undefined && typeof options.lineNamesOnStart == "boolean") this.lineNamesOnStart = options.lineNamesOnStart;
 	}
 	public getOptions()
 	{
@@ -92,6 +94,7 @@ export class Lines
 			compactLinePlacing: this.compactLinePlacing,
 			selectionCustomColor: this.overLineCustomColor,
 			compactPlacingAlignIsTop: this.compactPlacingOnTop,
+			lineNamesOnStart: this.lineNamesOnStart,
 		};
 	}
 	public setLines(newLines: LineF[])
@@ -144,7 +147,9 @@ export class Lines
 	private createLineText(index: number, axis: Rect, spaces: number, zoom: number, scroll: number)
 	{
 		const el = this.lines[index];
-		const x = Math.max(axis.x + el.start * (this.oneHour / 60 / 60 * zoom), axis.x + scroll);
+		let x;
+		if (this.lineNamesOnStart) x = Math.max(axis.x + el.start * (this.oneHour / 60 / 60 * zoom), axis.x + scroll);
+		else x = axis.x + scroll;
 		let y;
 		if (this.compactPlacingOnTop) y = axis.y + spaces * index - (el.width / 2 + 2);
 		else y = axis.y + axis.height - spaces * index - (el.width / 2 + 2);
