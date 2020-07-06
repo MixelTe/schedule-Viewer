@@ -1,7 +1,7 @@
 import { Grafic } from "./objects/grafic.js";
 import { SettingsMenu } from "./objects/settingsMenu.js";
 
-export class scheduleViewer
+export class ScheduleViewer
 {
 	private body: HTMLDivElement;
 
