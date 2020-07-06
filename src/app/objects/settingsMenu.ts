@@ -705,7 +705,7 @@ export class SettingsMenu
 		this.lineInputs.radioOnce.addEventListener("click", () => this.disableInputs("once"));
 		this.lineInputs.radioRepeating.addEventListener("click", () => this.disableInputs("repeating"));
 		this.lineInputs.colorDiv.addEventListener("click", () => this.colorInputing("open"));
-		this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto"));
+		this.lineInputs.checkBoxColor.addEventListener("change", () => this.colorInputing("toggleAuto", functions));
 
 		this.lineInputs.buttonRemoveAll.addEventListener("click", (e) => this.lineMenuButtons(e, "removeAll", functions));
 		this.lineInputs.buttonExample.addEventListener("click", (e) => this.lineMenuButtons(e, "example", functions));
@@ -1197,7 +1197,7 @@ export class SettingsMenu
 	{
 		return Math.floor(Math.random() * (max - min) + min);
 	}
-	private async colorInputing(action: "toggleAuto" | "open")
+	private async colorInputing(action: "toggleAuto" | "open", functions?: FunctionsForMenu)
 	{
 		switch (action)
 		{
@@ -1227,6 +1227,14 @@ export class SettingsMenu
 				{
 					this.lineInputs.colorDiv.style.backgroundImage = "";
 					this.lineInputs.colorDiv.style.backgroundColor = this.lineInputs.color;
+				}
+				if (functions != undefined && this.lineToChange != undefined)
+				{
+					const newData = Object.assign({ interval: 0, duration: <number | number[]>0 }, this.lineToChange);
+					newData.interval = newData.dasharray[0];
+					newData.duration = newData.dasharray[1];
+					newData.autoColor = this.lineInputs.checkBoxColor.checked;
+					functions.changeLine(newData, this.lineToChange);
 				}
 				break;
 
