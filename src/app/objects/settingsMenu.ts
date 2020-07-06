@@ -17,8 +17,6 @@ export class SettingsMenu
 	private toggleSepLineEl: HTMLInputElement;
 	private revTimeInputEl: HTMLInputElement;
 	private moreSettingsButton: HTMLButtonElement;
-	// private colorizeLineSelectionEl: HTMLInputElement;
-	// private compactLinePlacingEl: HTMLInputElement;
 	private revTimeInput = false;
 	private settingsPrm = { height: 140 };
 
@@ -195,9 +193,6 @@ export class SettingsMenu
 				return button;
 			}();
 			menu.appendChild(this.moreSettingsButton);
-
-			// this.colorizeLineSelectionEl = createSetting("colorize selection line", "scheduleViewer-SettingsMenu-colorizeSelectionInput", functions.CustomSelectionColorIsActive());
-			// this.compactLinePlacingEl = createSetting("compact line placing", "scheduleViewer-SettingsMenu-compactLinePlacingInput", functions.compactLinePlacingIsActive());
 
 		}
 
@@ -702,8 +697,6 @@ export class SettingsMenu
 		this.toggleSepLineEl.addEventListener("change", () => { functions.toggleSepLine(); this.toggleSepLineEl.checked = functions.SepLineIsActive(); });
 		this.revTimeInputEl.addEventListener("change", () => { this.toggleLineMenuRev(); this.revTimeInputEl.checked = this.revTimeInput; });
 		this.moreSettingsButton.addEventListener("click", () => this.changeSettings(functions));
-		// this.colorizeLineSelectionEl.addEventListener("change", () => { functions.toggleCustomSelectionColor(); this.colorizeLineSelectionEl.checked = functions.CustomSelectionColorIsActive(); });
-		// this.compactLinePlacingEl.addEventListener("change",  () => { this.toggleCompactLinePlacing(functions); this.compactLinePlacingEl.checked = functions.compactLinePlacingIsActive(); });
 
 		this.lineInputs.buttonAdd.addEventListener("click", (e) => this.lineMenuButtons(e, "add", functions));
 		this.lineInputs.buttonChange.addEventListener("click", (e) => this.lineMenuButtons(e, "change", functions));
@@ -822,16 +815,16 @@ export class SettingsMenu
 			showYAxis: graficData.showYAxis,
 		}
 		const settings = await new SettingsWindow(this.body, data).getAnswer();
-		if (typeof settings != "boolean")
-		{
-			if (data.revTimeInput != settings.revTimeInput) console.log("revTimeInput: " + data.revTimeInput + " => " + settings.revTimeInput);
-			if (data.showRealLineAfterEnd != settings.showRealLineAfterEnd) console.log("showRealLineAfterEnd: " + data.showRealLineAfterEnd + " => " + settings.showRealLineAfterEnd);
-			if (data.compactLinePlacing != settings.compactLinePlacing) console.log("compactLinePlacing: " + data.compactLinePlacing + " => " + settings.compactLinePlacing);
-			if (data.compactPlacingAlignIsTop != settings.compactPlacingAlignIsTop) console.log("compactPlacingAlignIsTop: " + data.compactPlacingAlignIsTop + " => " + settings.compactPlacingAlignIsTop);
-			if (data.selectionCustomColor != settings.selectionCustomColor) console.log("selectionCustomColor: " + data.selectionCustomColor + " => " + settings.selectionCustomColor);
-			if (data.showSeparateLine != settings.showSeparateLine) console.log("showSeparateLine: " + data.showSeparateLine + " => " + settings.showSeparateLine);
-			if (data.showYAxis != settings.showYAxis) console.log("showYAxis: " + data.showYAxis + " => " + settings.showYAxis);
-		}
+		// if (typeof settings != "boolean")
+		// {
+		// 	if (data.revTimeInput != settings.revTimeInput) console.log("revTimeInput: " + data.revTimeInput + " => " + settings.revTimeInput);
+		// 	if (data.showRealLineAfterEnd != settings.showRealLineAfterEnd) console.log("showRealLineAfterEnd: " + data.showRealLineAfterEnd + " => " + settings.showRealLineAfterEnd);
+		// 	if (data.compactLinePlacing != settings.compactLinePlacing) console.log("compactLinePlacing: " + data.compactLinePlacing + " => " + settings.compactLinePlacing);
+		// 	if (data.compactPlacingAlignIsTop != settings.compactPlacingAlignIsTop) console.log("compactPlacingAlignIsTop: " + data.compactPlacingAlignIsTop + " => " + settings.compactPlacingAlignIsTop);
+		// 	if (data.selectionCustomColor != settings.selectionCustomColor) console.log("selectionCustomColor: " + data.selectionCustomColor + " => " + settings.selectionCustomColor);
+		// 	if (data.showSeparateLine != settings.showSeparateLine) console.log("showSeparateLine: " + data.showSeparateLine + " => " + settings.showSeparateLine);
+		// 	if (data.showYAxis != settings.showYAxis) console.log("showYAxis: " + data.showYAxis + " => " + settings.showYAxis);
+		// }
 		if (typeof settings != "boolean")
 		{
 			functions.setSettings(settings);
