@@ -832,7 +832,12 @@ export class SettingsMenu
 			if (data.showSeparateLine != settings.showSeparateLine) console.log("showSeparateLine: " + data.showSeparateLine + " => " + settings.showSeparateLine);
 			if (data.showYAxis != settings.showYAxis) console.log("showYAxis: " + data.showYAxis + " => " + settings.showYAxis);
 		}
-		if (typeof settings != "boolean") functions.setSettings(settings);
+		if (typeof settings != "boolean")
+		{
+			functions.setSettings(settings);
+			this.setOptions(settings);
+			this.toggleSepLineEl.checked = functions.SepLineIsActive();
+		}
 	}
 
 	private addLine(functions: FunctionsForMenu)
