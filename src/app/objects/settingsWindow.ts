@@ -22,16 +22,16 @@ export class SettingsWindow extends DialogWindow
 			this.createCell(2, "All options", [], []),
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
-			this.createCell(1, "", cellStyle, this.createOption("change time input order", "scheduleViewer-SettingsWindow-revTimeInput", false, 0)),
-			this.createCell(1, "", cellStyle, this.createOption("show real line after ending", "scheduleViewer-SettingsWindow-showRealLineAfterEnd", false, 1)),
+			this.createCell(1, "", cellStyle, this.createOption("show separate line", "scheduleViewer-SettingsWindow-showSeparateLine", false, 5)),
+			this.createCell(1, "", cellStyle, this.createOption("compact line placing", "scheduleViewer-SettingsWindow-compactLinePlacing", false, 2)),
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
-			this.createCell(1, "", cellStyle, this.createOption("compact line placing", "scheduleViewer-SettingsWindow-compactLinePlacing", false, 2)),
+			this.createCell(1, "", cellStyle, this.createOption("change time input order", "scheduleViewer-SettingsWindow-revTimeInput", false, 0)),
 			this.createCell(1, "", cellStyle, this.createOption("line align top", "scheduleViewer-SettingsWindow-compactPlacingAlignIsTop", false, 3)),
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
 			this.createCell(1, "", cellStyle, this.createOption("custom selection color", "scheduleViewer-SettingsWindow-selectionCustomColor", false, 4)),
-			this.createCell(1, "", cellStyle, this.createOption("show separate line", "scheduleViewer-SettingsWindow-showSeparateLine", false, 5)),
+			this.createCell(1, "", cellStyle, this.createOption("show real line after ending", "scheduleViewer-SettingsWindow-showRealLineAfterEnd", false, 1)),
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
 			this.createCell(1, "", cellStyle, this.createOption("show Y axis", "scheduleViewer-SettingsWindow-showYAxis", false, 6)),
