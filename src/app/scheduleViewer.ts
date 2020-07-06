@@ -11,7 +11,7 @@ export class ScheduleViewer
 	private settingsMenuBody = document.createElement("div");
 	private settingsMenu: SettingsMenu
 
-	private version = "1.9";
+	private version = "1.9.1:beta";
 
 
 	constructor(body: HTMLDivElement, options?: string | null | ScheduleOptions)
