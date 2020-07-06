@@ -9,6 +9,9 @@ export class SettingsMenu
 	private toggleMenuEl: SVGSVGElement;
 	private menuWidth: number
 	private menuOpen = true;
+	private darkTheme = false;
+	private textColor = "black";
+	private backgroundColor = "lightblue";
 
 	private titleDIV = document.createElement("div");
 	private titlePrm = { height: 100 };
@@ -68,7 +71,7 @@ export class SettingsMenu
 		this.body.style.height = "calc(100% - 0px)";
 		this.body.style.width = `${width}px`;
 		this.body.style.minWidth = `${width}px`;
-		this.body.style.backgroundColor = "lightblue";
+		this.body.style.backgroundColor = this.backgroundColor;
 		this.body.style.overflowY = "auto"
 		this.body.style.overflowX = "hidden"
 		this.body.style.display = "inline-block";
@@ -746,6 +749,7 @@ export class SettingsMenu
 		this.colorInputing("toggleAuto");
 
 		this.setOptions(options);
+		this.setTheme(false, functions);
 	}
 	private setOptions(options?: ScheduleOptions)
 	{
@@ -764,6 +768,26 @@ export class SettingsMenu
 	public setLinesCount(count: number)
 	{
 		this.lineCount = count;
+	}
+	private setTheme(dark: boolean, functions: FunctionsForMenu)
+	{
+		if (dark)
+		{
+			this.backgroundColor = "black";
+			this.textColor = "white";
+			this.body.style.borderLeftColor = "gray";
+		}
+		else
+		{
+			this.backgroundColor = "lightblue";
+			this.textColor = "black";
+			this.body.style.borderLeftColor = "black";
+		}
+		this.body.style.backgroundColor = this.backgroundColor;
+		this.body.style.color = this.textColor;
+		this.lineInputs.freqenceRow.style.color = this.textColor;
+		this.darkTheme = dark;
+		functions.setTheme(dark);
 	}
 
 	private toggleMenu()
@@ -837,7 +861,7 @@ export class SettingsMenu
 			showYAxis: graficData.showYAxis,
 			lineNamesOnStart: graficData.lineNamesOnStart,
 		}
-		const settings = await new SettingsWindow(this.body, data).getAnswer();
+		const settings = await new SettingsWindow(this.body, data, this.darkTheme).getAnswer();
 		// if (typeof settings != "boolean")
 		// {
 		// 	if (data.revTimeInput != settings.revTimeInput) console.log("revTimeInput: " + data.revTimeInput + " => " + settings.revTimeInput);
@@ -1128,7 +1152,7 @@ export class SettingsMenu
 				break;
 
 			case "remove":
-				if (await new AskWindow(this.body, "remove line").getAnswer())
+				if (await new AskWindow(this.body, "remove line", this.darkTheme).getAnswer())
 				{
 					if (this.lineToChange == undefined) throw new Error();
 					functions.removeLine(this.lineToChange)
@@ -1159,7 +1183,7 @@ export class SettingsMenu
 			case "removeAll":
 				{
 					let continueChange = false;
-					if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+					if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and show example", this.darkTheme).getAnswer();
 					else continueChange = true;
 					if (continueChange)
 					{
@@ -1175,7 +1199,7 @@ export class SettingsMenu
 			case "example":
 				{
 					let continueChange = false;
-					if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and show example").getAnswer();
+					if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and show example", this.darkTheme).getAnswer();
 					else continueChange = true;
 					if (continueChange)
 					{
@@ -1269,7 +1293,7 @@ export class SettingsMenu
 
 	private menuSystem(state: "noSelect" | "selected" | "realSelected")
 	{
-		this.lineInputs.freqenceRow.style.color = "black";
+		this.lineInputs.freqenceRow.style.color = this.textColor;
 		this.lineInputs.radioRepeating.disabled = false;
 		this.lineInputs.radioOnce.disabled = false;
 		switch (state)
@@ -1395,7 +1419,7 @@ export class SettingsMenu
 		// console.log(newSchedule);
 
 		let continueChange = false;
-		if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and load file").getAnswer();
+		if (this.linesChanged) continueChange = await new AskWindow(this.body, "remove all and load file", this.darkTheme).getAnswer();
 		else continueChange = true;
 		if (!continueChange) return
 

@@ -261,4 +261,21 @@ export class Coordinates
 	{
 		return this.scale.separateLine.active;
 	}
+	public setTheme(dark: boolean)
+	{
+		if (dark)
+		{
+			this.axis.color = "gray";
+			this.scale.hours.color = [180, 100, 43];
+			this.scale.minutes.color = [180, 100, 100];
+			this.scale.seconds.color = [160, 100, 80];
+		}
+		else
+		{
+			this.axis.color = "black";
+			this.scale.hours.color = [240, 100, 27];
+			this.scale.minutes.color = [240, 100, 50];
+			this.scale.seconds.color = [210, 100, 40];
+		}
+	}
 }

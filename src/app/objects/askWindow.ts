@@ -5,13 +5,14 @@ export class AskWindow extends DialogWindow
 	protected answer: boolean = false;
 	protected resolve: ((value?: boolean | PromiseLike<boolean> | undefined) => void) | undefined;
 
-	constructor(parent: HTMLElement, text: string)
+	constructor(parent: HTMLElement, text: string, darkTheme?: boolean)
 	{
 		super(parent, "max-content", "120px", "150px", "120px");
 
+		if (darkTheme) this.setDarkTheme();
 		const rowStyle = [{ property: "text-align", value: "center" }];
 		const rowStyleColorize = rowStyle.slice(0, rowStyle.length);
-		rowStyleColorize.push({ property: "background-color", value: "#ffc823" })
+		rowStyleColorize.push({ property: "background-color", value: "#ffc823" }, { property: "color", value: "black" })
 
 		this.table.appendChild(this.createRow(rowStyle, [
 			this.createCell(2, "Your action:", [], [])

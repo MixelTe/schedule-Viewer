@@ -2,6 +2,7 @@ export class DialogWindow
 {
 	private body = document.createElement("div");
 	private parent: HTMLElement;
+	private tableDiv = document.createElement("div");
 	protected table = document.createElement("table");
 	protected resolve: ((value?: any) => void) | undefined;
 	protected answer: any = undefined;
@@ -32,27 +33,27 @@ export class DialogWindow
 		this.body.style.height = "100%";
 		this.body.style.width = "100%";
 		this.body.style.backgroundColor = "transparent";
+		this.body.style.color = "black";
 		this.body.style.transition = "background-Color 250ms ease-in-out"
 		this.parent.appendChild(this.body);
 		setTimeout(() => {
 			this.body.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
 		}, 1);
 
-		const tableDiv = document.createElement("div");
-		tableDiv.style.width = this.width;
-		tableDiv.style.height = this.height;
-		tableDiv.style.minWidth = this.minWidth;
-		tableDiv.style.minHeight = this.minHeight;
-		tableDiv.style.backgroundColor = "lightgreen";
-		tableDiv.style.borderRadius = "12px";
-		tableDiv.style.border = "3px solid black";
-		this.body.appendChild(tableDiv);
+		this.tableDiv.style.width = this.width;
+		this.tableDiv.style.height = this.height;
+		this.tableDiv.style.minWidth = this.minWidth;
+		this.tableDiv.style.minHeight = this.minHeight;
+		this.tableDiv.style.backgroundColor = "lightgreen";
+		this.tableDiv.style.borderRadius = "12px";
+		this.tableDiv.style.border = "3px solid black";
+		this.body.appendChild(this.tableDiv);
 
 
 		this.table.style.width = "100%";
 		this.table.style.height = "100%";
 
-		tableDiv.appendChild(this.table);
+		this.tableDiv.appendChild(this.table);
 	}
 	public getAnswer()
 	{
@@ -100,6 +101,12 @@ export class DialogWindow
 			cell.appendChild(el);
 		});
 		return cell;
+	}
+	protected setDarkTheme()
+	{
+		this.tableDiv.style.borderColor = "gray";
+		this.tableDiv.style.backgroundColor = "black";
+		this.tableDiv.style.color = "white";
 	}
 }
 

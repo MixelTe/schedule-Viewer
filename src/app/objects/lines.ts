@@ -17,6 +17,7 @@ export class Lines
 	private compactPlacingOnTop = true;
 	private lineNamesOnStart = false;
 	private minSpace = 40;
+	private nameColor = "black";
 
 	private overLineOpacity = 0;
 	private overLineOpacityMouseOver = 0.2;
@@ -154,7 +155,7 @@ export class Lines
 		if (this.compactPlacingOnTop) y = axis.y + spaces * index - (el.width / 2 + 2);
 		else y = axis.y + axis.height - spaces * index - (el.width / 2 + 2);
 		const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-		text.setAttribute("stroke", "black");
+		text.setAttribute("stroke", this.nameColor);
 		text.innerHTML = el.name;
 		text.setAttribute("x", `${x}`);
 		text.setAttribute("y", `${y}`);
@@ -414,5 +415,17 @@ export class Lines
 	public setFunctionsForLines(functions: FunctionsForLines)
 	{
 		this.functionsForLines = functions;
+	}
+
+	public setTheme(dark: boolean)
+	{
+		if (dark)
+		{
+			this.nameColor = "white";
+		}
+		else
+		{
+			this.nameColor = "black";
+		}
 	}
 }

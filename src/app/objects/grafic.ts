@@ -231,6 +231,7 @@ export class Grafic
 			CustomSelectionColorIsActive: this.lines.overLineCustomColorIsActive.bind(this.lines),
 			compactLinePlacingIsActive: this.lines.compactLinePlacingIsActive.bind(this.lines),
 			setSettings: this.apllyNewSettings.bind(this),
+			setTheme: this.setTheme.bind(this),
 		}
 	}
 	public setFunctionsForLines(functions: FunctionsForLines)
@@ -264,5 +265,18 @@ export class Grafic
 
 
 		this.recreate();
+	}
+	public setTheme(dark: boolean)
+	{
+		if (dark)
+		{
+			this.body.style.backgroundColor = "black";
+		}
+		else
+		{
+			this.body.style.backgroundColor = "";
+		}
+		this.lines.setTheme(dark);
+		this.coordinates.setTheme(dark);
 	}
 }

@@ -6,10 +6,11 @@ export class SettingsWindow extends DialogWindow
 	protected resolve: ((value?: boolean | ScheduleOptionsFull | PromiseLike<boolean | ScheduleOptionsFull> | undefined) => void) | undefined;
 	private inputs: HTMLInputElement[] = []
 
-	constructor(parent: HTMLElement, data: ScheduleOptionsFull)
+	constructor(parent: HTMLElement, data: ScheduleOptionsFull, darkTheme?: boolean)
 	{
 		super(parent, "max-content", "max-content", "150px", "140px");
 
+		if (darkTheme) this.setDarkTheme();
 		const titleStyle = [
 			{ property: "text-align", value: "center" },
 			{ property: "font-size", value: "20px" }

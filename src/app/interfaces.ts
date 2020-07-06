@@ -23,6 +23,7 @@ interface FunctionsForMenu
 	CustomSelectionColorIsActive: () => boolean,
 	compactLinePlacingIsActive: () => boolean,
 	setSettings: (data: ScheduleOptionsFull) => void,
+	setTheme: (dark: boolean) => void,
 }
 
 interface FunctionsForLines
