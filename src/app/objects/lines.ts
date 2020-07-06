@@ -145,7 +145,9 @@ export class Lines
 	{
 		const el = this.lines[index];
 		const x = Math.max(axis.x + el.start * (this.oneHour / 60 / 60 * zoom), axis.x + scroll);
-		const y = axis.y + spaces * index - (el.width / 2 + 2);
+		let y;
+		if (this.compactPlacingOnTop) y = axis.y + spaces * index - (el.width / 2 + 2);
+		else y = axis.y + axis.height - spaces * index - (el.width / 2 + 2);
 		const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		text.setAttribute("stroke", "black");
 		text.innerHTML = el.name;
