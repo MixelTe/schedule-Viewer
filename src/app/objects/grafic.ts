@@ -54,7 +54,7 @@ export class Grafic
 			this.coordinates = new Coordinates(this.coordinatesBody, scgBCR, this.oneHour, this.zoom, 0, this.changeSVGHeight.bind(this), options);
 			this.lines = new Lines(this.linesBody, scgBCR, this.linesOverBody, this.linesNames, this.defs, this.coordinates.axis, this.oneHour, this.zoom, this.coordinates.changeHeightAndRecreate.bind(this.coordinates), options);
 
-			this.coordinatesBody.addEventListener("click", this.lines.clickOutside.bind(this.lines))
+			this.svg.addEventListener("click", this.lines.clickOutside.bind(this.lines))
 			for (let i = 0; i < 4; i++)
 			{
 				// this.lines.createLine(this.getRndInteger(1000, 2000), this.getRndInteger(1000, 9000), this.getRndInteger(0, 10000), this.getRndInteger(50000, 80000));

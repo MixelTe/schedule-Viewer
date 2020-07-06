@@ -292,7 +292,7 @@ export class Lines
 
 	public clickOutside(e: MouseEvent)
 	{
-		this.functionsForLines.unSelectLine(e);
+		if (!(e.target instanceof SVGRectElement)) this.functionsForLines.unSelectLine(e);
 	}
 	private overBodyClick(e: MouseEvent)
 	{
