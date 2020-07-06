@@ -155,7 +155,7 @@ export class Lines
 		if (this.compactPlacingOnTop) y = axis.y + spaces * index - (el.width / 2 + 2);
 		else y = axis.y + axis.height - spaces * index - (el.width / 2 + 2);
 		const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-		text.setAttribute("stroke", this.nameColor);
+		text.setAttribute("fill", this.nameColor);
 		text.innerHTML = el.name;
 		text.setAttribute("x", `${x}`);
 		text.setAttribute("y", `${y}`);
