@@ -100,6 +100,6 @@ export class scheduleViewer
 	}
 	public getLinesString()
 	{
-		return JSON.stringify(Object.assign({}, this.grafic.getLines()));
+		return JSON.stringify(this.grafic.getLines());
 	}
 }

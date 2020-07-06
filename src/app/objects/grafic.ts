@@ -243,11 +243,13 @@ export class Grafic
 	}
 	public getLines()
 	{
-		const lines = this.lines.getLines();
-		lines.forEach(el =>
-			{
+		const lines = Object.assign({}, this.lines.getLines());
+		for (const key in lines) {
+			if (lines.hasOwnProperty(key)) {
+				const el = lines[key];
 				el.selected = false;
-			})
+			}
+		}
 		return lines;
 	}
 	public getLinesCount()
