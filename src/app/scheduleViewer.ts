@@ -65,6 +65,7 @@ export class scheduleViewer
 		const options = {
 			openControlPanel: settingsMenuOptions.openControlPanel,
 			revTimeInput: settingsMenuOptions.revTimeInput,
+			darkTheme: settingsMenuOptions.darkTheme,
 			showRealLineAfterEnd: graficOptions.showRealLineAfterEnd,
     		compactLinePlacing: graficOptions.compactLinePlacing,
 			compactPlacingAlignIsTop: graficOptions.compactPlacingAlignIsTop,

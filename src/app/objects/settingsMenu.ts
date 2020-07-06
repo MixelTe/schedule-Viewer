@@ -748,12 +748,12 @@ export class SettingsMenu
 		this.disableInputs("once");
 		this.colorInputing("toggleAuto");
 
-		this.setOptions(options);
-		this.setTheme(false, functions);
+		this.setOptions(options, functions);
 	}
-	private setOptions(options?: ScheduleOptions)
+	private setOptions(options: ScheduleOptions | undefined, functions: FunctionsForMenu)
 	{
 		if (options?.openControlPanel != undefined && !options.openControlPanel) this.toggleMenu();
+		if (options != undefined && typeof options.darkTheme == "boolean") this.setTheme(options.darkTheme, functions);
 		if (options?.revTimeInput != undefined && typeof options.revTimeInput == "boolean")
 		{
 			this.revTimeInput = !options.revTimeInput;
@@ -763,7 +763,11 @@ export class SettingsMenu
 	}
 	public getOptions()
 	{
-		return { openControlPanel: this.menuOpen, revTimeInput: this.revTimeInput };
+		return {
+			openControlPanel: this.menuOpen,
+			revTimeInput: this.revTimeInput,
+			darkTheme: this.darkTheme,
+		};
 	}
 	public setLinesCount(count: number)
 	{
@@ -853,6 +857,7 @@ export class SettingsMenu
 		const graficData = functions.getOptions();
 		const data = {
 			revTimeInput: this.revTimeInput,
+			darkTheme: this.darkTheme,
 			showRealLineAfterEnd: graficData.showRealLineAfterEnd,
 			compactLinePlacing: graficData.compactLinePlacing,
 			compactPlacingAlignIsTop: graficData.compactPlacingAlignIsTop,
@@ -875,8 +880,8 @@ export class SettingsMenu
 		// }
 		if (typeof settings != "boolean")
 		{
+			this.setOptions(settings, functions);
 			functions.setSettings(settings);
-			this.setOptions(settings);
 			this.toggleSepLineEl.checked = functions.SepLineIsActive();
 		}
 	}

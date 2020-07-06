@@ -96,6 +96,7 @@ interface ScheduleOptions
 	showSeparateLine?: boolean,
 	showYAxis?: boolean,
 	lineNamesOnStart?: boolean,
+	darkTheme?: boolean,
 }
 
 interface ScheduleOptionsGraic
@@ -119,4 +120,5 @@ interface ScheduleOptionsFull
 	showSeparateLine: boolean,
 	showYAxis: boolean,
 	lineNamesOnStart: boolean,
+	darkTheme: boolean,
 }

@@ -39,6 +39,9 @@ export class SettingsWindow extends DialogWindow
 			this.createCell(1, "", cellStyle, this.createOption("move names to line begin", "scheduleViewer-SettingsWindow-lineNamesOnStart", false, 7)),
 		]));
 		this.table.appendChild(this.createRow(rowStyle, [
+			this.createCell(1, "", cellStyle, this.createOption("dark theme", "scheduleViewer-SettingsWindow-darkTheme", false, 8)),
+		]));
+		this.table.appendChild(this.createRow(rowStyle, [
 			this.createCell(1, "", cellStyle, []),
 			this.createCell(1, "", buttonCellStyle, [
 				this.createButton("cancel", false),
@@ -69,6 +72,7 @@ export class SettingsWindow extends DialogWindow
 				showSeparateLine: this.inputs[5].checked,
 				showYAxis: this.inputs[6].checked,
 				lineNamesOnStart: this.inputs[7].checked,
+				darkTheme: this.inputs[8].checked,
 			}
 			this.answer = data;
 		}
@@ -89,6 +93,7 @@ export class SettingsWindow extends DialogWindow
 		this.inputs[5].checked = data.showSeparateLine;
 		this.inputs[6].checked = data.showYAxis;
 		this.inputs[7].checked = data.lineNamesOnStart;
+		this.inputs[8].checked = data.darkTheme;
 	}
 
 	private createOption(text: string, id: string, checked: boolean, index: number)
